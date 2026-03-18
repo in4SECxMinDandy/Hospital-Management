@@ -4,339 +4,146 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>LazyCoder || sumit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMS - Doctor Dashboard</title>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static '/style.css' %}">
 
-
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
+  <style>
+    /* Inline styles for template-specific overrides */
     a {
-      color: white;
+      color: inherit;
+      text-decoration: none;
     }
-
     a:hover {
-      color: white;
+      color: inherit;
     }
-
-
-
-
-    /*---------------------------------------
-       Social section
-    -----------------------------------------*/
-    footer {
-      padding: 0px 0px 0px 0px;
-      background-color: black;
-      margin: 0px;
-    }
-
-
-    #ftr {
-
-      padding: 20px;
-    }
-
-    .fa {
-
-      font-size: 23px;
-      width: 60px;
-      text-align: center;
-      text-decoration: none;
-      margin: 5px 2px;
-      border-radius: 50%;
-    }
-
-    .fa:hover {
-      opacity: 0.5;
-      text-decoration: none;
-    }
-
-    .fa-facebook {
-      background: #3B5998;
-      color: white;
-      margin-top: 30px;
-    }
-
-    .fa-whatsapp {
-      background: #25d366;
-      color: white;
-    }
-
-    .fa-twitter {
-      background: #55ACEE;
-      color: white;
-    }
-
-    .fa-instagram {
-      background: #125688;
-      color: white;
-    }
-
-    p {
-      text-align: center;
-
-    }
-
-
-
-
-
-    body {
-
-      padding-left: 240px;
-    }
-    main {
-      position: relative;
-      height: 100vh;
-    }
-
-    .menu {
-      background: #5bc995;
-      height: 100vh;
-      width: 240px;
-      position: fixed;
-      top: 0px;
-      left: 0;
-      z-index: 5;
-      outline: none;
-    }
-    .menu .avatar {
-      background: rgba(0, 0, 0, 0.1);
-      padding: 2em 0.5em;
-      text-align: center;
-    }
-    .menu .avatar img {
-      width: 100px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #ffea92;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
-    }
-    .menu .avatar h2 {
-      font-weight: normal;
-      margin-bottom: 0;
-    }
-    .menu ul {
-      list-style: none;
-      padding: 0.5em 0;
-      margin: 0;
-    }
-    .menu ul li {
-      padding: 0.5em 1em 0.5em 3em;
-      font-size: 0.95em;
-      font-weight: regular;
-      background-repeat: no-repeat;
-      background-position: left 15px center;
-      background-size: auto 20px;
-      transition: all 0.15s linear;
-      cursor: pointer;
-    }
-    .menu ul li.icon-dashboard {
-      background-image: url("http://www.entypo.com/images//gauge.svg");
-    }
-    .menu ul li.icon-customers {
-      background-image: url("http://www.entypo.com/images//briefcase.svg");
-    }
-    .menu ul li.icon-users {
-      background-image: url("http://www.entypo.com/images//users.svg");
-    }
-    .menu ul li.icon-calendar {
-      background-image: url("http://www.entypo.com/images//calendar.svg");
-    }
-
-    .menu ul li:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-    .menu ul li:focus {
-      outline: none;
-    }
-    @media screen and (max-width: 900px) and (min-width: 400px) {
-      body {
-        padding-left: 90px;
-      }
-      .menu {
-        width: 90px;
-      }
-      .menu .avatar {
-        padding: 0.5em;
-        position: relative;
-      }
-      .menu .avatar img {
-        width: 60px;
-      }
-      .menu .avatar h2 {
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 100px;
-        margin: 0;
-        min-width: 200px;
-        border-radius: 4px;
-        background: rgba(0, 0, 0, 0.4);
-        transform: translate3d(-20px, -50%, 0);
-        transition: all 0.15s ease-in-out;
-      }
-      .menu .avatar:hover h2 {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
-      }
-      .menu ul li {
-        height: 60px;
-        background-position: center center;
-        background-size: 30px auto;
-        position: relative;
-      }
-      .menu ul li span {
-        opacity: 0;
-        position: absolute;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 0.2em 0.5em;
-        border-radius: 4px;
-        top: 50%;
-        left: 80px;
-        transform: translate3d(-15px, -50%, 0);
-        transition: all 0.15s ease-in-out;
-      }
-      .menu ul li span:before {
-        content: '';
-        width: 0;
-        height: 0;
-        position: absolute;
-        top: 50%;
-        left: -5px;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-right: 5px solid rgba(0, 0, 0, 0.5);
-        transform: translateY(-50%);
-      }
-      .menu ul li:hover span {
-        opacity: 1;
-        transform: translate3d(0px, -50%, 0);
-      }
-    }
-    @media screen and (max-width: 400px) {
-      body {
-        padding-left: 0;
-      }
-      .menu {
-        width: 230px;
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0);
-        transform: translate3d(-230px, 0, 0);
-        transition: all 0.3s ease-in-out;
-      }
-      .menu .smartphone-menu-trigger {
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        left: 100%;
-        background: #5bc995;
-      }
-      .menu .smartphone-menu-trigger:before,
-      .menu .smartphone-menu-trigger:after {
-        content: '';
-        width: 50%;
-        height: 2px;
-        background: #fff;
-        border-radius: 10px;
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0);
-      }
-      .menu .smartphone-menu-trigger:after {
-        top: 55%;
-        transform: translate3d(-50%, -50%, 0);
-      }
-      .menu ul li {
-        padding: 1em 1em 1em 3em;
-        font-size: 1.2em;
-      }
-      .menu:focus {
-        transform: translate3d(0, 0, 0);
-        box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.6);
-      }
-      .menu:focus .smartphone-menu-trigger {
-        pointer-events: none;
-      }
-    }
-
   </style>
 </head>
 
 <body>
-  <!-- partial:index.partial.html -->
+  <!-- SIDEBAR NAVIGATION -->
   <nav class="menu" tabindex="0">
     <div class="smartphone-menu-trigger"></div>
+    
+    <!-- Brand/Avatar Section -->
     <header class="avatar">
-      <img src="{% static doctor.profile_pic.url %}" alt="Profile Pic" />
-      <br><br>
+      <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true" alt="Doctor Avatar" />
       <h6>Doctor</h6>
-      <h2>{{request.user.first_name}}</h2>
+      <h2>{{ request.user.first_name }}</h2>
     </header>
+    
+    <!-- Navigation Menu -->
     <ul>
-      <li tabindex="0" class="icon-dashboard"> <a style="color:white; text-decoration:none;" href="/doctor-dashboard"><span>Dashboard</span></a> </li>
-      <li tabindex="0" class="icon-users"> <a style="color:white; text-decoration:none;" href="/doctor-patient"><span>Patient</span></a></li>
-      <li tabindex="0" class="icon-calendar"> <a style="color:white; text-decoration:none;" href="/doctor-appointment"><span>Appointments</span></a></li>
+      <li>
+        <a href="/doctor-dashboard">
+          <i class="fas fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="/doctor-patient">
+          <i class="fas fa-users"></i>
+          <span>Patients</span>
+        </a>
+      </li>
+      <li>
+        <a href="/doctor-appointment">
+          <i class="fas fa-calendar-check"></i>
+          <span>Appointments</span>
+        </a>
+      </li>
     </ul>
   </nav>
+
   <main>
-    <!-- nav start -->
-    <div class="bs-example">
-      <nav class="navbar navbar-expand-md  navbar-dark fixed-top" style="background:#337AB7;">
-        <a href="/doctor-dashboard" class="navbar-brand">HOSPITAL MANAGEMENT</a>
-        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <!-- TOPBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/doctor-dashboard">
+          <i class="fas fa-hospital" style="color: var(--color-primary); margin-right: 8px;"></i>
+          Hospital Management
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-          <div class="navbar-nav" style=" margin-left: 90%;">
-
-            <a href="/logout" class="nav-item nav-link">Logout</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-    <!-- nav end -->
-    <br><br>
-    <!-- content start-->
-    {% block content %}
-    {% endblock content %}
-    <!-- content end-->
-    <br><br><br><br><br><br><br>
-    <footer>
-      <p>
-        <a id="ftr" href="https://facebook.com/sumit.luv/" class="fa fa-facebook"></a>
-        <a id="ftr" href="https://api.whatsapp.com/send?phone=919572181024&text=Hello%20Sumit.%0d%0aHow%20are%20you%20%3f%0d%0aI%20came%20from%20your%20website.&source=&data=#" class="fa fa-whatsapp"></a>
-        <a id="ftr" href="https://instagram.com/sumit.luv" class="fa fa-instagram"></a>
-        <a id="ftr" href="https://twitter.com/sumitkumar1503" class="fa fa-twitter"></a>
-      </p>
-      <br>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div style="color:#ffffff;" class="wow fadeInUp footer-copyright">
-              <p>Made in India <br>
-                Copyright &copy; 2020 LazyCoder </p>
+        
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <div class="navbar-nav gap-3">
+            <div class="nav-item dropdown">
+              <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-bell" style="color: var(--color-primary);"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">No new notifications</a></li>
+              </ul>
+            </div>
+            
+            <div class="nav-item dropdown">
+              <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true" 
+                     alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
+    </nav>
+
+    <!-- CONTENT AREA -->
+    <div style="padding: 32px; margin-top: 20px;">
+      {% block content %}
+      {% endblock content %}
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p style="margin-bottom: 16px;">
+        <a href="https://facebook.com" class="fa-brands fa-facebook-f" aria-label="Facebook"></a>
+        <a href="https://whatsapp.com" class="fa-brands fa-whatsapp" aria-label="WhatsApp"></a>
+        <a href="https://instagram.com" class="fa-brands fa-instagram" aria-label="Instagram"></a>
+        <a href="https://twitter.com" class="fa-brands fa-twitter" aria-label="Twitter"></a>
+      </p>
+      <div class="footer-copyright">
+        <p>Hospital Management System &copy; 2024 | All Rights Reserved</p>
+      </div>
     </footer>
   </main>
-  <!-- partial -->
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Mobile Menu Toggle -->
+  <script>
+    const menuTrigger = document.querySelector('.smartphone-menu-trigger');
+    const menu = document.querySelector('.menu');
+    
+    if (menuTrigger) {
+      menuTrigger.addEventListener('click', () => {
+        menu.classList.toggle('active');
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !menuTrigger.contains(e.target)) {
+          menu.classList.remove('active');
+        }
+      });
+    }
+  </script>
 </body>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/lazycoders
--->
 
 </html>
