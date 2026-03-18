@@ -25,6 +25,7 @@
       color: inherit;
       text-decoration: none;
     }
+
     a:hover {
       color: inherit;
     }
@@ -38,7 +39,8 @@
 
     <!-- Brand/Avatar Section -->
     <header class="avatar">
-      <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true" alt="Avatar Bệnh nhân" />
+      <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true"
+        alt="Avatar Bệnh nhân" />
       <h6>Bệnh nhân</h6>
       <h2>{{ request.user.first_name }}</h2>
     </header>
@@ -98,8 +100,9 @@
 
             <div class="nav-item dropdown">
               <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <img src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true"
-                     alt="Hồ sơ" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                <img
+                  src="https://ui-avatars.com/api/?name={{ request.user.first_name }}&background=2563eb&color=fff&bold=true"
+                  alt="Hồ sơ" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
@@ -118,12 +121,6 @@
 
     <!-- FOOTER -->
     <footer>
-      <p style="margin-bottom: 16px;">
-        <a href="https://facebook.com" class="fa-brands fa-facebook-f" aria-label="Facebook"></a>
-        <a href="https://whatsapp.com" class="fa-brands fa-whatsapp" aria-label="WhatsApp"></a>
-        <a href="https://instagram.com" class="fa-brands fa-instagram" aria-label="Instagram"></a>
-        <a href="https://twitter.com" class="fa-brands fa-twitter" aria-label="Twitter"></a>
-      </p>
       <div class="footer-copyright">
         <p>Hệ thống Quản lý Bệnh viện &copy; 2024 | Tất cả các quyền được bảo lưu</p>
       </div>

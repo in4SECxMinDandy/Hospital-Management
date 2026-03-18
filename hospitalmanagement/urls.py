@@ -2,7 +2,7 @@
 
 Developed By : sumit kumar
 facebook : fb.com/sumit.luv
-Youtube :youtube.com/lazycoders
+Youtube :youtube.com/AT05s
 
 
 """
@@ -111,4 +111,4 @@ urlpatterns +=[
 
 #Developed By : sumit kumar
 #facebook : fb.com/sumit.luv
-#Youtube :youtube.com/lazycoders
+#Youtube :youtube.com/AT05s
