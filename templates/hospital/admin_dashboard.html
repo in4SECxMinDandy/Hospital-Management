@@ -7,15 +7,15 @@
   <div class="row">
     <div class="panel panel-primary col-md-5" style="margin-left:2%;">
       <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Recent Doctors</h6>
+        <h6 class="panel-title">Bác sĩ gần đây</h6>
       </div>
       <table class="table table-hover" id="dev-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Mobile</th>
-            <th>Status</th>
+            <th>Tên</th>
+            <th>Khoa</th>
+            <th>Điện thoại</th>
+            <th>Trạng thái</th>
 
           </tr>
         </thead>
@@ -25,9 +25,9 @@
           <td>{{d.department}}</td>
           <td>{{d.mobile}}</td>
           {%if d.status%}
-          <td> <span class="label label-primary">Permanent</span></td>
+          <td> <span class="label label-primary">Chính thức</span></td>
           {% else %}
-          <td> <span class="label label-success">On Hold</span></td>
+          <td> <span class="label label-success">Chờ duyệt</span></td>
           {% endif %}
 
         </tr>
@@ -37,16 +37,16 @@
 
     <div class="panel panel-primary col-md-5" style="margin-left:5%;">
       <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Recent Patient</h6>
+        <h6 class="panel-title">Bệnh nhân gần đây</h6>
       </div>
       <table class="table table-hover" id="dev-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Symptoms</th>
-            <th>Mobile</th>
-            <th>Address</th>
-            <th>Status</th>
+            <th>Tên</th>
+            <th>Triệu chứng</th>
+            <th>Điện thoại</th>
+            <th>Địa chỉ</th>
+            <th>Trạng thái</th>
 
           </tr>
         </thead>
@@ -57,9 +57,9 @@
           <td>{{p.mobile}}</td>
           <td>{{p.address}}</td>
           {%if p.status%}
-          <td> <span class="label label-primary">Admitted</span></td>
+          <td> <span class="label label-primary">Đã nhập viện</span></td>
           {% else %}
-          <td> <span class="label label-success">On Hold</span></td>
+          <td> <span class="label label-success">Chờ duyệt</span></td>
           {% endif %}
 
         </tr>

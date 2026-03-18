@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>LazyCoder || sumit</title>
+  <title>Quản lý Bệnh viện</title>
   <style type="text/css">
     body {
       color: #aa082e;
@@ -61,38 +61,39 @@
 
 
 
+
   <!--- signup page for admin by admin(sumit)  ---------->
   <form method="post">
     {% csrf_token %}
     <div class="container register-form">
       <div class="form">
         <div class="note">
-          <p>Add New Admin To Hospital</p>
+          <p>Thêm Quản trị viên mới cho Bệnh viện</p>
         </div>
 
         <div class="form-content">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                {% render_field form.first_name class="form-control" placeholder="First Name" %}
+                {% render_field form.first_name class="form-control" placeholder="Họ" %}
               </div>
               <div class="form-group">
-                {% render_field form.username class="form-control" placeholder="Username" %}
+                {% render_field form.username class="form-control" placeholder="Tên đăng nhập" %}
               </div>
 
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                {% render_field form.last_name class="form-control" placeholder="Last Name" %}
+                {% render_field form.last_name class="form-control" placeholder="Tên" %}
               </div>
               <div class="form-group">
-                {% render_field form.password class="form-control" placeholder="Password" %}
+                {% render_field form.password class="form-control" placeholder="Mật khẩu" %}
               </div>
 
             </div>
           </div>
-          <button type="submit" class="btnSubmit">Submit</button>
-          <div class="text-center">Already have an account? <a href="adminlogin">Login here</a></div>
+          <button type="submit" class="btnSubmit">Gửi</button>
+          <div class="text-center">Đã có tài khoản? <a href="adminlogin">Đăng nhập tại đây</a></div>
         </div>
       </div>
     </div>

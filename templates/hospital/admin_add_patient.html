@@ -54,43 +54,43 @@
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Admit Patient To Hospital</p>
+        <p>Nhập viện cho Bệnh nhân</p>
       </div>
       <div class="form-content">
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+              {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
             </div>
             <div class="form-group">
-              {% render_field userForm.username class="form-control" placeholder="Username" %}
+              {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.address class="form-control" placeholder="Address" %}
+              {% render_field patientForm.address class="form-control" placeholder="Địa chỉ" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.symptoms class="form-control" placeholder="Symptoms" %}
+              {% render_field patientForm.symptoms class="form-control" placeholder="Triệu chứng" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.profile_pic required="required" class="form-control" placeholder="Profile Picture" %}
+              {% render_field patientForm.profile_pic required="required" class="form-control" placeholder="Ảnh đại diện" %}
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+              {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
             </div>
             <div class="form-group">
-              {% render_field userForm.password class="form-control" placeholder="Password" %}
+              {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.mobile  class="form-control" placeholder="Mobile" %}
+              {% render_field patientForm.mobile  class="form-control" placeholder="Số điện thoại" %}
             </div>
             <div class="form-group">
-              {% render_field patientForm.assignedDoctorId class="form-control" placeholder="Doctor" %}
+              {% render_field patientForm.assignedDoctorId class="form-control" placeholder="Bác sĩ" %}
             </div>
           </div>
         </div>
-        <button type="submit" class="btnSubmit">Admit</button>
+        <button type="submit" class="btnSubmit">Nhập viện</button>
       </div>
     </div>
   </div>

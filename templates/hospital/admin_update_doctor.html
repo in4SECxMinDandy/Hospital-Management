@@ -53,40 +53,40 @@
   <div class="container register-form">
     <div class="form">
       <div class="note">
-        <p>Update Doctor Details</p>
+        <p>Cập nhật thông tin Bác sĩ</p>
       </div>
       <div class="form-content">
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field userForm.first_name class="form-control" placeholder="First Name" %}
+              {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
             </div>
             <div class="form-group">
-              {% render_field userForm.username class="form-control" placeholder="Username" %}
+              {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.mobile class="form-control" placeholder="Mobile" %}
+              {% render_field doctorForm.mobile class="form-control" placeholder="Số điện thoại" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.department class="form-control" placeholder="Department" %}
+              {% render_field doctorForm.department class="form-control" placeholder="Khoa" %}
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              {% render_field userForm.last_name class="form-control" placeholder="Last Name" %}
+              {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
             </div>
             <div class="form-group">
-              {% render_field userForm.password class="form-control" placeholder="Password" %}
+              {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.address class="form-control" placeholder="Address" %}
+              {% render_field doctorForm.address class="form-control" placeholder="Địa chỉ" %}
             </div>
             <div class="form-group">
-              {% render_field doctorForm.profile_pic class="form-control" placeholder="Profile Picture" %}
+              {% render_field doctorForm.profile_pic class="form-control" placeholder="Ảnh đại diện" %}
             </div>
           </div>
         </div>
-        <button type="submit" class="btnSubmit">Update</button>
+        <button type="submit" class="btnSubmit">Cập nhật</button>
       </div>
     </div>
   </div>

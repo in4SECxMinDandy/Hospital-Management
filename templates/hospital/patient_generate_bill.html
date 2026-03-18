@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A simple, clean, and responsive HTML invoice template</title>
+  <title>Mẫu hóa đơn đơn giản</title>
 
   <style>
     .invoice-box {
@@ -113,14 +113,14 @@
         <table>
           <tr>
             <td class="title">
-              <h1>Hospital Management</h1>
+              <h1>Quản lý Bệnh viện</h1>
             </td>
 
             <td>
 
-              Admit Date: {{admitDate}}<br>
-              Release Date: {{todayDate}}<br>
-              Days Spent: {{day}}
+              Ngày nhập viện: {{admitDate}}<br>
+              Ngày xuất viện: {{todayDate}}<br>
+              Số ngày nằm viện: {{day}}
             </td>
           </tr>
         </table>
@@ -132,13 +132,13 @@
         <table>
           <tr>
             <td>
-              Patient Name : {{name}}<br>
-              Patient Mobile : {{mobile}}<br>
-              Patient Addres : {{address}}<br>
+              Tên Bệnh nhân : {{name}}<br>
+              Số điện thoại : {{mobile}}<br>
+              Địa chỉ : {{address}}<br>
             </td>
 
             <td>
-              Doctor Name :<br>
+              Tên Bác sĩ :<br>
               {{assignedDoctorName}}<br>
 
             </td>
@@ -149,7 +149,7 @@
 
     <tr class="heading">
       <td>
-        Disease and Symptoms
+        Bệnh và Triệu chứng
       </td>
       <td>
 
@@ -164,11 +164,11 @@
     </tr>
     <tr class="heading">
       <td>
-        Item
+        Khoản mục
       </td>
 
       <td>
-        Price
+        Giá
       </td>
     </tr>
     <form method="post">
@@ -176,41 +176,41 @@
 
       <tr class="item">
         <td>
-          Room Charge (Per Day)
+          Tiền phòng (Mỗi ngày)
         </td>
 
         <td>
-          <input type="number" name="roomCharge" placeholder="In Rupees" value="">
-        </td>
-      </tr>
-
-      <tr class="item">
-        <td>
-          Doctor Fee
-        </td>
-
-        <td>
-          <input type="number" name="doctorFee" placeholder="In Rupees" value="">
+          <input type="number" name="roomCharge" placeholder="Nhập số tiền" value="">
         </td>
       </tr>
 
       <tr class="item">
         <td>
-          Medicine Cost
+          Phí Bác sĩ
         </td>
 
         <td>
-          <input type="number" name="medicineCost" placeholder="In Rupees" value="">
+          <input type="number" name="doctorFee" placeholder="Nhập số tiền" value="">
+        </td>
+      </tr>
+
+      <tr class="item">
+        <td>
+          Tiền thuốc
+        </td>
+
+        <td>
+          <input type="number" name="medicineCost" placeholder="Nhập số tiền" value="">
         </td>
       </tr>
 
       <tr class="item last">
         <td>
-          Other Charge
+          Chi phí khác
         </td>
 
         <td>
-          <input type="number" name="OtherCharge" placeholder="In Rupees" value="">
+          <input type="number" name="OtherCharge" placeholder="Nhập số tiền" value="">
         </td>
       </tr>
 
@@ -218,7 +218,7 @@
         <td></td>
 
         <td>
-          <input type="submit" name="submit" value="Generate Bill">
+          <input type="submit" name="submit" value="Tạo hóa đơn">
         </td>
       </tr>
 

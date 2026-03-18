@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>A simple, clean, and responsive HTML invoice template</title>
+  <title>Mẫu hóa đơn đơn giản</title>
 
   <style>
     .invoice-box {
@@ -120,14 +120,14 @@
         <table>
           <tr>
             <td class="title">
-              <h1>Hospital Management</h1>
+              <h1>Quản lý Bệnh viện</h1>
             </td>
 
             <td>
 
-              Admit Date: {{admitDate}}<br>
-              Release Date: {{releaseDate}}<br>
-              Days Spent: {{daySpent}}
+              Ngày nhập viện: {{admitDate}}<br>
+              Ngày xuất viện: {{releaseDate}}<br>
+              Số ngày nằm viện: {{daySpent}}
             </td>
           </tr>
         </table>
@@ -139,13 +139,13 @@
         <table>
           <tr>
             <td>
-              Patient Name : {{patientName}}<br>
-              Patient Mobile : {{mobile}}<br>
-              Patient Addres : {{address}}<br>
+              Tên Bệnh nhân : {{patientName}}<br>
+              Số điện thoại : {{mobile}}<br>
+              Địa chỉ : {{address}}<br>
             </td>
 
             <td>
-              Doctor Name :<br>
+              Tên Bác sĩ :<br>
               {{assignedDoctorName}}<br>
 
             </td>
@@ -156,7 +156,7 @@
 
     <tr class="heading">
       <td>
-        Disease and Symptoms
+        Bệnh và Triệu chứng
       </td>
       <td>
 
@@ -171,17 +171,17 @@
     </tr>
     <tr class="heading">
       <td>
-        Item
+        Khoản mục
       </td>
 
       <td>
-        Price
+        Giá
       </td>
     </tr>
 
     <tr class="item">
       <td>
-        Room Charge of {{daySpent}} Days
+        Tiền phòng {{daySpent}} ngày
       </td>
 
       <td>
@@ -191,7 +191,7 @@
 
     <tr class="item">
       <td>
-        Doctor Fee
+        Phí Bác sĩ
       </td>
 
       <td>
@@ -201,7 +201,7 @@
 
     <tr class="item">
       <td>
-        Medicine Cost
+        Tiền thuốc
       </td>
 
       <td>
@@ -211,7 +211,7 @@
 
     <tr class="item last">
       <td>
-        Other Charge
+        Chi phí khác
       </td>
 
       <td>
@@ -223,7 +223,7 @@
       <td></td>
 
       <td>
-        Total Rupees : {{total}}
+        Tổng cộng : {{total}}
       </td>
     </tr>
 
@@ -231,15 +231,15 @@
 </div>
 <br><br>
 <div class="download">
-  <a style="background:red; width:500px;" href="{% url 'download-pdf' patientId  %}">Download</a>
+  <a style="background:red; width:500px;" href="{% url 'download-pdf' patientId  %}">Tải xuống</a>
 </div>
 
 
 
 {%else%}
-<h5 style="text-align:center;">You Are Not Discharged By Hospital !</h5>
-<h5 style="text-align:center;">Your Treatment Is Going On !</h5><br><br>
-<h6 style="text-align:center;">When You Will Be Discahrged. You Can Download Invoice.</h6>
+<h5 style="text-align:center;">Bạn chưa được xuất viện !</h5>
+<h5 style="text-align:center;">Điều trị của bạn đang tiếp tục !</h5><br><br>
+<h6 style="text-align:center;">Khi nào bạn được xuất viện, bạn có thể tải hóa đơn.</h6>
 {%endif%}
 <!--
 developed By : sumit kumar
