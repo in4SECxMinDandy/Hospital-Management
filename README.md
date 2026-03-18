@@ -1,7 +1,6 @@
-<!--
-
 # 🏥 Hospital Management System | Hệ thống Quản lý Bệnh viện
 
+<!-- markdownlint-disable MD033 -->
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.7%2B-blue?style=flat&logo=python" alt="Python">
   <img src="https://img.shields.io/badge/Django-3.0.5-green?style=flat&logo=django" alt="Django">
@@ -11,14 +10,13 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Made%20with%20%E2%9D%A4%EF%B8%8F-by%20sumit%20kumar-red?style=flat" alt="Made with Love">
+  <img src="https://img.shields.io/badge/Made%20with%20%E2%9D%A4%EF%B8%8F-by%20sumit%20kumar-red?style=flat" alt="Made with Love by sumit kumar">
 </p>
+<!-- markdownlint-enable MD033 -->
 
 ---
 
-<p align="center">
-  <strong>English</strong> | <a href="#tiếng-việt"><strong>Tiếng Việt</strong></a>
-</p>
+**English** | [**Tiếng Việt**](#tiếng-việt)
 
 ---
 
@@ -153,15 +151,15 @@ A comprehensive **Hospital Management System** built with Django 3.0.5, Bootstra
 
 | Landing Page | Admin Dashboard |
 |--------------|-----------------|
-| ![Landing](https://placehold.co/600x400/2563EB/white?text=Landing+Page) | ![Admin](https://placehold.co/600x400/10B981/white?text=Admin+Dashboard) |
+| ![Landing Page](https://placehold.co/600x400/2563EB/white?text=Landing+Page) | ![Admin Dashboard](https://placehold.co/600x400/10B981/white?text=Admin+Dashboard) |
 
 | Doctor Dashboard | Patient Dashboard |
 |------------------|-------------------|
-| ![Doctor](https://placehold.co/600x400/F59E0B/white?text=Doctor+Dashboard) | ![Patient](https://placehold.co/600x400/EF4444/white?text=Patient+Dashboard) |
+| ![Doctor Dashboard](https://placehold.co/600x400/F59E0B/white?text=Doctor+Dashboard) | ![Patient Dashboard](https://placehold.co/600x400/EF4444/white?text=Patient+Dashboard) |
 
 | PDF Bill Sample |
 |-----------------|
-| ![Bill](https://placehold.co/600x800/0F172A/white?text=PDF+Bill+Sample) |
+| ![PDF Bill Sample](https://placehold.co/600x800/0F172A/white?text=PDF+Bill+Sample) |
 
 ---
 
@@ -216,7 +214,7 @@ hospital-management/
 │   ├── admin_patient.html         # Patient management menu
 │   ├── admin_view_patient.html    # View patients list
 │   ├── admin_add_patient.html     # Add new patient
-│   ├── admin_update_patient.html # Update patient info
+│   ├── admin_update_patient.html  # Update patient info
 │   ├── admin_approve_patient.html # Approve patient requests
 │   ├── admin_discharge_patient.html # Discharge patient
 │   ├── patient_generate_bill.html # Generate bill form
@@ -231,12 +229,12 @@ hospital-management/
 │   ├── doctorlogin.html           # Doctor login
 │   ├── doctorsignup.html          # Doctor registration
 │   ├── doctor_base.html           # Doctor dashboard base
-│   ├── doctor_dashboard.html     # Doctor dashboard
+│   ├── doctor_dashboard.html      # Doctor dashboard
 │   ├── doctor_dashboard_cards.html # Doctor dashboard stats
-│   ├── doctor_patient.html       # Patient management menu
-│   ├── doctor_view_patient.html  # View assigned patients
+│   ├── doctor_patient.html        # Patient management menu
+│   ├── doctor_view_patient.html   # View assigned patients
 │   ├── doctor_view_discharge_patient.html # View discharged patients
-│   ├── doctor_appointment.html   # Appointment menu
+│   ├── doctor_appointment.html    # Appointment menu
 │   ├── doctor_view_appointment.html # View appointments
 │   ├── doctor_delete_appointment.html # Delete appointment
 │   ├── doctor_wait_for_approval.html # Pending approval page
@@ -298,6 +296,7 @@ hospital-management/
 Before installing, make sure you have:
 
 - **Python 3.7 or higher** — [Download Python](https://www.python.org/downloads/)
+
   ```bash
   # Verify Python installation
   python --version
@@ -399,10 +398,10 @@ To enable the Contact Us email feature, you need to configure SMTP settings.
 #### Step-by-step: Create Google App Password
 
 1. **Enable 2-Factor Authentication** on your Google account
-   - Go to: https://myaccount.google.com/signinoptions/two-step-verification
+   - Go to: <https://myaccount.google.com/signinoptions/two-step-verification>
 
 2. **Generate App Password**
-   - Go to: https://myaccount.google.com/apppasswords
+   - Go to: <https://myaccount.google.com/apppasswords>
    - Select App: **Mail**
    - Select Device: **Other (Custom name)** → Enter "Hospital Management"
    - Click **Generate**
@@ -930,6 +929,7 @@ git push origin feature/amazing-feature
 ### 6. Create Pull Request
 
 Open a Pull Request on GitHub with:
+
 - Clear title and description
 - Reference to related issue
 - Screenshots if UI changes
@@ -1022,9 +1022,7 @@ Join our community discussions at [GitHub Discussions](https://github.com/exampl
 
 ---
 
-<p align="center">
-  <strong>English</strong> | <a href="#tiếng-việt"><strong>Tiếng Việt</strong></a>
-</p>
+**English** | [**Tiếng Việt**](#tiếng-việt)
 
 ---
 
@@ -1155,11 +1153,7 @@ Mở trình duyệt tại: `http://127.0.0.1:8000/`
 
 ---
 
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/sumit-kumar">sumit kumar</a>
-</p>
+Made with ❤️ by [sumit kumar](https://github.com/sumit-kumar)
 
-<p align="center">
-  <a href="https://fb.com/sumit.luv"><img src="https://img.shields.io/badge/Facebook-Follow-blue?style=flat&logo=facebook"></a>
-  <a href="https://youtube.com/lazycoders"><img src="https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube"></a>
-</p>
+[![Facebook](https://img.shields.io/badge/Facebook-Follow-blue?style=flat&logo=facebook)](https://fb.com/sumit.luv)
+[![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://youtube.com/lazycoders)
