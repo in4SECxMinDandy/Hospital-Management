@@ -974,14 +974,6 @@ SOFTWARE.
 
 ---
 
-## 🙏 Acknowledgements | Lời cảm ơn
-
-### Original Developer | Nhà phát triển gốc
-
-- **sumit kumar** — Original creator
-  - Facebook: [fb.com/sumit.luv](https://fb.com/sumit.luv)
-  - YouTube: [youtube.com/lazycoders](https://youtube.com/lazycoders)
-
 ### Open Source Libraries | Thư viện mã nguồn mở
 
 | Library | Purpose | License |
@@ -1152,8 +1144,3 @@ Mở trình duyệt tại: `http://127.0.0.1:8000/`
 [Xem phần English ở trên](#-contact--support--liên-hệ-và-hỗ-trợ)
 
 ---
-
-Made with ❤️ by [sumit kumar](https://github.com/sumit-kumar)
-
-[![Facebook](https://img.shields.io/badge/Facebook-Follow-blue?style=flat&logo=facebook)](https://fb.com/sumit.luv)
-[![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=flat&logo=youtube)](https://youtube.com/lazycoders)
