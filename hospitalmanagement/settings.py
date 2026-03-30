@@ -11,23 +11,21 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from pathlib import Path
+from decouple import config, Csv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_DIR=os.path.join(BASE_DIR,'static')
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR = BASE_DIR / 'templates'
+STATIC_DIR = BASE_DIR / 'static'
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+# Security Settings - Su dung environment variables
+SECRET_KEY = config('SECRET_KEY', default='hpbv()ep00boce&o0w7z1h)st148(*m@6@-rk$nn)(n9ojj4c0')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hpbv()ep00boce&o0w7z1h)st148(*m@6@-rk$nn)(n9ojj4c0'
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 
 # Application definition
@@ -39,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-        'hospital',
-        'widget_tweaks',
+    'hospital',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +78,7 @@ WSGI_APPLICATION = 'hospitalmanagement.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -107,9 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'vi'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 
@@ -123,24 +121,26 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS=[STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR,]
 
-MEDIA_ROOT=os.path.join(BASE_DIR,'static')
+MEDIA_ROOT = STATIC_DIR
 
 
+# Login URLs
+LOGIN_REDIRECT_URL = '/afterlogin'
+LOGIN_URL = '/'
 
-LOGIN_REDIRECT_URL='/afterlogin'
+# Email Configuration - Su dung environment variables
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_RECEIVING_USER = config('EMAIL_RECEIVING_USER', default='', cast=Csv())
 
-#for contact us give your gmail id and password
-EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'from@gmail.com' # this email will be used to send emails
-EMAIL_HOST_PASSWORD = 'xyz' # host email password required
-# now sign in with your host gmail account in your browser
-# open following link and turn it ON
-# https://myaccount.google.com/lesssecureapps
-# otherwise you will get SMTPAuthenticationError at /contactus
-# this process is required because google blocks apps authentication by default
-EMAIL_RECEIVING_USER = ['to@gmail.com'] # email on which you will receive messages sent from website
+
+# Security Headers (Them vao de tang bao mat)
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True

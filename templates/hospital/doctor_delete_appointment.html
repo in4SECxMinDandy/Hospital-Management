@@ -2,26 +2,7 @@
 {% block content %}
 {%load static%}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
+  <!--
 written By : sumit kumar
 facebook : fb.com/sumit.luv
 -->
@@ -42,7 +23,13 @@ facebook : fb.com/sumit.luv
       {% for a,p in appointments %}
       <tr>
         <td>{{a.patientName}}</td>
-        <td> <img src="{% static p.profile_pic.url %}" alt="Ảnh đại diện" height="40px" width="40px" /></td>
+        <td>
+          {% if p.profile_pic %}
+          <img src="{{ p.profile_pic.url }}" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
+          {% else %}
+          <img src="https://ui-avatars.com/api/?name={{ a.patientName|urlencode }}&background=94a3b8&color=fff" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
+          {% endif %}
+        </td>
         <td>{{a.description}}</td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'delete-appointment' a.id  %}"><span
               class="glyphicon glyphicon-trash"></span></a></td>

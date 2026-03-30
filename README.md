@@ -51,31 +51,31 @@ A comprehensive **Hospital Management System** built with Django 3.0.5, Bootstra
 
 ### Role-Based Access Comparison| So sánh quyền truy cập theo vai trò
 
-| Feature / Tính năng            | Admin             | Doctor           | Patient          |
-| -------------------------------- | :---------------: | :--------------: | :--------------: |
-| **Dashboard**                   | ✅                | ✅               | ✅               |
-| **Login/Logout**                | ✅                | ✅               | ✅               |
-| **Register (Signup)**           | ✅ (Auto-approved)| ✅ (Need approval)| ✅ (Need approval)|
-| **View All Doctors**            | ✅                | ✅               | ✅               |
-| **Add Doctor**                  | ✅                | ❌               | ❌               |
-| **Update Doctor**               | ✅                | ❌               | ❌               |
-| **Delete Doctor**               | ✅                | ❌               | ❌               |
-| **Approve Doctor**              | ✅                | ❌               | ❌               |
-| **View All Patients**           | ✅                | ✅ (Assigned only)| ❌               |
-| **Add Patient**                 | ✅                | ❌               | ❌               |
-| **Update Patient**              | ✅                | ❌               | ❌               |
-| **Delete Patient**              | ✅                | ❌               | ❌               |
-| **Approve Patient**             | ✅                | ❌               | ❌               |
-| **Discharge Patient**           | ✅                | ❌               | ❌               |
-| **Generate PDF Bill**           | ✅                | ❌               | ❌               |
-| **Download PDF Bill**           | ✅                | ❌               | ✅ (Own only)    |
-| **View Appointments**           | ✅ All            | ✅ Own           | ✅ Own           |
-| **Book Appointment**            | ✅                | ❌               | ✅               |
-| **Approve Appointment**         | ✅                | ❌               | ❌               |
-| **Delete Appointment**          | ❌                | ✅ (Own)         | ❌               |
-| **Search**                      | ❌                | ✅               | ✅               |
-| **View Department**             | ✅                | ✅               | ✅               |
-| **Contact Us**                  | ✅                | ✅               | ✅               |
+|Feature / Tính năng|Admin|Doctor|Patient|
+|---|---|---|---|
+|**Dashboard**|✅|✅|✅|
+|**Login/Logout**|✅|✅|✅|
+|**Register (Signup)**|✅ (Auto-approved)|✅ (Need approval)|✅ (Need approval)|
+|**View All Doctors**|✅|✅|✅|
+|**Add Doctor**|✅|❌|❌|
+|**Update Doctor**|✅|❌|❌|
+|**Delete Doctor**|✅|❌|❌|
+|**Approve Doctor**|✅|❌|❌|
+|**View All Patients**|✅|✅ (Assigned only)|❌|
+|**Add Patient**|✅|❌|❌|
+|**Update Patient**|✅|❌|❌|
+|**Delete Patient**|✅|❌|❌|
+|**Approve Patient**|✅|❌|❌|
+|**Discharge Patient**|✅|❌|❌|
+|**Generate PDF Bill**|✅|❌|❌|
+|**Download PDF Bill**|✅|❌|✅ (Own only)|
+|**View Appointments**|✅ All|✅ Own|✅ Own|
+|**Book Appointment**|✅|❌|✅|
+|**Approve Appointment**|✅|❌|❌|
+|**Delete Appointment**|❌|✅ (Own)|❌|
+|**Search**|❌|✅|✅|
+|**View Department**|✅|✅|✅|
+|**Contact Us**|✅|✅|✅|
 
 ### Detailed Features by Role| Chi tiết tính năng theo vai trò
 
@@ -149,17 +149,17 @@ A comprehensive **Hospital Management System** built with Django 3.0.5, Bootstra
 
 > 📌 **Note**: Screenshots coming soon. This is a placeholder section.
 
-| Landing Page                                                                     | Admin Dashboard                                                                        |
-| ----------------------------------------------------------------------------------| ----------------------------------------------------------------------------------------|
-| ![Landing Page](https://placehold.co/600x400/2563EB/white?text=Landing+Page)      | ![Admin Dashboard](https://placehold.co/600x400/10B981/white?text=Admin+Dashboard)      |
+|Landing Page|Admin Dashboard|
+|---|---|
+|![Landing Page](https://placehold.co/600x400/2563EB/white?text=Landing+Page)|![Admin Dashboard](https://placehold.co/600x400/10B981/white?text=Admin+Dashboard)|
 
-| Doctor Dashboard                                                                       | Patient Dashboard                                                                        |
-| ----------------------------------------------------------------------------------------| ------------------------------------------------------------------------------------------|
-| ![Doctor Dashboard](https://placehold.co/600x400/F59E0B/white?text=Doctor+Dashboard)    | ![Patient Dashboard](https://placehold.co/600x400/EF4444/white?text=Patient+Dashboard)    |
+|Doctor Dashboard|Patient Dashboard|
+|---|---|
+|![Doctor Dashboard](https://placehold.co/600x400/F59E0B/white?text=Doctor+Dashboard)|![Patient Dashboard](https://placehold.co/600x400/EF4444/white?text=Patient+Dashboard)|
 
-| PDF Bill Sample                                                                   |
-| -----------------------------------------------------------------------------------|
-| ![PDF Bill Sample](https://placehold.co/600x800/0F172A/white?text=PDF+Bill+Sample) |
+|PDF Bill Sample|
+|---|
+|![PDF Bill Sample](https://placehold.co/600x800/0F172A/white?text=PDF+Bill+Sample)|
 
 ---
 
@@ -262,6 +262,7 @@ hospital-management/
 │       ├── doctor.png
 │       └── patient.jpg
 │
+├── .env.example                   # Environment variables template
 ├── .gitignore                     # Git ignore rules
 ├── LICENSE                        # MIT License
 ├── manage.py                      # Django management script
@@ -274,18 +275,18 @@ hospital-management/
 
 ## 🛠️ Tech Stack| Công nghệ sử dụng
 
-| Technology                | Version | Purpose                        |
-| -------------------------- | -------- | --------------------------------|
-| **Django**                | 3.0.5  | Full-stack Python web framework|
-| **Python**                | 3.7+   | Server-side programming language|
-| **Bootstrap**             | 5.3.0  | Responsive CSS framework       |
-| **Font Awesome**          | 6.4.0  | Icon library                   |
-| **Inter**                 | Latest | Google Fonts typography        |
-| **xhtml2pdf**             | Latest | PDF generation library         |
-| **django-widget-tweaks**  | 1.4.8  | Django form rendering          |
-| **sqlparse**              | 0.3.1  | SQL parsing utilities         |
-| **SQLite**                | Built-in| Default database (development) |
-| **CSS Custom Properties** | Modern | Design system tokens          |
+|Technology|Version|Purpose|
+|---|---|---|
+|**Django**|3.0.5|Full-stack Python web framework|
+|**Python**|3.7+|Server-side programming language|
+|**Bootstrap**|5.3.0|Responsive CSS framework|
+|**Font Awesome**|6.4.0|Icon library|
+|**Inter**|Latest|Google Fonts typography|
+|**xhtml2pdf**|Latest|PDF generation library|
+|**django-widget-tweaks**|1.4.8|Django form rendering|
+|**sqlparse**|0.3.1|SQL parsing utilities|
+|**SQLite**|Built-in|Default database (development)|
+|**CSS Custom Properties**|Modern|Design system tokens|
 
 ---
 
@@ -492,14 +493,14 @@ DEFAULT_FROM_EMAIL = 'Hospital Management <your-email@gmail.com>'
 
 ### Permission Summary| Tóm tắt quyền
 
-| Action             | Admin | Doctor | Patient |
-| ------------------ | :---: | :-----: | :------: |
-| View all data      | ✅  | Limited| Limited |
-| Create data        | ✅  | ❌     | Own only|
-| Update data        | ✅  | ❌     | ❌      |
-| Delete data        | ✅  | Own only| ❌     |
-| Approve requests   | ✅  | ❌     | ❌      |
-| Generate bills     | ✅  | ❌     | ❌      |
+|Action|Admin|Doctor|Patient|
+|---|:---:|:-------:|:------:|
+|View all data|✅|Limited|Limited|
+|Create data|✅|❌|Own only|
+|Update data|✅|❌|❌|
+|Delete data|✅|Own only|❌|
+|Approve requests|✅|❌|❌|
+|Generate bills|✅|❌|❌|
 
 ---
 
@@ -580,62 +581,62 @@ erDiagram
 
 #### Doctor Model
 
-| Field        | Type         | Constraints             | Description            |
-| ------------ | ------------ | ---------------------- | ---------------------- |
-| `id`         | AutoField    | Primary Key             | Unique identifier      |
-| `user`       | OneToOneField| Foreign Key → User      | Link to Django User    |
-| `profile_pic`| ImageField   | Optional, null=True     | Doctor's profile picture|
-| `address`    | CharField    | max_length=40           | Contact address        |
-| `mobile`     | CharField    | max_length=20, Optional | Phone number           |
-| `department` | CharField    | max_length=50, Choices  | Medical department     |
-| `status`     | BooleanField | default=False           | Approval status        |
+|Field|Type|Constraints|Description|
+|---|---|---|---|
+|`id`|AutoField|Primary Key|Unique identifier|
+|`user`|OneToOneField|Foreign Key → User|Link to Django User|
+|`profile_pic`|ImageField|Optional, null=True|Doctor's profile picture|
+|`address`|CharField|max_length=40|Contact address|
+|`mobile`|CharField|max_length=20, Optional|Phone number|
+|`department`|CharField|max_length=50, Choices|Medical department|
+|`status`|BooleanField|default=False|Approval status|
 
 #### Patient Model
 
-| Field            | Type                | Constraints             | Description             |
-| ---------------- | ------------------- | ---------------------- | ----------------------- |
-| `id`             | AutoField           | Primary Key             | Unique identifier       |
-| `user`           | OneToOneField       | Foreign Key → User      | Link to Django User     |
-| `profile_pic`    | ImageField          | Optional, null=True     | Patient's profile picture|
-| `address`        | CharField           | max_length=40           | Contact address         |
-| `mobile`         | CharField           | max_length=20, Required | Phone number            |
-| `symptoms`       | CharField           | max_length=100, Required| Medical symptoms        |
-| `assignedDoctorId`| PositiveIntegerField| Optional, null=True     | FK to Doctor's user_id  |
-| `admitDate`      | DateField           | auto_now=True           | Admission date          |
-| `status`         | BooleanField        | default=False           | Approval status         |
+|Field|Type|Constraints|Description|
+|---|---|---|---|
+|`id`|AutoField|Primary Key|Unique identifier|
+|`user`|OneToOneField|Foreign Key → User|Link to Django User|
+|`profile_pic`|ImageField|Optional, null=True|Patient's profile picture|
+|`address`|CharField|max_length=40|Contact address|
+|`mobile`|CharField|max_length=20, Required|Phone number|
+|`symptoms`|CharField|max_length=100, Required|Medical symptoms|
+|`assignedDoctorId`|PositiveIntegerField|Optional, null=True|FK to Doctor's user_id|
+|`admitDate`|DateField|auto_now=True|Admission date|
+|`status`|BooleanField|default=False|Approval status|
 
 #### Appointment Model
 
-| Field           | Type                | Constraints            | Description        |
-| --------------- | ------------------- | --------------------- | ------------------ |
-| `id`            | AutoField           | Primary Key            | Unique identifier  |
-| `patientId`     | PositiveIntegerField| Optional, null=True    | FK to Patient's user_id|
-| `doctorId`      | PositiveIntegerField| Optional, null=True    | FK to Doctor's user_id|
-| `patientName`   | CharField           | max_length=40          | Patient's full name|
-| `doctorName`    | CharField           | max_length=40          | Doctor's full name |
-| `appointmentDate`| DateField           | auto_now=True          | Appointment date   |
-| `description`   | TextField           | max_length=500         | Appointment notes  |
-| `status`        | BooleanField        | default=False          | Approval status    |
+|Field|Type|Constraints|Description|
+|---|---|---|---|
+|`id`|AutoField|Primary Key|Unique identifier|
+|`patientId`|PositiveIntegerField|Optional, null=True|FK to Patient's user_id|
+|`doctorId`|PositiveIntegerField|Optional, null=True|FK to Doctor's user_id|
+|`patientName`|CharField|max_length=40|Patient's full name|
+|`doctorName`|CharField|max_length=40|Doctor's full name|
+|`appointmentDate`|DateField|auto_now=True|Appointment date|
+|`description`|TextField|max_length=500|Appointment notes|
+|`status`|BooleanField|default=False|Approval status|
 
 #### PatientDischargeDetails Model
 
-| Field                | Type                | Constraints | Description           |
-| -------------------- | ------------------- | ----------- | --------------------- |
-| `id`                 | AutoField           | Primary Key | Unique identifier     |
-| `patientId`          | PositiveIntegerField| Required    | FK to Patient         |
-| `patientName`        | CharField           | max_length=40| Patient name        |
-| `assignedDoctorName` | CharField           | max_length=40| Doctor name         |
-| `address`            | CharField           | max_length=40| Contact address     |
-| `mobile`             | CharField           | max_length=20| Phone number        |
-| `symptoms`           | CharField           | max_length=100| Initial symptoms   |
-| `admitDate`          | DateField           | Required    | Admission date        |
-| `releaseDate`        | DateField           | Required    | Discharge date        |
-| `daySpent`           | PositiveIntegerField| Required    | Days hospitalized     |
-| `roomCharge`         | PositiveIntegerField| Required    | Room cost (per day)   |
-| `medicineCost`       | PositiveIntegerField| Required    | Medicine expenses     |
-| `doctorFee`          | PositiveIntegerField| Required    | Doctor consultation fee|
-| `OtherCharge`        | PositiveIntegerField| Required    | Miscellaneous charges |
-| `total`              | PositiveIntegerField| Required    | Total bill amount     |
+|Field|Type|Constraints|Description|
+|---|---|---|---|
+|`id`|AutoField|Primary Key|Unique identifier|
+|`patientId`|PositiveIntegerField|Required|FK to Patient|
+|`patientName`|CharField|max_length=40|Patient name|
+|`assignedDoctorName`|CharField|max_length=40|Doctor name|
+|`address`|CharField|max_length=40|Contact address|
+|`mobile`|CharField|max_length=20|Phone number|
+|`symptoms`|CharField|max_length=100|Initial symptoms|
+|`admitDate`|DateField|Required|Admission date|
+|`releaseDate`|DateField|Required|Discharge date|
+|`daySpent`|PositiveIntegerField|Required|Days hospitalized|
+|`roomCharge`|PositiveIntegerField|Required|Room cost (per day)|
+|`medicineCost`|PositiveIntegerField|Required|Medicine expenses|
+|`doctorFee`|PositiveIntegerField|Required|Doctor consultation fee|
+|`OtherCharge`|PositiveIntegerField|Required|Miscellaneous charges|
+|`total`|PositiveIntegerField|Required|Total bill amount|
 
 ---
 
@@ -729,14 +730,14 @@ erDiagram
 
 ### Layout Components| Các thành phần giao diện
 
-| Component          | Value          | Description            |
-| ------------------ | -------------- | ---------------------- |
-| Sidebar Width      | 260px          | Fixed left sidebar on desktop|
-| Topbar Height      | 64px           | Fixed header navigation|
-| Card Border Radius | 12px           | Rounded corners        |
-| Button Border Radius| 8px            | Rounded buttons        |
-| Box Shadow (md)    | 0 4px 6px -1px | Medium shadow effect   |
-| Transition         | 0.3s ease-in-out| Smooth animations      |
+|Component|Value|Description|
+|---|---|---|
+|Sidebar Width|260px|Fixed left sidebar on desktop|
+|Topbar Height|64px|Fixed header navigation|
+|Card Border Radius|12px|Rounded corners|
+|Button Border Radius|8px|Rounded buttons|
+|Box Shadow (md)|0 4px 6px -1px|Medium shadow effect|
+|Transition|0.3s ease-in-out|Smooth animations|
 
 ---
 
@@ -744,14 +745,14 @@ erDiagram
 
 The system currently supports **6 medical departments**:
 
-| # | Department                        | Tiếng Việt                      |
-| - | --------------------------------- | ---------------------------------|
-| 1 | Cardiologist                      | Bác sĩ Tim mạch                 |
-| 2 | Dermatologists                    | Bác sĩ Da liễu                  |
-| 3 | Emergency Medicine Specialists    | Bác sĩ Cấp cứu                  |
-| 4 | Allergists/Immunologists          | Bác sĩ Dị ứng/Huyết học         |
-| 5 | Anesthesiologists                 | Bác sĩ Gây mê                   |
-| 6 | Colon and Rectal Surgeons         | Bác sĩ Phẫu thuật Ruột          |
+|#|Department|Tiếng Việt|
+|---|---|---|
+|1|Cardiologist|Bác sĩ Tim mạch|
+|2|Dermatologists|Bác sĩ Da liễu|
+|3|Emergency Medicine Specialists|Bác sĩ Cấp cứu|
+|4|Allergists/Immunologists|Bác sĩ Dị ứng/Huyết học|
+|5|Anesthesiologists|Bác sĩ Gây mê|
+|6|Colon and Rectal Surgeons|Bác sĩ Phẫu thuật Ruột|
 
 ### Adding New Departments| Thêm chuyên khoa mới
 
@@ -859,12 +860,12 @@ python manage.py check --deploy
 
 ### Recommended Platforms| Nền tảng được đề xuất
 
-| Platform          | Free Tier            | Easy Deploy | Notes                |
-| ----------------- | -------------------- | ----------- | -------------------- |
-| **Railway**       | ✅ $5/month          | Medium      | PostgreSQL included  |
-| **Render**        | ✅ Free              | Easy        | Python support       |
-| **Heroku**        | ✅ Free (30s sleep)  | Easy        | Add-on required      |
-| **PythonAnywhere**| ✅ Free              | Easy        | Built-in Python      |
+|Platform|Free Tier|Easy Deploy|Notes|
+|---|---|---|---|
+|**Railway**|✅ $5/month|Medium|PostgreSQL included|
+|**Render**|✅ Free|Easy|Python support|
+|**Heroku**|✅ Free (30s sleep)|Easy|Add-on required|
+|**PythonAnywhere**|✅ Free|Easy|Built-in Python|
 
 ### Example: Deploy to Railway
 
@@ -974,31 +975,18 @@ SOFTWARE.
 
 ---
 
-<<<<<<< HEAD
-### Open Source Libraries | Thư viện mã nguồn mở
-
-| Library | Purpose | License |
-|---------|---------|---------|
-| Django | Web framework | BSD-3-Clause |
-| Bootstrap | CSS framework | MIT |
-| Font Awesome | Icons | CC BY 4.0 |
-| Inter | Typography | OFL |
-| xhtml2pdf | PDF generation | Apache-2.0 |
-| django-widget-tweaks | Form rendering | MIT |
-=======
 ## 🙏 Acknowledgements| Lời cảm ơn
 
 ### Open Source Libraries| Thư viện mã nguồn mở
 
-| Library                | Purpose       | License    |
-| ---------------------- | ------------- | ---------- |
-| Django                 | Web framework | BSD-3-Clause|
-| Bootstrap              | CSS framework | MIT        |
-| Font Awesome           | Icons         | CC BY 4.0  |
-| Inter                  | Typography    | OFL        |
-| xhtml2pdf              | PDF generation| Apache-2.0 |
-| django-widget-tweaks   | Form rendering| MIT        |
->>>>>>> 27a71d7 (Update project files and templates)
+|Library|Purpose|License|
+|---|---|---|
+|Django|Web framework|BSD-3-Clause|
+|Bootstrap|CSS framework|MIT|
+|Font Awesome|Icons|CC BY 4.0|
+|Inter|Typography|OFL|
+|xhtml2pdf|PDF generation|Apache-2.0|
+|django-widget-tweaks|Form rendering|MIT|
 
 ---
 
@@ -1029,11 +1017,7 @@ Join our community discussions at [GitHub Discussions](https://github.com/exampl
 
 ---
 
-<<<<<<< HEAD
 **English** | [**Tiếng Việt**](#tiếng-việt)
-=======
-**English**| [**Tiếng Việt**](#tiếng-việt)
->>>>>>> 27a71d7 (Update project files and templates)
 
 ---
 
@@ -1041,13 +1025,13 @@ Join our community discussions at [GitHub Discussions](https://github.com/exampl
 
 ### ✨ Tính năng| Features
 
-[Xem phần English ở trên](#-features)
+[Xem phần English ở trên](#-features-tính-năng)
 
 ---
 
 ### 🗄️ Sơ đồ Cơ sở Dữ liệu| Database Schema
 
-[Xem phần English ở trên](#-database-schema)
+[Xem phần English ở trên](#️-database-schema-sơ-đồ-cơ-sở-dữ-liệu)
 
 ---
 
@@ -1118,31 +1102,31 @@ Mở trình duyệt tại: `http://127.0.0.1:8000/`
 
 ### 🎨 Hệ thống Thiết kế| UI/UX Design System
 
-[Xem phần English ở trên](#-uiux-design-system)
+[Xem phần English ở trên](#-uiux-design-system-hệ-thống-thiết-kế)
 
 ---
 
 ### 📋 Các Chuyên khoa| Available Departments
 
-[Xem phần English ở trên](#-available-departments)
+[Xem phần English ở trên](#-available-departments-các-chuyên-khoa)
 
 ---
 
 ### ⚠️ Hạn chế Đã biết| Known Limitations
 
-[Xem phần English ở trên](#-known-limitations)
+[Xem phần English ở trên](#️-known-limitations-hạn-chế-đã-biết)
 
 ---
 
 ### 🚀 Triển khai| Deployment
 
-[Xem phần English ở trên](#-deployment)
+[Xem phần English ở trên](#-deployment-triển-khai)
 
 ---
 
 ### 🤝 Đóng góp| Contributing
 
-[Xem phần English ở trên](#-contributing)
+[Xem phần English ở trên](#-contributing-đóng-góp)
 
 ---
 
@@ -1154,12 +1138,12 @@ Mở trình duyệt tại: `http://127.0.0.1:8000/`
 
 ### 🙏 Lời cảm ơn| Acknowledgements
 
-[Xem phần English ở trên](#-acknowledgements)
+[Xem phần English ở trên](#-acknowledgements-lời-cảm-ơn)
 
 ---
 
 ### 📞 Liên hệ| Contact
 
-[Xem phần English ở trên](#-contact--support)
+[Xem phần English ở trên](#-contact--support-liên-hệ-và-hỗ-trợ)
 
 ---

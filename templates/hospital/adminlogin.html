@@ -1,103 +1,605 @@
 <!DOCTYPE html>
 {% load widget_tweaks %}
-<html lang="en" dir="ltr">
-
+<html lang="vi" dir="ltr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý Bệnh viện</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Clinic Dashboard</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563EB'><path d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z'/></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static '/style.css' %}">
 
-  <style type="text/css">
+  <style>
+    :root {
+      --primary-50: #EFF6FF;
+      --primary-600: #2563EB;
+      --primary-700: #1D4ED8;
+      --primary-800: #1E40AF;
+      --primary-900: #1E3A8A;
+      --slate-50: #F8FAFC;
+      --slate-100: #F1F5F9;
+      --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-400: #94A3B8;
+      --slate-500: #64748B;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1E293B;
+      --slate-900: #0F172A;
+      --success-500: #10B981;
+      --success-600: #059669;
+      --success-50: #ECFDF5;
+      --danger-500: #EF4444;
+      --danger-600: #DC2626;
+      --danger-50: #FEF2F2;
+      --warning-50: #FFFBEB;
+      --warning-500: #F59E0B;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-2xl: 24px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      --transition-fast: 150ms ease-in-out;
+      --transition-base: 200ms ease-in-out;
+      --transition-slow: 300ms ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      color: #aa082e;
-      background-color: #b6bde7;
-      font-family: 'Roboto', sans-serif;
+      font-family: var(--font-family);
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--slate-900) 0%, var(--primary-900) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
 
-    a:link {
-      text-decoration: none;
+    .auth-container {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: white;
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-2xl);
+      overflow: hidden;
     }
 
-    .note {
-      text-align: center;
-      height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
-      color: #fff;
-      font-weight: bold;
-      line-height: 80px;
+    @media (max-width: 768px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+      }
+      .auth-visual {
+        display: none;
+      }
     }
 
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
+    .auth-visual {
+      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: pulse 15s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .auth-visual-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-visual-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
+
+    .auth-visual h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .auth-visual p {
+      font-size: 1.125rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .auth-visual-features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .auth-visual-feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .auth-visual-feature i {
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .auth-form-section {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-header {
+      margin-bottom: 32px;
+    }
+
+    .auth-header-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-50);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--primary-600);
+      margin-bottom: 16px;
+    }
+
+    .auth-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      font-size: 0.875rem;
+      color: var(--slate-500);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-700);
+      margin-bottom: 8px;
     }
 
     .form-control {
-      border-radius: 1.5rem;
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: var(--slate-900);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-fast);
     }
 
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-600);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      background: white;
+    }
+
+    .form-control::placeholder {
+      color: var(--slate-400);
+    }
+
+    .form-remember {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--slate-600);
       cursor: pointer;
-      background: #0062cc;
-      color: #fff;
+    }
+
+    .form-check input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-600);
+    }
+
+    .forgot-link {
+      font-size: 0.875rem;
+      color: var(--primary-600);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-link:hover {
+      color: var(--primary-700);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: inherit;
+      border-radius: var(--radius-lg);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--primary-600);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-700);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--slate-200);
+      font-size: 0.875rem;
+      color: var(--slate-500);
+    }
+
+    .auth-footer a {
+      color: var(--primary-600);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .auth-footer a:hover {
+      color: var(--primary-700);
+    }
+
+    .role-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .role-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 12px;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .role-card:hover {
+      border-color: var(--primary-300);
+      background: var(--primary-50);
+    }
+
+    .role-card.active {
+      border-color: var(--primary-600);
+      background: var(--primary-50);
+    }
+
+    .role-card i {
+      font-size: 24px;
+      color: var(--slate-500);
+    }
+
+    .role-card:hover i,
+    .role-card.active i {
+      color: var(--primary-600);
+    }
+
+    .role-card span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--slate-600);
+    }
+
+    .role-card:hover span,
+    .role-card.active span {
+      color: var(--primary-700);
+    }
+
+    /* Role Selection Tabs */
+    .role-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 4px;
+      background: var(--slate-100);
+      border-radius: var(--radius-lg);
+    }
+
+    .role-tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-500);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .role-tab:hover {
+      color: var(--slate-700);
+    }
+
+    .role-tab.active {
+      background: white;
+      color: var(--primary-600);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .role-tab i {
+      font-size: 16px;
+    }
+
+    /* Alert styles */
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .alert-danger {
+      background: var(--danger-50);
+      border: 1px solid #FECACA;
+      color: var(--danger-600);
+    }
+
+    .alert i {
+      font-size: 18px;
+    }
+
+    /* Loading button state */
+    .btn.loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid white;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
-
 <body>
-  {% include "hospital/navbar.html" %}
-  <br>
-  <br>
-  <br><br>
-
-  <!--- login page for admin by admin(sumit)  ---------->
-  <form method="post">
-    {% csrf_token %}
-    <div class="container register-form">
-      <div class="form">
-        <div class="note">
-          <p>Trang đăng nhập Quản trị viên</p>
+  <div class="auth-container">
+    <!-- Visual Side -->
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <div class="auth-visual-icon">
+          <i class="fas fa-hospital"></i>
         </div>
-
-        <div class="form-content">
-          <div class="row">
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.username class="form-control" placeholder="Tên đăng nhập" %}
-              </div>
-
-            </div>
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.password class="form-control" placeholder="Mật khẩu" %}
-              </div>
-
-            </div>
+        <h1>Hệ thống Quản lý Bệnh viện</h1>
+        <p>Nền tảng quản lý y tế hiện đại, giúp quản lý bệnh viện một cách hiệu quả và chuyên nghiệp.</p>
+        
+        <div class="auth-visual-features">
+          <div class="auth-visual-feature">
+            <i class="fas fa-check"></i>
+            <span>Quản lý bác sĩ và bệnh nhân</span>
           </div>
-          <button type="submit" class="btnSubmit">Đăng nhập</button>
-          <div class="text-center">Chưa có tài khoản? <a href="adminsignup">Đăng ký tại đây</a></div>
+          <div class="auth-visual-feature">
+            <i class="fas fa-check"></i>
+            <span>Đặt lịch hẹn trực tuyến</span>
+          </div>
+          <div class="auth-visual-feature">
+            <i class="fas fa-check"></i>
+            <span>Theo dõi và xuất hóa đơn</span>
+          </div>
+          <div class="auth-visual-feature">
+            <i class="fas fa-check"></i>
+            <span>Báo cáo thống kê chi tiết</span>
+          </div>
         </div>
       </div>
     </div>
 
-  </form>
+    <!-- Form Side -->
+    <div class="auth-form-section">
+      <div class="auth-header">
+        <div class="auth-header-icon">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h2 class="auth-title">Chào mừng trở lại</h2>
+        <p class="auth-subtitle">Đăng nhập để truy cập vào tài khoản của bạn</p>
+      </div>
 
-  <br><br><br>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/AT05s
-  -->
+      <!-- Role Selection -->
+      <div class="role-tabs">
+        <button class="role-tab active" data-role="admin">
+          <i class="fas fa-user-shield"></i>
+          Quản trị
+        </button>
+        <button class="role-tab" data-role="doctor">
+          <i class="fas fa-user-md"></i>
+          Bác sĩ
+        </button>
+        <button class="role-tab" data-role="patient">
+          <i class="fas fa-user"></i>
+          Bệnh nhân
+        </button>
+      </div>
 
-  {% include "hospital/footer.html" %}
+      <!-- Error Messages -->
+      {% if form.errors %}
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Tên đăng nhập hoặc mật khẩu không đúng. Vui lòng thử lại.</span>
+      </div>
+      {% endif %}
+
+      <!-- Login Form -->
+      <form method="post" id="loginForm">
+        {% csrf_token %}
+        <input type="hidden" name="role" id="selectedRole" value="admin">
+        
+        <div class="form-group">
+          <label class="form-label" for="id_username">Tên đăng nhập</label>
+          <input type="text" class="form-control" id="id_username" name="username" placeholder="Nhập tên đăng nhập" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_password">Mật khẩu</label>
+          <input type="password" class="form-control" id="id_password" name="password" placeholder="Nhập mật khẩu" required>
+        </div>
+
+        <div class="form-remember">
+          <label class="form-check">
+            <input type="checkbox" name="remember">
+            <span>Ghi nhớ đăng nhập</span>
+          </label>
+          <a href="#" class="forgot-link">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <i class="fas fa-sign-in-alt"></i>
+          Đăng nhập
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Chưa có tài khoản? 
+        <a href="/adminsignup">Đăng ký Quản trị viên</a> | 
+        <a href="/doctorsignup">Đăng ký Bác sĩ</a> | 
+        <a href="/patientsignup">Đăng ký Bệnh nhân</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const roleTabs = document.querySelectorAll('.role-tab');
+      const selectedRole = document.getElementById('selectedRole');
+      const loginForm = document.getElementById('loginForm');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // Role tab switching
+      roleTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          roleTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          const role = this.dataset.role;
+          selectedRole.value = role;
+          
+          // Update form action based on role
+          loginForm.action = `/${role}login`;
+        });
+      });
+
+      // Form submission with loading state
+      loginForm.addEventListener('submit', function() {
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+      });
+    });
+  </script>
 </body>
-
 </html>

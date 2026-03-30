@@ -1,78 +1,294 @@
 {% extends 'hospital/admin_base.html' %}
 {% load static %}
+{% block title %}Bảng điều khiển - Clinic Dashboard{% endblock %}
 {% block content %}
-{%include 'hospital/admin_dashboard_cards.html'%}
-<br><br><br><br>
-<div class="container">
-  <div class="row">
-    <div class="panel panel-primary col-md-5" style="margin-left:2%;">
-      <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Bác sĩ gần đây</h6>
+
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Bảng điều khiển</h1>
+    <p class="page-subtitle">Xem tổng quan về hoạt động của bệnh viện</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-add-doctor" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Thêm Bác sĩ
+    </a>
+  </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+  <!-- Total Doctors -->
+  <div class="stat-card primary stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-stethoscope"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ doctorcount }}</div>
+      <div class="stat-label">Tổng Bác sĩ</div>
+      <span class="stat-change negative">
+        <i class="fas fa-clock"></i>
+        {{ pendingdoctorcount }} chờ duyệt
+      </span>
+    </div>
+  </div>
+
+  <!-- Total Patients -->
+  <div class="stat-card success stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-users"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ patientcount }}</div>
+      <div class="stat-label">Tổng Bệnh nhân</div>
+      <span class="stat-change negative">
+        <i class="fas fa-clock"></i>
+        {{ pendingpatientcount }} chờ duyệt
+      </span>
+    </div>
+  </div>
+
+  <!-- Total Appointments -->
+  <div class="stat-card warning stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-calendar-check"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ appointmentcount }}</div>
+      <div class="stat-label">Lịch hẹn đã duyệt</div>
+      <span class="stat-change negative">
+        <i class="fas fa-clock"></i>
+        {{ pendingappointmentcount }} chờ duyệt
+      </span>
+    </div>
+  </div>
+
+  <!-- System Status -->
+  <div class="stat-card info stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-heartbeat"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">
+        <span class="status-dot online">Hoạt động</span>
       </div>
-      <table class="table table-hover" id="dev-table">
+      <div class="stat-label">Trạng thái hệ thống</div>
+      <span class="stat-change positive">
+        <i class="fas fa-check-circle"></i>
+        Tất cả bình thường
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Content Grid -->
+<div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+  <!-- Recent Doctors -->
+  <div class="card animate-fadeInUp" style="animation-delay: 0.2s;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title">Bác sĩ gần đây</h3>
+        <p class="card-subtitle">Danh sách bác sĩ mới nhất</p>
+      </div>
+      <a href="/admin-view-doctor" class="btn btn-sm btn-outline">
+        <i class="fas fa-arrow-right"></i>
+        Xem tất cả
+      </a>
+    </div>
+    <div class="table-container" style="border-radius: 0;">
+      <table class="data-table">
         <thead>
           <tr>
-            <th>Tên</th>
+            <th>Bác sĩ</th>
             <th>Khoa</th>
-            <th>Điện thoại</th>
+            <th>Liên hệ</th>
             <th>Trạng thái</th>
-
           </tr>
         </thead>
-        {% for d in doctors %}
-        <tr>
-          <td> {{d.get_name}}</td>
-          <td>{{d.department}}</td>
-          <td>{{d.mobile}}</td>
-          {%if d.status%}
-          <td> <span class="label label-primary">Chính thức</span></td>
-          {% else %}
-          <td> <span class="label label-success">Chờ duyệt</span></td>
-          {% endif %}
-
-        </tr>
-        {% endfor %}
+        <tbody>
+          {% for d in doctors %}
+          <tr>
+            <td>
+              <div class="cell-user">
+                <div class="cell-user-avatar">
+                  {% if d.profile_pic %}
+                  <img src="{{ d.profile_pic.url }}" alt="{{ d.get_name }}">
+                  {% else %}
+                  {{ d.get_name|slice:":1" }}
+                  {% endif %}
+                </div>
+                <div class="cell-user-info">
+                  <span class="cell-user-name">{{ d.get_name }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-primary">{{ d.department }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ d.mobile }}</span>
+            </td>
+            <td>
+              {% if d.status %}
+              <span class="badge badge-success">Hoạt động</span>
+              {% else %}
+              <span class="badge badge-warning">Chờ duyệt</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center" style="padding: 40px;">
+              <div class="empty-state-icon" style="width: 48px; height: 48px; font-size: 20px; margin-bottom: 8px;">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <p style="margin: 0; color: var(--text-secondary);">Chưa có bác sĩ nào</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
+  </div>
 
-    <div class="panel panel-primary col-md-5" style="margin-left:5%;">
-      <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Bệnh nhân gần đây</h6>
+  <!-- Recent Patients -->
+  <div class="card animate-fadeInUp" style="animation-delay: 0.3s;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title">Bệnh nhân gần đây</h3>
+        <p class="card-subtitle">Danh sách bệnh nhân mới nhất</p>
       </div>
-      <table class="table table-hover" id="dev-table">
+      <a href="/admin-view-patient" class="btn btn-sm btn-outline">
+        <i class="fas fa-arrow-right"></i>
+        Xem tất cả
+      </a>
+    </div>
+    <div class="table-container" style="border-radius: 0;">
+      <table class="data-table">
         <thead>
           <tr>
-            <th>Tên</th>
+            <th>Bệnh nhân</th>
             <th>Triệu chứng</th>
-            <th>Điện thoại</th>
-            <th>Địa chỉ</th>
+            <th>Liên hệ</th>
             <th>Trạng thái</th>
-
           </tr>
         </thead>
-        {% for p in patients %}
-        <tr>
-          <td> {{p.get_name}}</td>
-          <td>{{p.symptoms}}</td>
-          <td>{{p.mobile}}</td>
-          <td>{{p.address}}</td>
-          {%if p.status%}
-          <td> <span class="label label-primary">Đã nhập viện</span></td>
-          {% else %}
-          <td> <span class="label label-success">Chờ duyệt</span></td>
-          {% endif %}
-
-        </tr>
-        {% endfor %}
+        <tbody>
+          {% for p in patients %}
+          <tr>
+            <td>
+              <div class="cell-user">
+                <div class="cell-user-avatar">
+                  {% if p.profile_pic %}
+                  <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                  {% else %}
+                  {{ p.get_name|slice:":1" }}
+                  {% endif %}
+                </div>
+                <div class="cell-user-info">
+                  <span class="cell-user-name">{{ p.get_name }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ p.symptoms|truncatechars:20 }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+            </td>
+            <td>
+              {% if p.status %}
+              <span class="badge badge-success">Nhập viện</span>
+              {% else %}
+              <span class="badge badge-warning">Chờ duyệt</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center" style="padding: 40px;">
+              <div class="empty-state-icon" style="width: 48px; height: 48px; font-size: 20px; margin-bottom: 8px;">
+                <i class="fas fa-users"></i>
+              </div>
+              <p style="margin: 0; color: var(--text-secondary);">Chưa có bệnh nhân nào</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+<!-- Quick Actions -->
+<div class="card animate-fadeInUp" style="margin-top: 24px; animation-delay: 0.4s;">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">Thao tác nhanh</h3>
+      <p class="card-subtitle">Truy cập nhanh vào các chức năng chính</p>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="menu-grid">
+      <a href="/admin-add-doctor" class="menu-card primary">
+        <div class="menu-card-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h4 class="menu-card-title">Thêm Bác sĩ</h4>
+        <p class="menu-card-description">Tạo tài khoản và hồ sơ bác sĩ mới</p>
+      </a>
+      
+      <a href="/admin-add-patient" class="menu-card success">
+        <div class="menu-card-icon">
+          <i class="fas fa-user-injured"></i>
+        </div>
+        <h4 class="menu-card-title">Thêm Bệnh nhân</h4>
+        <p class="menu-card-description">Đăng ký bệnh nhân mới vào hệ thống</p>
+      </a>
+      
+      <a href="/admin-add-appointment" class="menu-card warning">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-plus"></i>
+        </div>
+        <h4 class="menu-card-title">Tạo Lịch hẹn</h4>
+        <p class="menu-card-description">Đặt lịch hẹn khám bệnh mới</p>
+      </a>
+      
+      <a href="/admin-approve-doctor" class="menu-card danger">
+        <div class="menu-card-icon">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <h4 class="menu-card-title">Duyệt Bác sĩ</h4>
+        <p class="menu-card-description">Phê duyệt đăng ký bác sĩ mới</p>
+        {% if pendingdoctorcount > 0 %}
+        <span class="nav-item-badge" style="position: absolute; top: 16px; right: 16px;">{{ pendingdoctorcount }}</span>
+        {% endif %}
+      </a>
+      
+      <a href="/admin-approve-patient" class="menu-card info">
+        <div class="menu-card-icon">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h4 class="menu-card-title">Duyệt Bệnh nhân</h4>
+        <p class="menu-card-description">Phê duyệt đăng ký bệnh nhân mới</p>
+        {% if pendingpatientcount > 0 %}
+        <span class="nav-item-badge" style="position: absolute; top: 16px; right: 16px;">{{ pendingpatientcount }}</span>
+        {% endif %}
+      </a>
+      
+      <a href="/admin-approve-appointment" class="menu-card purple">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h4 class="menu-card-title">Duyệt Lịch hẹn</h4>
+        <p class="menu-card-description">Phê duyệt lịch hẹn khám bệnh</p>
+        {% if pendingappointmentcount > 0 %}
+        <span class="nav-item-badge" style="position: absolute; top: 16px; right: 16px;">{{ pendingappointmentcount }}</span>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

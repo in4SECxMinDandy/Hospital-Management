@@ -2,25 +2,7 @@
 {% block content %}
 {%load static%}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
+      <!--
 written By : sumit kumar
 facebook : fb.com/sumit.luv
 -->
@@ -44,7 +26,13 @@ facebook : fb.com/sumit.luv
       {% for d in doctors %}
       <tr>
         <td> {{d.get_name}}</td>
-        <td> <img src="{% static d.profile_pic.url %}" alt="Ảnh đại diện" height="40px" width="40px" /></td>
+        <td>
+          {% if d.profile_pic %}
+          <img src="{{ d.profile_pic.url }}" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
+          {% else %}
+          <img src="https://ui-avatars.com/api/?name={{ d.get_name|urlencode }}&background=2563eb&color=fff" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
+          {% endif %}
+        </td>
         <td>{{d.mobile}}</td>
         <td>{{d.address}}</td>
         <td>{{d.department}}</td>

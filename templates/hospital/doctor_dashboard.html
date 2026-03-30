@@ -1,43 +1,229 @@
 {% extends 'hospital/doctor_base.html' %}
 {% load static %}
+{% block title %}Bảng điều khiển Bác sĩ - Clinic Dashboard{% endblock %}
 {% block content %}
-{%include 'hospital/doctor_dashboard_cards.html'%}
-<br><br><br><br>
-<div class="container">
-  <div class="row">
-    <div class="panel panel-primary" style="margin-left:15%;">
-      <div class="panel-heading" style="text-align:center;">
-        <h6 class="panel-title">Lịch hẹn gần đây</h6>
+
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Chào mừng, BS. {{ request.user.first_name }}</h1>
+    <p class="page-subtitle">Xem tổng quan công việc và lịch hẹn của bạn</p>
+  </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+  <!-- Patient Count -->
+  <div class="stat-card success stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-users"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ patientcount }}</div>
+      <div class="stat-label">Bệnh nhân đang điều trị</div>
+    </div>
+  </div>
+
+  <!-- Appointment Count -->
+  <div class="stat-card primary stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-calendar-check"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ appointmentcount }}</div>
+      <div class="stat-label">Lịch hẹn hôm nay</div>
+    </div>
+  </div>
+
+  <!-- Discharged Patients -->
+  <div class="stat-card info stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-user-check"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ patientdischarged }}</div>
+      <div class="stat-label">Bệnh nhân đã xuất viện</div>
+    </div>
+  </div>
+
+  <!-- Doctor Info -->
+  <div class="stat-card warning stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-user-md"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ doctor.department }}</div>
+      <div class="stat-label">Chuyên khoa</div>
+    </div>
+  </div>
+</div>
+
+<!-- Content Grid -->
+<div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+  <!-- Recent Appointments -->
+  <div class="card animate-fadeInUp" style="animation-delay: 0.2s;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title">Lịch hẹn gần đây</h3>
+        <p class="card-subtitle">Danh sách lịch hẹn mới nhất</p>
       </div>
-      <table class="table table-hover" id="dev-table">
+      <a href="/doctor-view-appointment" class="btn btn-sm btn-outline">
+        <i class="fas fa-arrow-right"></i>
+        Xem tất cả
+      </a>
+    </div>
+    <div class="table-container" style="border-radius: 0;">
+      <table class="data-table">
         <thead>
           <tr>
-            <th>Tên Bệnh nhân</th>
-            <th>Ảnh</th>
+            <th>Bệnh nhân</th>
             <th>Mô tả</th>
-            <th>Điện thoại</th>
-            <th>Địa chỉ</th>
             <th>Ngày</th>
           </tr>
         </thead>
-        {% for a,p in appointments %}
-        <tr>
-          <td>{{a.patientName}}</td>
-          <td> <img src="{% static p.profile_pic.url %}" alt="Ảnh đại diện" height="40px" width="40px" /></td>
-          <td>{{a.description}}</td>
-          <td>{{p.mobile}}</td>
-          <td>{{p.address}}</td>
-          <td>{{a.appointmentDate}}</td>
-        </tr>
-        {% endfor %}
+        <tbody>
+          {% for a, p in appointments %}
+          <tr>
+            <td>
+              <div class="cell-user">
+                <div class="cell-user-avatar">
+                  {% if p.profile_pic %}
+                  <img src="{{ p.profile_pic.url }}" alt="{{ a.patientName }}">
+                  {% else %}
+                  {{ a.patientName|slice:":1" }}
+                  {% endif %}
+                </div>
+                <div class="cell-user-info">
+                  <span class="cell-user-name">{{ a.patientName }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ a.description|truncatechars:30 }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ a.appointmentDate }}</span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-center" style="padding: 40px;">
+              <div class="empty-state-icon" style="width: 48px; height: 48px; font-size: 20px; margin-bottom: 8px;">
+                <i class="fas fa-calendar"></i>
+              </div>
+              <p style="margin: 0; color: var(--text-secondary);">Chưa có lịch hẹn nào</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Patients -->
+  <div class="card animate-fadeInUp" style="animation-delay: 0.3s;">
+    <div class="card-header">
+      <div>
+        <h3 class="card-title">Bệnh nhân đang điều trị</h3>
+        <p class="card-subtitle">Danh sách bệnh nhân được phân công</p>
+      </div>
+      <a href="/doctor-view-patient" class="btn btn-sm btn-outline">
+        <i class="fas fa-arrow-right"></i>
+        Xem tất cả
+      </a>
+    </div>
+    <div class="table-container" style="border-radius: 0;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Bệnh nhân</th>
+            <th>Triệu chứng</th>
+            <th>Ngày nhập</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <tr>
+            <td>
+              <div class="cell-user">
+                <div class="cell-user-avatar">
+                  {% if patient.profile_pic %}
+                  <img src="{{ patient.profile_pic.url }}" alt="{{ patient.get_name }}">
+                  {% else %}
+                  {{ patient.get_name|slice:":1" }}
+                  {% endif %}
+                </div>
+                <div class="cell-user-info">
+                  <span class="cell-user-name">{{ patient.get_name }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-warning">{{ patient.symptoms|truncatechars:20 }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-secondary);">{{ patient.admitDate }}</span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="text-center" style="padding: 40px;">
+              <div class="empty-state-icon" style="width: 48px; height: 48px; font-size: 20px; margin-bottom: 8px;">
+                <i class="fas fa-users"></i>
+              </div>
+              <p style="margin: 0; color: var(--text-secondary);">Chưa có bệnh nhân nào</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
   </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+
+<!-- Quick Actions -->
+<div class="card animate-fadeInUp" style="margin-top: 24px; animation-delay: 0.4s;">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">Thao tác nhanh</h3>
+      <p class="card-subtitle">Truy cập nhanh vào các chức năng</p>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="menu-grid">
+      <a href="/doctor-view-patient" class="menu-card success">
+        <div class="menu-card-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h4 class="menu-card-title">Bệnh nhân</h4>
+        <p class="menu-card-description">Xem danh sách bệnh nhân đang điều trị</p>
+      </a>
+
+      <a href="/doctor-view-appointment" class="menu-card primary">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h4 class="menu-card-title">Lịch hẹn</h4>
+        <p class="menu-card-description">Xem và quản lý lịch hẹn khám bệnh</p>
+      </a>
+
+      <a href="/doctor-delete-appointment" class="menu-card warning">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-times"></i>
+        </div>
+        <h4 class="menu-card-title">Xóa lịch hẹn</h4>
+        <p class="menu-card-description">Hủy lịch hẹn không hợp lệ</p>
+      </a>
+
+      <a href="/doctor-view-discharge-patient" class="menu-card info">
+        <div class="menu-card-icon">
+          <i class="fas fa-file-medical"></i>
+        </div>
+        <h4 class="menu-card-title">Xuất viện</h4>
+        <p class="menu-card-description">Xem thông tin bệnh nhân đã xuất viện</p>
+      </a>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

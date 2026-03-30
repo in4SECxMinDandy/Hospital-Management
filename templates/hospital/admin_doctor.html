@@ -1,135 +1,80 @@
 {% extends 'hospital/admin_base.html' %}
-{% load static %}
+{% block title %}Quản lý Bác sĩ - Clinic Dashboard{% endblock %}
 {% block content %}
-<br><br>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Quản lý Bác sĩ</h1>
+    <p class="page-subtitle">Quản lý thông tin và tài khoản bác sĩ</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-add-doctor" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Thêm Bác sĩ
+    </a>
+  </div>
+</div>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-
-  <style type="text/css">
-    a:link {
-      text-decoration: none;
-    }
-
-    .menu {
-      top: 50px;
-    }
-
-    h6 {
-      color: white;
-    }
-
-    .order-card {
-      color: #fff;
-    }
-
-    .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
-    }
-
-    .bg-c-green {
-      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
-    }
-
-    .bg-c-yellow {
-      background: linear-gradient(45deg, #FFB64D, #ffcb80);
-    }
-
-    .bg-c-pink {
-      background: linear-gradient(45deg, #FF5370, #ff869a);
-    }
-
-
-    .card {
-      border-radius: 5px;
-      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      border: none;
-      margin-bottom: 30px;
-      -webkit-transition: all 0.3s ease-in-out;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .card .card-block {
-      padding: 25px;
-    }
-
-    .order-card i {
-      font-size: 26px;
-    }
-
-    .f-left {
-      float: left;
-    }
-
-    .f-right {
-      float: right;
-    }
-  </style>
-</head>
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
-  <div class="row">
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <a href="/admin-view-doctor">
-            <h6 class="m-b-20">Hồ sơ Bác sĩ</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-user-nurse f-left"></i></h2>
-
-        </div>
-      </div>
+<!-- Menu Cards -->
+<div class="menu-grid animate-fadeInUp" style="animation-delay: 0.1s;">
+  <a href="/admin-view-doctor" class="menu-card primary">
+    <div class="menu-card-icon">
+      <i class="fas fa-list"></i>
     </div>
+    <h4 class="menu-card-title">Danh sách Bác sĩ</h4>
+    <p class="menu-card-description">Xem và quản lý danh sách bác sĩ đã được duyệt</p>
+  </a>
 
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-green order-card">
-        <div class="card-block">
-          <a href="/admin-add-doctor">
-            <h6 class="m-b-20">Thêm Bác sĩ</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-user-plus f-left"></i></h2>
-        </div>
-      </div>
+  <a href="/admin-add-doctor" class="menu-card success">
+    <div class="menu-card-icon">
+      <i class="fas fa-user-plus"></i>
     </div>
+    <h4 class="menu-card-title">Thêm Bác sĩ</h4>
+    <p class="menu-card-description">Tạo tài khoản và hồ sơ bác sĩ mới</p>
+  </a>
 
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-yellow order-card">
-        <div class="card-block">
-          <a href="/admin-approve-doctor">
-            <h6 class="m-b-20">Duyệt Bác sĩ</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-check-circle f-left"></i></h2>
-        </div>
-      </div>
+  <a href="/admin-view-doctor-specialisation" class="menu-card warning">
+    <div class="menu-card-icon">
+      <i class="fas fa-layer-group"></i>
     </div>
+    <h4 class="menu-card-title">Theo Khoa</h4>
+    <p class="menu-card-description">Xem bác sĩ theo chuyên khoa</p>
+  </a>
 
-    <div class="col-md-4 col-xl-3">
-      <div class="card bg-c-pink order-card">
-        <div class="card-block">
-          <a href="/admin-view-doctor-specialisation">
-            <h6 class="m-b-20">Chuyên khoa Bác sĩ</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-user-md f-left"></i></h2>
-        </div>
-      </div>
+  <a href="/admin-approve-doctor" class="menu-card danger">
+    <div class="menu-card-icon">
+      <i class="fas fa-user-check"></i>
+    </div>
+    <h4 class="menu-card-title">Duyệt Bác sĩ</h4>
+    <p class="menu-card-description">Phê duyệt đăng ký bác sĩ mới
+      {% if pendingdoctorcount > 0 %}
+      <span class="badge badge-danger" style="margin-left: 8px;">{{ pendingdoctorcount }} mới</span>
+      {% endif %}
+    </p>
+  </a>
+</div>
+
+<!-- Statistics -->
+<div class="stats-grid animate-fadeInUp" style="animation-delay: 0.2s; margin-top: 24px;">
+  <div class="stat-card primary">
+    <div class="stat-icon">
+      <i class="fas fa-user-md"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ doctorcount }}</div>
+      <div class="stat-label">Bác sĩ hoạt động</div>
+    </div>
+  </div>
+  <div class="stat-card warning">
+    <div class="stat-icon">
+      <i class="fas fa-clock"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ pendingdoctorcount }}</div>
+      <div class="stat-label">Chờ duyệt</div>
     </div>
   </div>
 </div>
-<!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/AT05s
-  -->
-<br><br><br><br><br><br><br>
+
 {% endblock content %}

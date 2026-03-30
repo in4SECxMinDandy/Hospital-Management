@@ -1,4 +1,8 @@
-xhtml2pdf
+# Hospital Management System Dependencies
+# Install with: pip install -r requirement.txt
+
 Django==3.0.5
 django-widget-tweaks==1.4.8
 sqlparse==0.3.1
+xhtml2pdf==0.2.11
+python-decouple==3.8

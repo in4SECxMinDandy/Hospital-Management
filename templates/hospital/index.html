@@ -1,80 +1,152 @@
 {% extends 'hospital/homebase.html' %}
 {% load static %}
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-
-
 {% block content %}
 
+<!-- Hero Section -->
+<section class="landing-hero">
+  <div class="landing-hero-badge">
+    <i class="fas fa-heartbeat"></i>
+    Hệ thống quản lý bệnh viện hiện đại
+  </div>
+  
+  <h1>Chăm sóc sức khỏe<br><span style="color: var(--primary-600);">Chuyên nghiệp</span></h1>
+  
+  <p>Nền tảng quản lý y tế toàn diện, giúp quản lý bệnh viện một cách hiệu quả với công nghệ tiên tiến nhất.</p>
+  
+  <div class="landing-hero-actions">
+    <a href="/patientclick" class="btn btn-primary btn-lg">
+      <i class="fas fa-calendar-check"></i>
+      Đặt lịch hẹn ngay
+    </a>
+    <a href="/aboutus" class="btn btn-outline btn-lg">
+      <i class="fas fa-info-circle"></i>
+      Tìm hiểu thêm
+    </a>
+  </div>
+  
+  <!-- Stats -->
+  <div class="stats-grid" style="margin-top: 64px; max-width: 800px;">
+    <div class="stat-card primary stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Bác sĩ chuyên nghiệp</div>
+      </div>
+    </div>
+    
+    <div class="stat-card success stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1000+</div>
+        <div class="stat-label">Bệnh nhân đã điều trị</div>
+      </div>
+    </div>
+    
+    <div class="stat-card warning stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">500+</div>
+        <div class="stat-label">Lịch hẹn mỗi tháng</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<head>
-  <style media="screen">
-    .jumbotron {
-      margin-top: 0px;
-      margin-bottom: 0px;
-      background-image: url('{% static "images/bg.jpg" %}');
-      background-size: cover;
-      background-repeat: no-repeat;
-    }
+<!-- Features Section -->
+<section class="landing-section" style="background: white;">
+  <div class="landing-section-header">
+    <h2 class="landing-section-title">Tính năng nổi bật</h2>
+    <p class="landing-section-subtitle">
+      Hệ thống được thiết kế để đáp ứng mọi nhu cầu quản lý y tế của bạn
+    </p>
+  </div>
+  
+  <div class="landing-features-grid">
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--primary-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--primary-600);">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Quản lý Bác sĩ</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Theo dõi và quản lý thông tin bác sĩ, phân công công việc hiệu quả
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--success-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--success-600);">
+        <i class="fas fa-users"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Quản lý Bệnh nhân</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Lưu trữ và theo dõi hồ sơ bệnh nhân một cách chi tiết và chính xác
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--warning-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--warning-600);">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Đặt lịch hẹn</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Hệ thống đặt lịch trực tuyến, giúp bệnh nhân dễ dàng đặt hẹn khám bệnh
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--danger-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--danger-600);">
+        <i class="fas fa-file-invoice-dollar"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Thanh toán</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Tính toán và xuất hóa đơn tự động, hỗ trợ nhiều hình thức thanh toán
+      </p>
+    </div>
+  </div>
+</section>
 
-    .jumbotron h5,
-    h3 {
-      text-align: center;
-    }
+<!-- CTA Section -->
+<section class="landing-section" style="background: linear-gradient(135deg, var(--slate-900) 0%, var(--primary-900) 100%); color: white; text-align: center;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 16px; color: white;">
+      Sẵn sàng bắt đầu?
+    </h2>
+    <p style="font-size: 1.125rem; color: rgba(255,255,255,0.8); margin-bottom: 32px;">
+      Đăng ký ngay hôm nay để trải nghiệm hệ thống quản lý bệnh viện hiện đại nhất
+    </p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a href="/patientsignup" class="btn btn-primary btn-lg" style="background: white; color: var(--primary-600);">
+        <i class="fas fa-user-plus"></i>
+        Đăng ký Bệnh nhân
+      </a>
+      <a href="/doctorsignup" class="btn btn-outline btn-lg" style="border-color: white; color: white;">
+        <i class="fas fa-user-md"></i>
+        Đăng ký Bác sĩ
+      </a>
+    </div>
+  </div>
+</section>
 
-
-    .alert {
-      margin: 0px;
-    }
-
-
-
-    .glow {
-      font-size: 50px;
-      color: white;
-      text-align: center;
-      -webkit-animation: glow 1s ease-in-out infinite alternate;
-      -moz-animation: glow 1s ease-in-out infinite alternate;
-      animation: glow 1s ease-in-out infinite alternate;
-    }
-
-    @-webkit-keyframes glow {
-      from {
-        text-shadow: 0 0 10px #eeeeee, 0 0 20px #000000, 0 0 30px #000000, 0 0 40px #000000, 0 0 50px #9554b3, 0 0 60px #9554b3, 0 0 70px #9554b3;
-      }
-
-      to {
-        text-shadow: 0 0 20px #eeeeee, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
-      }
-    }
-  </style>
-</head>
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom: 0px;margin-top: 0px;">
-  <br>
-  <h5 class="display-3 glow">Chúng tôi yêu thương bạn bằng cách chăm sóc sức khỏe của bạn</h5>
-  <br><br><br><br><br>
-  <p>
-  <h3>Cấp cứu ?</h3>
-
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="/patientclick" role="button">Đặt lịch hẹn</a>
-  </p>
-  <br><br>
-</div>
-
-<br><br><br><br>
-
-{% include "hospital/admin_doctor_patient_card.html" %}
-<br><br><br>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+<!-- Emergency Section -->
+<section class="landing-section" style="background: var(--danger-50);">
+  <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div style="width: 80px; height: 80px; background: var(--danger-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 36px; color: white;">
+      <i class="fas fa-phone-alt"></i>
+    </div>
+    <h2 style="margin-bottom: 16px;">Cần cấp cứu?</h2>
+    <p style="font-size: 1.25rem; color: var(--danger-700); margin-bottom: 24px;">
+      Gọi ngay đường dây nóng cấp cứu: <strong>1900-xxxx</strong>
+    </p>
+    <a href="/patientclick" class="btn btn-danger btn-lg">
+      <i class="fas fa-calendar-check"></i>
+      Đặt lịch hẹn khẩn cấp
+    </a>
+  </div>
+</section>
 
 {% endblock content %}

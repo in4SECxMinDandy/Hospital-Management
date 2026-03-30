@@ -1,13 +1,189 @@
 {% extends 'hospital/patient_base.html' %}
 {% load static %}
+{% block title %}Bảng điều khiển Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
-{%include 'hospital/patient_dashboard_cards.html'%}
-<br><br><br><br>
 
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Chào mừng, {{ request.user.first_name }}</h1>
+    <p class="page-subtitle">Xem thông tin và dịch vụ của bạn</p>
+  </div>
+</div>
+
+<!-- Patient Info Card -->
+<div class="card animate-fadeInUp mb-6" style="margin-bottom: 24px;">
+  <div class="card-body">
+    <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-100); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: var(--primary-600);">
+        {% if patient.profile_pic %}
+        <img src="{{ patient.profile_pic.url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+        {% else %}
+        {{ request.user.first_name|slice:":1" }}
+        {% endif %}
+      </div>
+      <div style="flex: 1;">
+        <h3 style="margin-bottom: 8px;">{{ patient.get_name }}</h3>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; color: var(--text-secondary); font-size: 14px;">
+          <span>
+            <i class="fas fa-calendar" style="margin-right: 6px;"></i>
+            Ngày nhập: {{ patient.admitDate }}
+          </span>
+          <span>
+            <i class="fas fa-phone" style="margin-right: 6px;"></i>
+            {{ patient.mobile }}
+          </span>
+          <span>
+            <i class="fas fa-map-marker-alt" style="margin-right: 6px;"></i>
+            {{ patient.address }}
+          </span>
+        </div>
+      </div>
+      <div>
+        {% if patient.status %}
+        <span class="badge badge-success" style="font-size: 14px; padding: 8px 16px;">
+          <i class="fas fa-check-circle" style="margin-right: 4px;"></i>
+          Đang điều trị
+        </span>
+        {% else %}
+        <span class="badge badge-warning" style="font-size: 14px; padding: 8px 16px;">
+          <i class="fas fa-clock" style="margin-right: 4px;"></i>
+          Chờ duyệt
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+  <!-- Assigned Doctor -->
+  <div class="stat-card primary stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-user-md"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value" style="font-size: 20px;">{{ doctorName }}</div>
+      <div class="stat-label">Bác sĩ phụ trách</div>
+      <span class="badge badge-primary mt-2">{{ doctorDepartment }}</span>
+    </div>
+  </div>
+
+  <!-- Symptoms -->
+  <div class="stat-card warning stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-notes-medical"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value" style="font-size: 18px;">{{ symptoms }}</div>
+      <div class="stat-label">Triệu chứng</div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="stat-card success stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-phone-alt"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value" style="font-size: 18px;">{{ doctorMobile }}</div>
+      <div class="stat-label">Liên hệ Bác sĩ</div>
+    </div>
+  </div>
+</div>
+
+<!-- Services -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.2s;">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">Dịch vụ của tôi</h3>
+      <p class="card-subtitle">Truy cập các dịch vụ y tế</p>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="menu-grid">
+      <a href="/patient-book-appointment" class="menu-card primary">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-plus"></i>
+        </div>
+        <h4 class="menu-card-title">Đặt lịch hẹn</h4>
+        <p class="menu-card-description">Đặt lịch khám bệnh mới với bác sĩ</p>
+      </a>
+
+      <a href="/patient-view-appointment" class="menu-card success">
+        <div class="menu-card-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h4 class="menu-card-title">Lịch hẹn của tôi</h4>
+        <p class="menu-card-description">Xem danh sách lịch hẹn đã đặt</p>
+      </a>
+
+      <a href="/patient-view-doctor" class="menu-card warning">
+        <div class="menu-card-icon">
+          <i class="fas fa-stethoscope"></i>
+        </div>
+        <h4 class="menu-card-title">Danh sách Bác sĩ</h4>
+        <p class="menu-card-description">Xem thông tin các bác sĩ</p>
+      </a>
+
+      <a href="/patient-discharge" class="menu-card info">
+        <div class="menu-card-icon">
+          <i class="fas fa-file-medical"></i>
+        </div>
+        <h4 class="menu-card-title">Thông tin xuất viện</h4>
+        <p class="menu-card-description">Xem thông tin và hóa đơn xuất viện</p>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Info -->
+<div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px;">
+  <div class="card animate-fadeInUp" style="animation-delay: 0.3s;">
+    <div class="card-header">
+      <h3 class="card-title">Thông tin Bác sĩ phụ trách</h3>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary-100); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: var(--primary-600);">
+          {{ doctorName|slice:":1" }}
+        </div>
+        <div>
+          <div style="font-weight: 600;">{{ doctorName }}</div>
+          <div style="font-size: 14px; color: var(--text-secondary);">{{ doctorDepartment }}</div>
+        </div>
+      </div>
+      <div style="font-size: 14px; color: var(--text-secondary);">
+        <p style="margin-bottom: 8px;">
+          <i class="fas fa-phone" style="width: 20px;"></i>
+          {{ doctorMobile }}
+        </p>
+        <p style="margin-bottom: 0;">
+          <i class="fas fa-map-marker-alt" style="width: 20px;"></i>
+          {{ doctorAddress }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card animate-fadeInUp" style="animation-delay: 0.4s;">
+    <div class="card-header">
+      <h3 class="card-title">Thông tin điều trị</h3>
+    </div>
+    <div class="card-body">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+        <div style="padding: 16px; background: var(--bg-page); border-radius: var(--radius-lg); text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: var(--primary-600);">{{ symptoms }}</div>
+          <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Triệu chứng</div>
+        </div>
+        <div style="padding: 16px; background: var(--bg-page); border-radius: var(--radius-lg); text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: var(--success-600);">{{ admitDate }}</div>
+          <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Ngày nhập viện</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

@@ -1,67 +1,139 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Danh sách Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
-{%load static%}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Bệnh nhân</h1>
+    <p class="page-subtitle">Quản lý thông tin bệnh nhân trong hệ thống</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-add-patient" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Thêm Bệnh nhân
+    </a>
+  </div>
+</div>
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách Bệnh nhân</h6>
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <!-- Filters -->
+  <div class="filters-bar" style="padding: 16px 24px; border-bottom: 1px solid var(--border-color-light); margin-bottom: 0;">
+    <div class="search-box">
+      <span class="search-box-icon">
+        <i class="fas fa-search"></i>
+      </span>
+      <input type="text" id="searchInput" placeholder="Tìm kiếm bệnh nhân...">
     </div>
-    <table class="table table-hover" id="dev-table">
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="data-table" id="patientsTable">
       <thead>
         <tr>
-          <th>Tên</th>
-          <th>Ảnh đại diện</th>
+          <th>Bệnh nhân</th>
           <th>Triệu chứng</th>
           <th>Điện thoại</th>
           <th>Địa chỉ</th>
-          <th>Cập nhật</th>
-          <th>Xóa</th>
+          <th style="text-align: right;">Thao tác</th>
         </tr>
       </thead>
-      {% for p in patients %}
-      <tr>
-        <td> {{p.get_name}}</td>
-        <td> <img src="{% static p.profile_pic.url %}" alt="Ảnh đại diện" height="40px" width="40px" /></td>
-        <td>{{p.symptoms}}</td>
-        <td>{{p.mobile}}</td>
-        <td>{{p.address}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-patient' p.id  %}"><span
-              class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-patient-from-hospital' p.id  %}"><span
-              class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for p in patients %}
+        <tr class="stagger-item" data-name="{{ p.get_name|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if p.profile_pic %}
+                <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                {% else %}
+                {{ p.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.get_name }}</span>
+                <span class="cell-user-email">Ngày nhập: {{ p.admitDate }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.address }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: flex-end;">
+              <a href="{% url 'update-patient' p.id %}" class="action-btn edit" title="Chỉnh sửa">
+                <i class="fas fa-edit"></i>
+              </a>
+              <button type="button" class="action-btn delete" title="Xóa" 
+                      onclick="ClinicAPI.handleDelete('{% url 'delete-patient-from-hospital' p.id %}', 'Bạn có chắc muốn xóa bệnh nhân này?', '/admin-view-patient')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <h3 class="empty-state-title">Chưa có bệnh nhân nào</h3>
+              <p class="empty-state-description">Danh sách bệnh nhân trống. Hãy thêm bệnh nhân mới để bắt đầu.</p>
+              <a href="/admin-add-patient" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Thêm Bệnh nhân đầu tiên
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
+
+  <!-- Pagination -->
+  {% if patients %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      Hiển thị {{ patients|length }} bệnh nhân
+    </div>
+  </div>
+  {% endif %}
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
 
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('searchInput');
+  const table = document.getElementById('patientsTable');
+  const rows = table.querySelectorAll('tbody tr');
+
+  function filterTable() {
+    const searchQuery = searchInput.value.toLowerCase().trim();
+
+    rows.forEach(row => {
+      if (row.querySelector('.empty-state')) return;
+
+      const name = row.dataset.name || '';
+      const text = row.textContent.toLowerCase();
+      
+      row.style.display = text.includes(searchQuery) ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', ClinicAPI.debounce(filterTable, 300));
+});
+</script>
+{% endblock %}

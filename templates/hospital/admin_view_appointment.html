@@ -1,58 +1,93 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Danh sách Lịch hẹn - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách lịch hẹn</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Tên Bác sĩ</th>
-          <th>Tên Bệnh nhân</th>
-          <th>Mô tả</th>
-          <th>Ngày</th>
-        </tr>
-      </thead>
-      {% for a in appointments %}
-      <tr>
-        <td> {{a.doctorName}}</td>
-        <td>{{a.patientName}}</td>
-        <td>{{a.description}}</td>
-        <td>{{a.appointmentDate}}</td>
-      </tr>
-      {% endfor %}
-    </table>
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Lịch hẹn</h1>
+    <p class="page-subtitle">Quản lý lịch hẹn khám bệnh đã được duyệt</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-add-appointment" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Tạo Lịch hẹn
+    </a>
   </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="appointmentsTable">
+      <thead>
+        <tr>
+          <th>Bệnh nhân</th>
+          <th>Bác sĩ</th>
+          <th>Mô tả</th>
+          <th>Ngày</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+        <tr class="stagger-item">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ a.patientName }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.doctorName }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.description|truncatechars:40 }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.appointmentDate }}</span>
+          </td>
+          <td>
+            {% if a.status %}
+            <span class="badge badge-success">Đã duyệt</span>
+            {% else %}
+            <span class="badge badge-warning">Chờ duyệt</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-calendar"></i>
+              </div>
+              <h3 class="empty-state-title">Chưa có lịch hẹn nào</h3>
+              <p class="empty-state-description">Danh sách lịch hẹn trống.</p>
+              <a href="/admin-add-appointment" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Tạo lịch hẹn đầu tiên
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if appointments %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      Hiển thị {{ appointments|length }} lịch hẹn
+    </div>
+  </div>
+  {% endif %}
+</div>
 
 {% endblock content %}

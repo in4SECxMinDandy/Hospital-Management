@@ -1,69 +1,157 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Danh sách Bác sĩ - Clinic Dashboard{% endblock %}
 {% block content %}
-{%load static%}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách Bác sĩ</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-
-          <th>Tên</th>
-          <th>Ảnh đại diện</th>
-          <th>Điện thoại</th>
-          <th>Địa chỉ</th>
-          <th>Khoa</th>
-          <th>Cập nhật</th>
-          <th>Xóa</th>
-        </tr>
-      </thead>
-      {% for d in doctors %}
-      <tr>
-
-        <td> {{d.get_name}}</td>
-        <td> <img src="{% static d.profile_pic.url %}" alt="Ảnh đại diện" height="40px" width="40px" /></td>
-        <td>{{d.mobile}}</td>
-        <td>{{d.address}}</td>
-        <td>{{d.department}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-doctor' d.id  %}"><span
-              class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-doctor-from-hospital' d.id  %}"><span
-              class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
-    </table>
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Bác sĩ</h1>
+    <p class="page-subtitle">Quản lý thông tin bác sĩ trong hệ thống</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-add-doctor" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Thêm Bác sĩ
+    </a>
   </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <!-- Filters -->
+  <div class="filters-bar" style="padding: 16px 24px; border-bottom: 1px solid var(--border-color-light); margin-bottom: 0;">
+    <div class="search-box">
+      <span class="search-box-icon">
+        <i class="fas fa-search"></i>
+      </span>
+      <input type="text" id="searchInput" placeholder="Tìm kiếm bác sĩ...">
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Khoa:</label>
+      <select class="filter-select form-select" id="departmentFilter">
+        <option value="">Tất cả</option>
+        <option value="Cardiologist">Cardiologist</option>
+        <option value="Dermatologists">Dermatologists</option>
+        <option value="Emergency Medicine Specialists">Emergency Medicine Specialists</option>
+        <option value="Allergists/Immunologists">Allergists/Immunologists</option>
+        <option value="Anesthesiologists">Anesthesiologists</option>
+        <option value="Colon and Rectal Surgeons">Colon and Rectal Surgeons</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="data-table" id="doctorsTable">
+      <thead>
+        <tr>
+          <th>Bác sĩ</th>
+          <th>Khoa</th>
+          <th>Điện thoại</th>
+          <th>Địa chỉ</th>
+          <th style="text-align: right;">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in doctors %}
+        <tr class="stagger-item" data-department="{{ d.department }}" data-name="{{ d.get_name|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if d.profile_pic %}
+                <img src="{{ d.profile_pic.url }}" alt="{{ d.get_name }}">
+                {% else %}
+                {{ d.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ d.get_name }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-primary">{{ d.department }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ d.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ d.address }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: flex-end;">
+              <a href="{% url 'update-doctor' d.id %}" class="action-btn edit" title="Chỉnh sửa">
+                <i class="fas fa-edit"></i>
+              </a>
+              <button type="button" class="action-btn delete" title="Xóa" 
+                      onclick="ClinicAPI.handleDelete('{% url 'delete-doctor-from-hospital' d.id %}', 'Bạn có chắc muốn xóa bác sĩ này?', '/admin-view-doctor')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <h3 class="empty-state-title">Chưa có bác sĩ nào</h3>
+              <p class="empty-state-description">Danh sách bác sĩ trống. Hãy thêm bác sĩ mới để bắt đầu.</p>
+              <a href="/admin-add-doctor" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Thêm Bác sĩ đầu tiên
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if doctors %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      Hiển thị {{ doctors|length }} bác sĩ
+    </div>
+  </div>
+  {% endif %}
+</div>
 
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize search
+  const searchInput = document.getElementById('searchInput');
+  const departmentFilter = document.getElementById('departmentFilter');
+  const table = document.getElementById('doctorsTable');
+  const rows = table.querySelectorAll('tbody tr');
+
+  function filterTable() {
+    const searchQuery = searchInput.value.toLowerCase().trim();
+    const department = departmentFilter.value;
+
+    rows.forEach(row => {
+      if (row.querySelector('.empty-state')) return;
+
+      const name = row.dataset.name || '';
+      const rowDept = row.dataset.department || '';
+      
+      const matchesSearch = name.includes(searchQuery);
+      const matchesDept = !department || rowDept === department;
+
+      row.style.display = matchesSearch && matchesDept ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', ClinicAPI.debounce(filterTable, 300));
+  departmentFilter.addEventListener('change', filterTable);
+});
+</script>
+{% endblock %}

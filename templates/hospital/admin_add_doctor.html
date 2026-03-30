@@ -1,103 +1,164 @@
 {% extends 'hospital/admin_base.html' %}
 {% load widget_tweaks %}
+{% block title %}Thêm Bác sĩ - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<head>
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Thêm Bác sĩ mới</h1>
+    <p class="page-subtitle">Tạo tài khoản và hồ sơ bác sĩ</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-view-doctor" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+      Quay lại
+    </a>
+  </div>
+</div>
 
-    .note {
-      text-align: center;
-      height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
-      color: #fff;
-      font-weight: bold;
-      line-height: 80px;
-    }
+<!-- Form Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s; max-width: 800px;">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" id="addDoctorForm" data-ajax>
+      {% csrf_token %}
 
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
-    }
+      <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+        <!-- Left Column -->
+        <div>
+          <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+            <i class="fas fa-user" style="margin-right: 8px;"></i>
+            Thông tin tài khoản
+          </h4>
 
-    .form-control {
-      border-radius: 1.5rem;
-    }
-
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
-      cursor: pointer;
-      background: #0062cc;
-      color: #fff;
-    }
-
-    .menu {
-      top: 50px;
-    }
-  </style>
-
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-</head>
-<br><br><br>
-<!------ signup page for doctor by admin(sumit)  ---------->
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
-      <div class="note">
-        <p>Thêm Bác sĩ mới vào Bệnh viện</p>
-      </div>
-      <div class="form-content">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
+          <div class="form-group">
+            <label class="form-label" for="id_first_name">Họ</label>
+            {{ userForm.first_name|add_class:"form-control" }}
+            {% if userForm.first_name.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ userForm.first_name.errors.0 }}
             </div>
-            <div class="form-group">
-              {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
-            </div>
-            <div class="form-group">
-              {% render_field doctorForm.department class="form-control" placeholder="Khoa" %}
-            </div>
-            <div class="form-group">
-              {% render_field doctorForm.address class="form-control" placeholder="Địa chỉ" %}
-            </div>
-
+            {% endif %}
           </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
+
+          <div class="form-group">
+            <label class="form-label" for="id_last_name">Tên</label>
+            {{ userForm.last_name|add_class:"form-control" }}
+            {% if userForm.last_name.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ userForm.last_name.errors.0 }}
             </div>
-            <div class="form-group">
-              {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_username">Tên đăng nhập</label>
+            {{ userForm.username|add_class:"form-control" }}
+            {% if userForm.username.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ userForm.username.errors.0 }}
             </div>
-            <div class="form-group">
-              {% render_field doctorForm.mobile class="form-control" placeholder="Số điện thoại" %}
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_password">Mật khẩu</label>
+            {{ userForm.password|add_class:"form-control" }}
+            {% if userForm.password.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ userForm.password.errors.0 }}
             </div>
-            <div class="form-group">
-              {% render_field doctorForm.profile_pic required="required" class="form-control" placeholder="Ảnh đại diện"
-              %}
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+          <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+            <i class="fas fa-stethoscope" style="margin-right: 8px;"></i>
+            Thông tin chuyên môn
+          </h4>
+
+          <div class="form-group">
+            <label class="form-label" for="id_department">Khoa</label>
+            {{ doctorForm.department|add_class:"form-control form-select" }}
+            {% if doctorForm.department.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ doctorForm.department.errors.0 }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_mobile">Số điện thoại</label>
+            {{ doctorForm.mobile|add_class:"form-control" }}
+            {% if doctorForm.mobile.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ doctorForm.mobile.errors.0 }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_address">Địa chỉ</label>
+            {{ doctorForm.address|add_class:"form-control" }}
+            {% if doctorForm.address.errors %}
+            <div class="form-error">
+              <i class="fas fa-exclamation-circle"></i>
+              {{ doctorForm.address.errors.0 }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ảnh đại diện</label>
+            <div class="form-file">
+              <input type="file" name="profile_pic" accept="image/*" id="id_profile_pic">
+              <div class="form-file-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <div class="form-file-text">
+                Kéo thả hoặc click để tải ảnh lên
+              </div>
             </div>
           </div>
         </div>
-        <button type="submit" class="btnSubmit">Đăng ký</button>
       </div>
-    </div>
-  </div>
 
-</form>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+      <!-- Form Actions -->
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+        <a href="/admin-view-doctor" class="btn btn-secondary">
+          Hủy
+        </a>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i>
+          Lưu Bác sĩ
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('addDoctorForm');
+  
+  ClinicAPI.handleFormSubmit(form, {
+    showToastNotification: true,
+    redirectUrl: '/admin-view-doctor',
+    onSuccess: function(data) {
+      console.log('Doctor added successfully:', data);
+    }
+  });
+});
+</script>
+{% endblock %}
