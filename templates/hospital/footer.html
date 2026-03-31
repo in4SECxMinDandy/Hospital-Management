@@ -1,91 +1,251 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="vi">
 <head>
-
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /*---------------------------------------
-   Social section
------------------------------------------*/
     footer {
-      padding: 0px 0px 0px 0px;
-      background-color: black;
-      margin: 0px;
+      background: var(--slate-900, #0f172a);
+      padding: 48px 48px 32px;
+      margin: 0;
     }
 
-    .fa {
-      padding: 20px;
-      font-size: 23px;
-      width: 60px;
-      text-align: center;
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 768px) {
+      footer {
+        padding: 40px 24px 28px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    /* Brand */
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       text-decoration: none;
-      margin: 5px 2px;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary-500, #3b82f6), var(--primary-700, #1d4ed8));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .footer-brand-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      color: var(--slate-400, #94a3b8);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 280px;
+    }
+
+    /* Links */
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 0 0 16px;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: var(--slate-400, #94a3b8);
+      text-decoration: none;
+      transition: color 150ms ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    /* Social */
+    .footer-social {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-    }
-
-    .fa:hover {
-      opacity: 0.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
       text-decoration: none;
+      transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
+      cursor: pointer;
     }
 
-    .fa-facebook {
-      background: #3B5998;
-      color: white;
-      margin-top: 30px;
+    .footer-social a:hover {
+      transform: translateY(-2px);
+      opacity: 0.85;
     }
 
-    .fa-whatsapp {
-      background: #25d366;
-      color: white;
+    .footer-social .soc-facebook { background: #3B5998; }
+    .footer-social .soc-whatsapp { background: #25d366; }
+    .footer-social .soc-instagram { background: #E4405F; }
+    .footer-social .soc-twitter { background: #55ACEE; }
+
+    /* Bottom Bar */
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .fa-twitter {
-      background: #55ACEE;
-      color: white;
+    .footer-copyright {
+      font-size: 13px;
+      color: var(--slate-500, #64748b);
+      margin: 0;
     }
 
-    .fa-instagram {
-      background: #125688;
-      color: white;
+    .footer-legal {
+      display: flex;
+      gap: 20px;
     }
 
-    p {
-      text-align: center;
+    .footer-legal a {
+      font-size: 13px;
+      color: var(--slate-500, #64748b);
+      text-decoration: none;
+      transition: color 150ms ease-in-out;
+      cursor: pointer;
+    }
 
+    .footer-legal a:hover {
+      color: var(--slate-300, #cbd5e1);
+    }
+
+    @media (max-width: 640px) {
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .footer-legal {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
     }
   </style>
 </head>
 
 <footer>
-
-  <p>
-    <a href="https://facebook.com/sumit.luv/" class="fa fa-facebook"></a>
-    <a href="https://api.whatsapp.com/send?phone=919572181024&text=Hello%20Sumit.%0d%0aHow%20are%20you%20%3f%0d%0aI%20came%20from%20your%20website.&source=&data=#"
-      class="fa fa-whatsapp"></a>
-    <a href="https://instagram.com/sumit.luv" class="fa fa-instagram"></a>
-    <a href="https://twitter.com/sumitkumar1503" class="fa fa-twitter"></a>
-  </p>
-
-  <br>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div style="color:#ffffff;" class="wow fadeInUp footer-copyright">
-          <p>Made in AT05 <br>
-            Copyright &copy; 2026 in4SEC </p>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <!-- Brand & Description -->
+      <div>
+        <a href="/" class="footer-brand">
+          <div class="footer-brand-icon">
+            <i class="fas fa-hospital"></i>
+          </div>
+          <span class="footer-brand-text">Clinic Pro</span>
+        </a>
+        <p class="footer-brand-desc">
+          Hệ thống quản lý bệnh viện hiện đại, giúp kết nối bác sĩ và bệnh nhân một cách dễ dàng.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="soc-facebook" title="Facebook" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="soc-whatsapp" title="WhatsApp" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="#" class="soc-instagram" title="Instagram" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="soc-twitter" title="Twitter" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
         </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="footer-col-title">Liên kết</h3>
+        <ul class="footer-links">
+          <li><a href="/">Trang chủ</a></li>
+          <li><a href="/aboutus">Về chúng tôi</a></li>
+          <li><a href="/contactus">Liên hệ</a></li>
+          <li><a href="/patientclick">Đặt lịch hẹn</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <h3 class="footer-col-title">Hỗ trợ</h3>
+        <ul class="footer-links">
+          <li><a href="#">Trung tâm trợ giúp</a></li>
+          <li><a href="#">Câu hỏi thường gặp</a></li>
+          <li><a href="#">Chính sách bảo mật</a></li>
+          <li><a href="#">Điều khoản sử dụng</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p class="footer-copyright">
+        © 2026 Clinic Pro - Hệ thống Quản lý Bệnh viện. Made with care.
+      </p>
+      <div class="footer-legal">
+        <a href="#">Hỗ trợ</a>
+        <a href="#">Chính sách</a>
+        <a href="#">Điều khoản</a>
       </div>
     </div>
   </div>
 </footer>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
 </html>

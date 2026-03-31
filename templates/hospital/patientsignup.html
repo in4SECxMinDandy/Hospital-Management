@@ -1,126 +1,76 @@
-<!DOCTYPE html>
-
+{% extends 'hospital/homebase.html' %}
+{% load static %}
 {% load widget_tweaks %}
-<html lang="en" dir="ltr">
+{% block title %}Đăng ký bệnh nhân — Clinic Pro{% endblock %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý Bệnh viện</title>
-  <style type="text/css">
-    body {
-      color: #aa082e;
-      background-color: #b6bde7;
-      font-family: 'Roboto', sans-serif;
-    }
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 
-    a:link {
-      text-decoration: none;
-    }
-
-    .note {
-      text-align: center;
-      height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
-      color: #fff;
-      font-weight: bold;
-      line-height: 80px;
-    }
-
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
-    }
-
-    .form-control {
-      border-radius: 1.5rem;
-    }
-
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
-      cursor: pointer;
-      background: #0062cc;
-      color: #fff;
-    }
-  </style>
-
-</head>
-
-
-<body>
-  {% include "hospital/navbar.html" %}
-  <br>
-  <br>
-  <br>
-  <br>
-
-
-
-
-  <!--- signup page for patient by admin(sumit)  ---------->
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="container register-form">
-      <div class="form">
-        <div class="note">
-          <p>Đăng ký vào Bệnh viện</p>
-        </div>
-
-        <div class="form-content">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
-              </div>
-              <div class="form-group">
-                {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
-              </div>
-              <div class="form-group">
-                {% render_field patientForm.address class="form-control" placeholder="Địa chỉ" %}
-              </div>
-              <div class="form-group">
-                {% render_field patientForm.symptoms class="form-control" placeholder="Triệu chứng" %}
-              </div>
-              <div class="form-group">
-                {% render_field patientForm.profile_pic required="required" class="form-control" placeholder="Ảnh đại
-                diện" %}
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
-              </div>
-              <div class="form-group">
-                {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
-              </div>
-              <div class="form-group">
-                {% render_field patientForm.mobile class="form-control" pattern="[6789][0-9]{9}" placeholder="Số điện
-                thoại" %}
-              </div>
-              <div class="form-group">
-                {% render_field patientForm.assignedDoctorId class="form-control" placeholder="Bác sĩ" %}
-              </div>
-
-            </div>
-          </div>
-          <button type="submit" class="btnSubmit">Đăng ký</button>
-          <div class="text-center">Đã có tài khoản? <a href="patientlogin">Đăng nhập tại đây</a></div>
-        </div>
-      </div>
+<div class="auth-page">
+  <div class="auth-card" role="region" aria-labelledby="auth-signup-title">
+    <div class="auth-card-header" id="auth-signup-title">
+      Đăng ký vào bệnh viện
     </div>
-
-  </form>
-
-  {% include "hospital/footer.html" %}
-</body>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
-</html>
+    <div class="auth-card-body">
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-grid">
+          <div class="form-group-auth">
+            <label for="id_first_name">Họ</label>
+            {% render_field userForm.first_name class="form-control-auth" autocomplete="given-name" %}
+            {% if userForm.first_name.errors %}<div class="form-error-text">{{ userForm.first_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_last_name">Tên</label>
+            {% render_field userForm.last_name class="form-control-auth" autocomplete="family-name" %}
+            {% if userForm.last_name.errors %}<div class="form-error-text">{{ userForm.last_name.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_username">Tên đăng nhập</label>
+            {% render_field userForm.username class="form-control-auth" autocomplete="username" %}
+            {% if userForm.username.errors %}<div class="form-error-text">{{ userForm.username.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_password">Mật khẩu</label>
+            {% render_field userForm.password class="form-control-auth" autocomplete="new-password" %}
+            {% if userForm.password.errors %}<div class="form-error-text">{{ userForm.password.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_address">Địa chỉ</label>
+            {% render_field patientForm.address class="form-control-auth" autocomplete="street-address" %}
+            {% if patientForm.address.errors %}<div class="form-error-text">{{ patientForm.address.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_mobile">Số điện thoại</label>
+            {% render_field patientForm.mobile class="form-control-auth" pattern="0[0-9]{9}" inputmode="numeric" autocomplete="tel" %}
+            <span class="form-error-text" style="color: var(--text-secondary);">10 chữ số, bắt đầu bằng 0</span>
+            {% if patientForm.mobile.errors %}<div class="form-error-text">{{ patientForm.mobile.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_symptoms">Triệu chứng / lý do khám</label>
+            {% render_field patientForm.symptoms class="form-control-auth" %}
+            {% if patientForm.symptoms.errors %}<div class="form-error-text">{{ patientForm.symptoms.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_assignedDoctorId">Bác sĩ phụ trách</label>
+            {% render_field patientForm.assignedDoctorId class="form-control-auth" %}
+            {% if patientForm.assignedDoctorId.errors %}<div class="form-error-text">{{ patientForm.assignedDoctorId.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group-auth" style="grid-column: 1 / -1;">
+            <label for="id_profile_pic">Ảnh đại diện (tuỳ chọn)</label>
+            {% render_field patientForm.profile_pic class="form-control-auth" %}
+            {% if patientForm.profile_pic.errors %}<div class="form-error-text">{{ patientForm.profile_pic.errors.0 }}</div>{% endif %}
+          </div>
+        </div>
+        <div class="form-actions-auth">
+          <button type="submit" class="btn btn-primary btn-lg">Đăng ký</button>
+        </div>
+        <div class="form-footer-auth">
+          Đã có tài khoản?
+          <a href="/patientlogin">Đăng nhập tại đây</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -2,59 +2,158 @@
 {% load widget_tweaks %}
 {% block content %}
 
-  <br><br><br>
-<!------ signup page for doctor by admin(sumit)  ---------->
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
-      <div class="note">
-        <p>Nhập viện cho Bệnh nhân</p>
-      </div>
-      <div class="form-content">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
-            </div>
-            <div class="form-group">
-              {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.address class="form-control" placeholder="Địa chỉ" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.symptoms class="form-control" placeholder="Triệu chứng" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.profile_pic required="required" class="form-control" placeholder="Ảnh đại
-              diện" %}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
-            </div>
-            <div class="form-group">
-              {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.mobile class="form-control" placeholder="Số điện thoại" %}
-            </div>
-            <div class="form-group">
-              {% render_field patientForm.assignedDoctorId class="form-control" placeholder="Bác sĩ" %}
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btnSubmit">Nhập viện</button>
-      </div>
+<div class="page-content">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">Nhập viện Bệnh nhân</h1>
+      <p class="page-subtitle">Tạo tài khoản và hồ sơ bệnh nhân</p>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'admin-view-patient' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Quay lại
+      </a>
     </div>
   </div>
 
-</form>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+  <div class="card animate-fadeInUp" style="max-width: 900px;">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data" id="addPatientForm" action="{% url 'admin-add-patient' %}" data-ajax data-redirect="{% url 'admin-view-patient' %}">
+        {% csrf_token %}
+
+        <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <!-- Left Column -->
+          <div>
+            <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+              <i class="fas fa-user" style="margin-right: 8px;"></i>
+              Thông tin tài khoản
+            </h4>
+
+            <div class="form-group">
+              <label class="form-label">Họ</label>
+              {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
+              {% if userForm.first_name.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ userForm.first_name.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tên</label>
+              {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
+              {% if userForm.last_name.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ userForm.last_name.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tên đăng nhập</label>
+              {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
+              {% if userForm.username.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ userForm.username.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Mật khẩu</label>
+              {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
+              {% if userForm.password.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ userForm.password.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div>
+            <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
+              <i class="fas fa-notes-medical" style="margin-right: 8px;"></i>
+              Thông tin y tế
+            </h4>
+
+            <div class="form-group">
+              <label class="form-label">Triệu chứng</label>
+              {% render_field patientForm.symptoms class="form-control" placeholder="Mô tả triệu chứng" %}
+              {% if patientForm.symptoms.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ patientForm.symptoms.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số điện thoại</label>
+              {% render_field patientForm.mobile class="form-control" placeholder="Số điện thoại (10 chữ số)" pattern="0[0-9]{9}" %}
+              {% if patientForm.mobile.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ patientForm.mobile.errors.0 }}
+              </div>
+              {% endif %}
+              <div class="form-text">10 chữ số, bắt đầu bằng số 0</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Địa chỉ</label>
+              {% render_field patientForm.address class="form-control" placeholder="Địa chỉ" %}
+              {% if patientForm.address.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ patientForm.address.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bác sĩ phụ trách</label>
+              {% render_field patientForm.assignedDoctorId class="form-control form-select" %}
+              {% if patientForm.assignedDoctorId.errors %}
+              <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ patientForm.assignedDoctorId.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ảnh đại diện</label>
+              <div class="form-file">
+                {% render_field patientForm.profile_pic class="" type="file" accept="image/*" %}
+                <div class="form-file-icon">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="form-file-text">
+                  Kéo thả hoặc click để tải ảnh lên
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+          <a href="{% url 'admin-view-patient' %}" class="btn btn-secondary">
+            Hủy
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Nhập viện
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}

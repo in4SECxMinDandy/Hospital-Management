@@ -1,43 +1,58 @@
 {% extends 'hospital/patient_base.html' %}
-{% block content %}
+{% load static %}
+{% block title %}Lịch hẹn của tôi — Clinic Pro{% endblock %}
 
-  <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Lịch hẹn của bạn</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/design-tokens.css' %}">
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-content">
+    <h1 class="page-title">Lịch hẹn của bạn</h1>
+    <p class="page-subtitle">Các lịch đã đặt, gồm cả trạng thái chờ bác sĩ / quản trị xác nhận</p>
+  </div>
+</div>
+
+<div class="clinic-table-wrap">
+  <div class="table-heading">Danh sách lịch hẹn</div>
+  <div class="table-responsive">
+    <table class="clinic-table">
       <thead>
         <tr>
-          <th>Tên Bác sĩ</th>
-          <th>Mô tả</th>
-          <th>Ngày</th>
-          <th>Trạng thái</th>
+          <th scope="col">Bác sĩ</th>
+          <th scope="col">Mô tả</th>
+          <th scope="col">Ngày</th>
+          <th scope="col">Trạng thái</th>
         </tr>
       </thead>
-      {% for a in appointments %}
-      <tr>
-        <td> {{a.doctorName}}</td>
-        <td>{{a.description}}</td>
-        <td>{{a.appointmentDate}}</td>
-        {%if a.status%}
-        <td> <span class="label label-primary">Đã xác nhận</span></td>
-        {% else %}
-        <td> <span class="label label-success">Chờ duyệt</span></td>
-        {% endif %}
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for a in appointments %}
+        <tr>
+          <td>{{ a.doctorName }}</td>
+          <td>{{ a.description }}</td>
+          <td>{{ a.appointmentDate|default:"—" }}</td>
+          <td>
+            {% if a.status %}
+              <span class="badge-status badge-status--confirmed">Đã xác nhận</span>
+            {% else %}
+              <span class="badge-status badge-status--pending">Chờ duyệt</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">
+            <div class="empty-state-table">
+              <p><strong>Chưa có lịch hẹn nào.</strong></p>
+              <p>Bạn có thể <a href="/patient-book-appointment">đặt lịch khám mới</a> hoặc quay lại <a href="/patient-appointment">trang lịch hẹn</a>.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
 {% endblock content %}

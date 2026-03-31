@@ -61,3 +61,6 @@ markdownlint_output.txt
 md051_errors.txt
 fix_readme.js
 test_slug.js
+list_users.py
+check_passwords.py
+users.txt

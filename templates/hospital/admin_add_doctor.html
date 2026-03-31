@@ -20,7 +20,7 @@
 <!-- Form Card -->
 <div class="card animate-fadeInUp" style="animation-delay: 0.1s; max-width: 800px;">
   <div class="card-body">
-    <form method="post" enctype="multipart/form-data" id="addDoctorForm" data-ajax>
+    <form method="post" enctype="multipart/form-data" id="addDoctorForm" action="{% url 'admin-add-doctor' %}" data-ajax data-redirect="/admin-view-doctor">
       {% csrf_token %}
 
       <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
@@ -146,19 +146,3 @@
 </div>
 
 {% endblock content %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('addDoctorForm');
-  
-  ClinicAPI.handleFormSubmit(form, {
-    showToastNotification: true,
-    redirectUrl: '/admin-view-doctor',
-    onSuccess: function(data) {
-      console.log('Doctor added successfully:', data);
-    }
-  });
-});
-</script>
-{% endblock %}

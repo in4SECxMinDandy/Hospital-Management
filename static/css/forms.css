@@ -1,0 +1,89 @@
+/**
+ * Form layout — auth & đăng ký bệnh nhân
+ */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group-auth {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group-auth label,
+.form-label-auth {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-control-auth {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: var(--text-base);
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--neutral-50);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control-auth:hover {
+  border-color: var(--neutral-300);
+}
+
+.form-control-auth:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: var(--focus-ring);
+  background: var(--neutral-0);
+}
+
+.form-error-text {
+  font-size: var(--text-xs);
+  color: var(--danger-600);
+  margin-top: var(--space-1);
+}
+
+.form-actions-auth {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.form-footer-auth {
+  margin-top: var(--space-6);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.form-footer-auth a {
+  color: var(--primary-600);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-footer-auth a:hover {
+  text-decoration: underline;
+}
+
+input[type="file"].form-control-auth {
+  padding: 10px;
+}
+
+select.form-control-auth {
+  cursor: pointer;
+}

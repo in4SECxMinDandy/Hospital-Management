@@ -1,24 +1,24 @@
 {% extends 'hospital/homebase.html' %}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+{% load static %}
+{% block title %}Bệnh nhân — Clinic Pro{% endblock %}
 
 {% block content %}
-
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom:0px;">
-  <h1 class="display-4" style="text-align:center;">Xin chào, Bệnh nhân</h1>
+<div class="hero-patient">
+  <h1>Xin chào, bệnh nhân</h1>
   <p class="lead">Chào mừng đến với Hệ thống Quản lý Bệnh viện.</p>
-  <hr class="my-4">
-  <p>Bạn có thể truy cập các tính năng khác sau khi Đăng nhập/Đăng ký.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="/patientsignup" role="button">Đăng ký tài khoản</a>
-    <a class="btn btn-primary btn-lg" href="/patientlogin" role="button">Đăng nhập</a>
+  <p class="lead">Đăng nhập hoặc đăng ký để đặt lịch khám, xem lịch hẹn và theo dõi hồ sơ.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary btn-lg" href="/patientlogin">
+      <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+      Đăng nhập
+    </a>
+    <a class="btn btn-secondary btn-lg" href="/patientsignup">
+      <i class="fas fa-user-plus" aria-hidden="true"></i>
+      Đăng ký tài khoản
+    </a>
+  </div>
+  <p class="lead" style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+    Đặt lịch và xem lịch hẹn chỉ khả dụng sau khi đăng nhập (menu <strong>Lịch hẹn</strong> trên trang bệnh nhân).
   </p>
 </div>
-
 {% endblock content %}

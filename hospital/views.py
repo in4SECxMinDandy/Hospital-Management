@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from . import forms, models
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -9,6 +9,7 @@ from django.db.models import Q
 import io
 from xhtml2pdf import pisa
 from django.template.loader import get_template
+from django.core.mail import send_mail
 
 
 def is_ajax(request):
@@ -16,31 +17,49 @@ def is_ajax(request):
     return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
 
+def pair_appointments_with_patients(appointments_qs):
+    """
+    Ghep tung Appointment voi Patient theo patientId (User.id cua benh nhan).
+    Tranh zip() theo thu tu — khong dung voi danh sach benh nhan duoc gan bac si.
+    """
+    appointments = list(appointments_qs)
+    if not appointments:
+        return []
+    user_ids = [a.patientId for a in appointments if a.patientId is not None]
+    if not user_ids:
+        return [(a, None) for a in appointments]
+    patient_map = {
+        p.user_id: p
+        for p in models.Patient.objects.filter(user_id__in=user_ids).select_related('user')
+    }
+    return [(a, patient_map.get(a.patientId)) for a in appointments]
+
+
 def home_view(request):
     """Trang chu - chuyen huong neu da dang nhap."""
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return redirect('afterlogin')
     return render(request, 'hospital/index.html')
 
 
 def adminclick_view(request):
     """Trang lua chon admin."""
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return redirect('afterlogin')
     return render(request, 'hospital/adminclick.html')
 
 
 def doctorclick_view(request):
     """Trang lua chon bac si."""
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return redirect('afterlogin')
     return render(request, 'hospital/doctorclick.html')
 
 
 def patientclick_view(request):
     """Trang lua chon benh nhan."""
     if request.user.is_authenticated:
-        return HttpResponseRedirect('afterlogin')
+        return redirect('afterlogin')
     return render(request, 'hospital/patientclick.html')
 
 
@@ -55,7 +74,7 @@ def admin_signup_view(request):
             user.save()
             my_admin_group, _ = Group.objects.get_or_create(name='ADMIN')
             my_admin_group.user_set.add(user)
-            return HttpResponseRedirect('adminlogin')
+            return redirect('adminlogin')
     return render(request, 'hospital/adminsignup.html', {'form': form})
 
 
@@ -81,7 +100,7 @@ def doctor_signup_view(request):
             my_doctor_group, _ = Group.objects.get_or_create(name='DOCTOR')
             my_doctor_group.user_set.add(user)
             
-            return HttpResponseRedirect('doctorlogin')
+            return redirect('doctorlogin')
     
     return render(request, 'hospital/doctorsignup.html', context=context)
 
@@ -90,12 +109,9 @@ def patient_signup_view(request):
     """Dang ky tai khoan benh nhan."""
     userForm = forms.PatientUserForm()
     patientForm = forms.PatientForm()
-    context = {'userForm': userForm, 'patientForm': patientForm}
-    
     if request.method == 'POST':
         userForm = forms.PatientUserForm(request.POST)
         patientForm = forms.PatientForm(request.POST, request.FILES)
-        
         if userForm.is_valid() and patientForm.is_valid():
             user = userForm.save()
             user.set_password(user.password)
@@ -109,8 +125,8 @@ def patient_signup_view(request):
             my_patient_group, _ = Group.objects.get_or_create(name='PATIENT')
             my_patient_group.user_set.add(user)
             
-            return HttpResponseRedirect('patientlogin')
-    
+            return redirect('patientlogin')
+    context = {'userForm': userForm, 'patientForm': patientForm}
     return render(request, 'hospital/patientsignup.html', context=context)
 
 
@@ -272,7 +288,7 @@ def admin_add_doctor_view(request):
                     'redirect': '/admin-view-doctor'
                 })
             
-            return HttpResponseRedirect('admin-view-doctor')
+            return redirect('admin-view-doctor')
     
     return render(request, 'hospital/admin_add_doctor.html', context=context)
 
@@ -424,7 +440,7 @@ def admin_add_patient_view(request):
                     'redirect': '/admin-view-patient'
                 })
             
-            return HttpResponseRedirect('admin-view-patient')
+            return redirect('admin-view-patient')
     
     return render(request, 'hospital/admin_add_patient.html', context=context)
 
@@ -625,6 +641,13 @@ def admin_add_appointment_view(request):
             appointment.doctorName = doctor.first_name
             appointment.patientName = patient.first_name
             appointment.status = True
+            # Handle appointmentDate - use form data if provided, otherwise use today
+            appointment_date = request.POST.get('appointmentDate')
+            if appointment_date:
+                from datetime import datetime as dt
+                appointment.appointmentDate = dt.strptime(appointment_date, '%Y-%m-%d').date()
+            else:
+                appointment.appointmentDate = date.today()
             appointment.save()
             
             if is_ajax(request):
@@ -634,7 +657,7 @@ def admin_add_appointment_view(request):
                     'redirect': '/admin-view-appointment'
                 })
             
-            return HttpResponseRedirect('admin-view-appointment')
+            return redirect('admin-view-appointment')
     
     return render(request, 'hospital/admin_add_appointment.html', context=context)
 
@@ -689,24 +712,27 @@ def doctor_dashboard_view(request):
     doctor = get_object_or_404(models.Doctor, user_id=request.user.id)
     
     patientcount = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id).count()
-    appointmentcount = models.Appointment.objects.filter(status=True, doctorId=request.user.id).count()
+    appointmentcount = models.Appointment.objects.filter(doctorId=request.user.id).count()
     patientdischarged = models.PatientDischargeDetails.objects.filter(
         assignedDoctorName=request.user.first_name
     ).distinct().count()
     
-    appointments = models.Appointment.objects.filter(
-        status=True, doctorId=request.user.id
-    ).order_by('-id')[:10]
+    appointments_qs = models.Appointment.objects.filter(
+        doctorId=request.user.id
+    ).order_by('-appointmentDate', '-id')[:10]
     
-    patients = models.Patient.objects.filter(
-        status=True, assignedDoctorId=request.user.id
-    ).order_by('-id')[:10]
+    patients_list = list(
+        models.Patient.objects.filter(
+            status=True, assignedDoctorId=request.user.id
+        ).order_by('-id')[:10]
+    )
     
     context = {
         'patientcount': patientcount,
         'appointmentcount': appointmentcount,
         'patientdischarged': patientdischarged,
-        'appointments': zip(appointments, patients),
+        'appointments': pair_appointments_with_patients(appointments_qs),
+        'patients': patients_list,
         'doctor': doctor,
     }
     return render(request, 'hospital/doctor_dashboard.html', context=context)
@@ -768,12 +794,14 @@ def doctor_appointment_view(request):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_view_appointment_view(request):
-    """Xem lich hen cua bac si."""
+    """Xem lich hen cua bac si (ca cho duyet va da xac nhan)."""
     doctor = get_object_or_404(models.Doctor, user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
-    patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
-    return render(request, 'hospital/doctor_view_appointment.html', 
-                  {'appointments': zip(appointments, patients), 'doctor': doctor})
+    appointments_qs = models.Appointment.objects.filter(
+        doctorId=request.user.id
+    ).order_by('-appointmentDate', '-id')
+    rows = pair_appointments_with_patients(appointments_qs)
+    return render(request, 'hospital/doctor_view_appointment.html',
+                  {'appointments': rows, 'doctor': doctor})
 
 
 @login_required(login_url='doctorlogin')
@@ -781,17 +809,21 @@ def doctor_view_appointment_view(request):
 def doctor_delete_appointment_view(request):
     """Trang xoa lich hen."""
     doctor = get_object_or_404(models.Doctor, user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
-    patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
-    return render(request, 'hospital/doctor_delete_appointment.html', 
-                  {'appointments': zip(appointments, patients), 'doctor': doctor})
+    appointments_qs = models.Appointment.objects.filter(
+        doctorId=request.user.id
+    ).order_by('-appointmentDate', '-id')
+    rows = pair_appointments_with_patients(appointments_qs)
+    return render(request, 'hospital/doctor_delete_appointment.html',
+                  {'appointments': rows, 'doctor': doctor})
 
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def delete_appointment_view(request, pk):
     """Xoa lich hen."""
-    appointment = get_object_or_404(models.Appointment, id=pk)
+    appointment = get_object_or_404(
+        models.Appointment, id=pk, doctorId=request.user.id
+    )
     appointment.delete()
     
     if is_ajax(request):
@@ -855,15 +887,20 @@ def patient_book_appointment_view(request):
         appointmentForm = forms.PatientAppointmentForm(request.POST)
         
         if appointmentForm.is_valid():
-            doctor_id = request.POST.get('doctorId')
-            doctor = get_object_or_404(models.Doctor, user_id=doctor_id)
-            
+            doctor = appointmentForm.cleaned_data['doctorId']
             appointment = appointmentForm.save(commit=False)
-            appointment.doctorId = doctor_id
+            appointment.doctorId = doctor.user_id
             appointment.patientId = request.user.id
-            appointment.doctorName = doctor.user.first_name
-            appointment.patientName = request.user.first_name
+            appointment.doctorName = doctor.get_name
+            appointment.patientName = patient.get_name
             appointment.status = False
+            # Handle appointmentDate - use form data if provided, otherwise use today
+            appointment_date = request.POST.get('appointmentDate')
+            if appointment_date:
+                from datetime import datetime as dt
+                appointment.appointmentDate = dt.strptime(appointment_date, '%Y-%m-%d').date()
+            else:
+                appointment.appointmentDate = date.today()
             appointment.save()
             
             if is_ajax(request):
@@ -873,7 +910,8 @@ def patient_book_appointment_view(request):
                     'redirect': '/patient-view-appointment'
                 })
             
-            return HttpResponseRedirect('patient-view-appointment')
+            return redirect('patient-view-appointment')
+        context['appointmentForm'] = appointmentForm
     
     return render(request, 'hospital/patient_book_appointment.html', context=context)
 
@@ -910,8 +948,10 @@ def search_doctor_view(request):
 def patient_view_appointment_view(request):
     """Xem lich hen cua benh nhan."""
     patient = get_object_or_404(models.Patient, user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(patientId=request.user.id)
-    return render(request, 'hospital/patient_view_appointment.html', 
+    appointments = models.Appointment.objects.filter(
+        patientId=request.user.id
+    ).order_by('-appointmentDate', '-id')
+    return render(request, 'hospital/patient_view_appointment.html',
                   {'appointments': appointments, 'patient': patient})
 
 
@@ -963,26 +1003,30 @@ def aboutus_view(request):
 def contactus_view(request):
     """Trang lien he."""
     contact_form = forms.ContactusForm()
-    
+
     if request.method == 'POST':
         contact_form = forms.ContactusForm(request.POST)
-        
+
         if contact_form.is_valid():
             name = contact_form.cleaned_data['Name']
             email = contact_form.cleaned_data['Email']
             message = contact_form.cleaned_data['Message']
-            
+
             try:
                 send_mail(
                     f'{name} || {email}',
                     message,
                     settings.EMAIL_HOST_USER,
-                    settings.EMAIL_RECEIVING_USER,
+                    [settings.EMAIL_RECEIVING_USER] if isinstance(settings.EMAIL_RECEIVING_USER, str) else settings.EMAIL_RECEIVING_USER,
                     fail_silently=False
                 )
-            except Exception:
-                pass
-            
+            except Exception as e:
+                # Log error but still show success to avoid user confusion
+                # In production, you might want to show an error message
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Failed to send contact email: {e}")
+
             return render(request, 'hospital/contactussuccess.html')
-    
+
     return render(request, 'hospital/contactus.html', {'form': contact_form})

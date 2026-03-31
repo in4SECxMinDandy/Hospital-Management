@@ -1,42 +1,445 @@
 {% extends 'hospital/admin_base.html' %}
 {% load widget_tweaks %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
 {% block content %}
-
-  <br><br>
-<!------ add appointment page by admin(sumit)  ---------->
-<form method="post">
-  {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
-      <div class="note">
-        <p>Đặt lịch hẹn</p>
+<div class="page-content">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-icon page-header-icon--primary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="12" y1="14" x2="12" y2="18"/>
+          <line x1="10" y1="16" x2="14" y2="16"/>
+        </svg>
       </div>
-      <div class="form-content">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              {% render_field appointmentForm.description class="form-control" placeholder="Mô tả" %}
-            </div>
-            <div class="form-group">
-              {% render_field appointmentForm.doctorId class="form-control" placeholder="Bác sĩ" %}
-            </div>
-            <div class="form-group">
-              {% render_field appointmentForm.patientId class="form-control" placeholder="Bệnh nhân" %}
-            </div>
-
-          </div>
-
-        </div>
-        <button type="submit" class="btnSubmit">Đặt lịch</button>
+      <div>
+        <h1 class="page-title">Đặt lịch hẹn mới</h1>
+        <p class="page-subtitle">Tạo lịch hẹn khám bệnh cho bệnh nhân</p>
       </div>
     </div>
+    <a href="{% url 'admin-view-appointment' %}" class="btn btn-secondary btn-sm">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Danh sách lịch hẹn
+    </a>
   </div>
-</form>
 
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+  <!-- Form Card -->
+  <div class="form-card">
+    <form method="post" enctype="multipart/form-data" class="appointment-form" novalidate>
+      {% csrf_token %}
 
-{% endblock content %}
+      <!-- Doctor & Patient Row -->
+      <div class="form-row form-row--two">
+        <div class="form-group">
+          <label class="form-label" for="id_doctorId">
+            <span class="form-label-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </span>
+            Bác sĩ <span class="required-mark" aria-label="bắt buộc">*</span>
+          </label>
+          {% render_field appointmentForm.doctorId class="form-control form-select" %}
+          {% if appointmentForm.doctorId.errors %}
+            <span class="form-error" role="alert">{{ appointmentForm.doctorId.errors.0 }}</span>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_patientId">
+            <span class="form-label-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            Bệnh nhân <span class="required-mark" aria-label="bắt buộc">*</span>
+          </label>
+          {% render_field appointmentForm.patientId class="form-control form-select" %}
+          {% if appointmentForm.patientId.errors %}
+            <span class="form-error" role="alert">{{ appointmentForm.patientId.errors.0 }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Date & Status Row -->
+      <div class="form-row form-row--two">
+        <div class="form-group">
+          <label class="form-label" for="id_appointmentDate">
+            <span class="form-label-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </span>
+            Ngày hẹn
+          </label>
+          {% render_field appointmentForm.appointmentDate class="form-control" type="date" %}
+          {% if appointmentForm.appointmentDate.errors %}
+            <span class="form-error" role="alert">{{ appointmentForm.appointmentDate.errors.0 }}</span>
+          {% endif %}
+          <span class="form-hint">Để trống để sử dụng ngày hiện tại</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_status">
+            <span class="form-label-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            Trạng thái
+          </label>
+          {% render_field appointmentForm.status class="form-control form-select" %}
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="id_description">
+          <span class="form-label-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="17" y1="10" x2="3" y2="10"/>
+              <line x1="21" y1="6" x2="3" y2="6"/>
+              <line x1="21" y1="14" x2="3" y2="14"/>
+              <line x1="17" y1="18" x2="3" y2="18"/>
+            </svg>
+          </span>
+          Mô tả / Ghi chú
+        </label>
+        {% render_field appointmentForm.description class="form-control form-textarea" rows="4" placeholder="Mô tả triệu chứng, lý do khám hoặc ghi chú đặc biệt cho bác sĩ..." %}
+        {% if appointmentForm.description.errors %}
+          <span class="form-error" role="alert">{{ appointmentForm.description.errors.0 }}</span>
+        {% endif %}
+      </div>
+
+      <!-- Quick Info -->
+      <div class="appointment-summary">
+        <div class="appointment-summary-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <p class="appointment-summary-text">
+          Lịch hẹn mới sẽ được gửi thông báo đến bác sĩ và bệnh nhân liên quan.
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="12" y1="14" x2="12" y2="18"/>
+            <line x1="10" y1="16" x2="14" y2="16"/>
+          </svg>
+          Đặt lịch hẹn
+        </button>
+        <a href="{% url 'admin-view-appointment' %}" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Hủy bỏ
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* ===== Page Header ===== */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .page-header-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .page-header-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .page-header-icon--primary {
+    background: var(--primary-100);
+    color: var(--primary-600);
+  }
+
+  .page-header-icon--success {
+    background: var(--success-50);
+    color: var(--success-600);
+  }
+
+  .page-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* ===== Form Card ===== */
+  .form-card {
+    background: var(--neutral-0);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    padding: var(--space-8);
+    max-width: 860px;
+  }
+
+  .appointment-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  /* ===== Form Rows ===== */
+  .form-row {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .form-row--two {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 640px) {
+    .form-row--two {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== Form Groups ===== */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .form-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .form-label-icon {
+    color: var(--slate-400);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .required-mark {
+    color: var(--danger-500);
+    font-size: var(--text-base);
+    line-height: 1;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: var(--text-base);
+    font-family: inherit;
+    color: var(--text-primary);
+    background: var(--neutral-0);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-control:hover {
+    border-color: var(--slate-300);
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+    background: var(--neutral-0);
+  }
+
+  .form-control.form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.6;
+  }
+
+  .form-error {
+    font-size: var(--text-xs);
+    color: var(--danger-600);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .form-hint {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+  }
+
+  /* ===== Summary ===== */
+  .appointment-summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--primary-50);
+    border: 1px solid var(--primary-100);
+    border-radius: var(--radius-lg);
+  }
+
+  .appointment-summary-icon {
+    color: var(--primary-600);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+  }
+
+  .appointment-summary-text {
+    font-size: var(--text-sm);
+    color: var(--primary-700);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ===== Actions ===== */
+  .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border-light);
+    margin-top: var(--space-2);
+  }
+
+  /* ===== Button Overrides for Dashboard ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 10px 20px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: var(--radius-lg);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--primary-600);
+    color: #ffffff;
+    border-color: var(--primary-600);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-700);
+    border-color: var(--primary-700);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgb(37 99 235 / 0.35);
+    color: #ffffff;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-color);
+  }
+
+  .btn-secondary:hover {
+    background: var(--slate-50);
+    border-color: var(--slate-300);
+    color: var(--text-primary);
+  }
+
+  .btn-lg {
+    padding: 13px 24px;
+    font-size: var(--text-base);
+  }
+
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: var(--text-xs);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .form-card {
+      padding: var(--space-5);
+    }
+
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .form-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}

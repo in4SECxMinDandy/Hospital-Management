@@ -1,104 +1,49 @@
-<!DOCTYPE html>
+{% extends 'hospital/homebase.html' %}
+{% load static %}
 {% load widget_tweaks %}
-<html lang="en" dir="ltr">
+{% block title %}Đăng nhập bệnh nhân — Clinic Pro{% endblock %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý Bệnh viện</title>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 
-
-  <style type="text/css">
-    body {
-      color: #aa082e;
-      background-color: #b6bde7;
-      font-family: 'Roboto', sans-serif;
-    }
-
-    a:link {
-      text-decoration: none;
-    }
-
-    .note {
-      text-align: center;
-      height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
-      color: #fff;
-      font-weight: bold;
-      line-height: 80px;
-    }
-
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
-    }
-
-    .form-control {
-      border-radius: 1.5rem;
-    }
-
-    .btnSubmit {
-      border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
-      cursor: pointer;
-      background: #0062cc;
-      color: #fff;
-    }
-  </style>
-
-</head>
-
-<body>
-  {% include "hospital/navbar.html" %}
-  <br>
-  <br>
-  <br><br>
-
-  <!--- login page for patient by admin(sumit)  ---------->
-  <form method="post">
-    {% csrf_token %}
-    <div class="container register-form">
-      <div class="form">
-        <div class="note">
-          <p>Trang đăng nhập Bệnh nhân</p>
-        </div>
-
-        <div class="form-content">
-          <div class="row">
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.username class="form-control" placeholder="Tên đăng nhập" %}
-              </div>
-
-            </div>
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.password class="form-control" placeholder="Mật khẩu" %}
-              </div>
-
-            </div>
-          </div>
-          <button type="submit" class="btnSubmit">Đăng nhập</button>
-          <div class="text-center">Chưa có tài khoản? <a href="patientsignup">Đăng ký tại đây</a></div>
-        </div>
-      </div>
+<div class="auth-page">
+  <div class="auth-card" role="region" aria-labelledby="auth-patient-title">
+    <div class="auth-card-header" id="auth-patient-title">
+      Đăng nhập bệnh nhân
     </div>
-
-  </form>
-
-  <br><br><br>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/AT05s
-  -->
-
-  {% include "hospital/footer.html" %}
-</body>
-
-</html>
+    <div class="auth-card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-grid">
+          <div class="form-group-auth">
+            <label for="id_username">Tên đăng nhập</label>
+            {% render_field form.username class="form-control-auth" autocomplete="username" aria-required="true" %}
+            {% if form.username.errors %}
+              <div class="form-error-text">{{ form.username.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="form-group-auth">
+            <label for="id_password">Mật khẩu</label>
+            {% render_field form.password class="form-control-auth" autocomplete="current-password" aria-required="true" %}
+            {% if form.password.errors %}
+              <div class="form-error-text">{{ form.password.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% if form.non_field_errors %}
+          <div class="form-error-text" role="alert" style="margin-top: 12px;">
+            {{ form.non_field_errors.0 }}
+          </div>
+        {% endif %}
+        <div class="form-actions-auth">
+          <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
+        </div>
+        <div class="form-footer-auth">
+          Chưa có tài khoản?
+          <a href="/patientsignup">Đăng ký tại đây</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

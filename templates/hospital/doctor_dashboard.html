@@ -31,7 +31,7 @@
     </div>
     <div class="stat-content">
       <div class="stat-value">{{ appointmentcount }}</div>
-      <div class="stat-label">Lịch hẹn hôm nay</div>
+      <div class="stat-label">Tổng lịch hẹn (mọi trạng thái)</div>
     </div>
   </div>
 
@@ -87,10 +87,10 @@
             <td>
               <div class="cell-user">
                 <div class="cell-user-avatar">
-                  {% if p.profile_pic %}
+                  {% if p and p.profile_pic %}
                   <img src="{{ p.profile_pic.url }}" alt="{{ a.patientName }}">
                   {% else %}
-                  {{ a.patientName|slice:":1" }}
+                  {{ a.patientName|slice:":1"|default:"?" }}
                   {% endif %}
                 </div>
                 <div class="cell-user-info">

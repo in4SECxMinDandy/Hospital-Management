@@ -27,6 +27,15 @@ class DoctorForm(forms.ModelForm):
         model=models.Doctor
         fields=['address','mobile','department','status','profile_pic']
 
+    def clean_mobile(self):
+        mobile = self.cleaned_data.get('mobile')
+        if mobile:
+            import re
+            # Vietnamese phone number validation (10 digits starting with 0)
+            if not re.match(r'^0\d{9}$', mobile):
+                raise forms.ValidationError('Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0')
+        return mobile
+
 
 
 #for teacher related form
@@ -46,21 +55,39 @@ class PatientForm(forms.ModelForm):
         model=models.Patient
         fields=['address','mobile','status','symptoms','profile_pic']
 
+    def clean_mobile(self):
+        mobile = self.cleaned_data.get('mobile')
+        if mobile:
+            import re
+            # Vietnamese phone number validation (10 digits starting with 0)
+            if not re.match(r'^0\d{9}$', mobile):
+                raise forms.ValidationError('Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0')
+        return mobile
+
+    def clean_symptoms(self):
+        symptoms = self.cleaned_data.get('symptoms')
+        if symptoms and len(symptoms) < 3:
+            raise forms.ValidationError('Mô tả triệu chứng phải có ít nhất 3 ký tự')
+        return symptoms
+
 
 
 class AppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên bác sĩ và Khoa", to_field_name="user_id")
     patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all().filter(status=True),empty_label="Tên bệnh nhân và Triệu chứng", to_field_name="user_id")
+    appointmentDate=forms.DateField(widget=forms.DateInput(attrs={'type':'date'}),required=False)
     class Meta:
         model=models.Appointment
-        fields=['description','status']
+        fields=['description','status','appointmentDate']
 
 
 class PatientAppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên bác sĩ và Khoa", to_field_name="user_id")
+    appointmentDate=forms.DateField(widget=forms.DateInput(attrs={'type':'date'}),required=False)
     class Meta:
         model=models.Appointment
-        fields=['description','status']
+        # status luon dat trong view (False = cho duyet) de tranh loi form / thieu field tren template
+        fields=['description','appointmentDate']
 
 
 #for contact us page

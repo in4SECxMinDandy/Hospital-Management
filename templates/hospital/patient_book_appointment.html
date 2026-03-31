@@ -2,50 +2,80 @@
 {% load widget_tweaks %}
 {% block content %}
 
-  <br><br>
-{% if message %}
-<script>
-  var a = "{{message}}";
-  alert(a);
-</script>
+<div class="page-content">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">Đặt lịch hẹn</h1>
+      <p class="page-subtitle">Chọn bác sĩ và đặt lịch khám</p>
+    </div>
+  </div>
 
-{% endif %}
+  {% if appointmentForm.non_field_errors %}
+  <div class="alert alert-danger animate-fadeIn" role="alert">
+    <div class="alert-content">{{ appointmentForm.non_field_errors }}</div>
+  </div>
+  {% endif %}
 
+  {% if message %}
+  <div class="alert alert-warning animate-fadeIn">
+    <div class="alert-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="alert-content">
+      {{ message }}
+    </div>
+  </div>
+  {% endif %}
 
-<!------ add appointment page by patient(sumit)  ---------->
-<form method="post">
-  {% csrf_token %}
-  <div class="container register-form">
-    <div class="form">
-      <div class="note">
-        <p>Đặt lịch hẹn</p>
-      </div>
-      <div class="form-content">
+  <div class="card">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label required">Bác sĩ</label>
+              {% render_field appointmentForm.doctorId class="form-control form-select" %}
+              {% if appointmentForm.doctorId.errors %}
+                <div class="form-error">{{ appointmentForm.doctorId.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Ngày hẹn</label>
+              {% render_field appointmentForm.appointmentDate class="form-control" %}
+              {% if appointmentForm.appointmentDate.errors %}
+                <div class="form-error">{{ appointmentForm.appointmentDate.errors }}</div>
+              {% endif %}
+              <div class="form-text">Để trống để sử dụng ngày hiện tại</div>
+            </div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              {% render_field appointmentForm.description class="form-control" placeholder="Mô tả" %}
+              <label class="form-label required">Mô tả triệu chứng</label>
+              {% render_field appointmentForm.description class="form-control form-textarea" rows="4" placeholder="Mô tả triệu chứng hoặc lý do khám" %}
+              {% if appointmentForm.description.errors %}
+                <div class="form-error">{{ appointmentForm.description.errors }}</div>
+              {% endif %}
             </div>
-            <div class="form-group">
-              {% render_field appointmentForm.doctorId class="form-control" placeholder="Bác sĩ" %}
-            </div>
-
-
-
-
           </div>
-
         </div>
-        <button type="submit" class="btnSubmit">Đặt lịch</button>
-      </div>
+
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Đặt lịch
+          </button>
+          <a href="{% url 'patient-view-appointment' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+          </a>
+        </div>
+      </form>
     </div>
   </div>
-</form>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
+</div>
 
 {% endblock content %}

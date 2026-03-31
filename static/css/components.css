@@ -1,0 +1,154 @@
+/**
+ * Buttons, cards, alerts — tái sử dụng trên landing & auth
+ */
+.landing-main {
+  padding-top: calc(var(--navbar-height) + var(--space-6));
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+/* Noi dung chinh duoi navbar co dinh (homebase) */
+.landing-content-main {
+  padding-top: calc(var(--navbar-height) + var(--space-6));
+  min-height: 40vh;
+}
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4) var(--space-12);
+  background: linear-gradient(165deg, var(--neutral-50) 0%, var(--primary-50) 45%, var(--neutral-50) 100%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 920px;
+  background: var(--neutral-0);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.auth-card-header {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-on-primary);
+  background: linear-gradient(120deg, var(--primary-600), #6366f1);
+  font-weight: 700;
+  font-size: var(--text-xl);
+}
+
+.auth-card-body {
+  padding: var(--space-8);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 10px 20px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: var(--radius-lg);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--primary-600);
+  color: var(--text-on-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-700);
+  color: var(--text-on-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+  background: var(--neutral-100);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--neutral-200);
+}
+
+.btn-lg {
+  padding: 14px 28px;
+  font-size: var(--text-base);
+}
+
+.hero-patient {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+}
+
+.hero-patient h1 {
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+  line-height: 1.2;
+}
+
+.hero-patient .lead {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.hero-patient .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+  margin-top: var(--space-6);
+}
+
+.page-about {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--space-8) var(--space-4) var(--space-12);
+}
+
+.page-about .about-badge {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--success-50);
+  color: var(--success-600);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-6);
+}
+
+.page-about h1 {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+  color: var(--text-primary);
+}
+
+.page-about p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-lg);
+}
