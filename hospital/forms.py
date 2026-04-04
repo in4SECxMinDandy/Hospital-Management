@@ -25,7 +25,10 @@ class DoctorUserForm(forms.ModelForm):
 class DoctorForm(forms.ModelForm):
     class Meta:
         model=models.Doctor
-        fields=['address','mobile','department','status','profile_pic']
+        # LOAI BO: status, address, mobile, profile_pic - chi admin moi set duoc
+        fields=['address','mobile','department','profile_pic']
+        # status luon dat trong view (True = auto approve khi admin tao)
+        # de tranh loi form/thieu field tren template khi dung boi admin
 
     def clean_mobile(self):
         mobile = self.cleaned_data.get('mobile')
@@ -53,7 +56,9 @@ class PatientForm(forms.ModelForm):
     assignedDoctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên và Khoa", to_field_name="user_id")
     class Meta:
         model=models.Patient
-        fields=['address','mobile','status','symptoms','profile_pic']
+        # LOAI BO: status - chi admin moi set duoc thong qua view
+        fields=['address','mobile','symptoms','profile_pic']
+        # status luon dat trong view (True = auto approve khi admin tao)
 
     def clean_mobile(self):
         mobile = self.cleaned_data.get('mobile')

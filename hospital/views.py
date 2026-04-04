@@ -575,12 +575,22 @@ def render_to_pdf(template_src, context_dict):
     return HttpResponse('Loi tao PDF', status=500)
 
 
+@login_required(login_url='adminlogin')
 def download_pdf_view(request, pk):
     """Tai xuong hoa don xuat vien PDF."""
     discharge_details = models.PatientDischargeDetails.objects.filter(patientId=pk).order_by('-id').first()
     
     if not discharge_details:
         return HttpResponse('Khong tim thay hoa don', status=404)
+    
+    # Permission check: chi admin hoac chinh benh nhan do moi duoc tai
+    if not is_admin(request.user):
+        try:
+            patient = models.Patient.objects.get(id=pk)
+            if patient.user_id != request.user.id:
+                return HttpResponse('Ban khong co quyen tai hoa don nay', status=403)
+        except models.Patient.DoesNotExist:
+            return HttpResponse('Ban khong co quyen tai hoa don nay', status=403)
     
     context = {
         'patientName': discharge_details.patientName,
@@ -916,22 +926,20 @@ def patient_book_appointment_view(request):
     return render(request, 'hospital/patient_book_appointment.html', context=context)
 
 
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
 def patient_view_doctor_view(request):
     """Xem danh sach bac si."""
-    if not request.user.is_authenticated:
-        return redirect('patientlogin')
-    
     patient = get_object_or_404(models.Patient, user_id=request.user.id)
     doctors = models.Doctor.objects.filter(status=True)
     return render(request, 'hospital/patient_view_doctor.html', 
                   {'patient': patient, 'doctors': doctors})
 
 
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
 def search_doctor_view(request):
     """Tim kiem bac si."""
-    if not request.user.is_authenticated:
-        return redirect('patientlogin')
-    
     patient = get_object_or_404(models.Patient, user_id=request.user.id)
     query = request.GET.get('query', '').strip()
     
