@@ -1,24 +1,28 @@
 {% extends 'hospital/homebase.html' %}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
+{% load static %}
+{% block title %}Bác sĩ - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom:0px;">
-  <h1 class="display-4" style="text-align:center;">Xin chào, Bác sĩ</h1>
-  <p class="lead">Chào mừng đến với Hệ thống Quản lý Bệnh viện.</p>
-  <hr class="my-4">
-  <p>Bạn có thể truy cập các tính năng khác sau khi Đăng nhập/Đăng ký.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="/doctorsignup" role="button">Ứng tuyển</a>
-    <a class="btn btn-primary btn-lg" href="/doctorlogin" role="button">Đăng nhập</a>
-  </p>
-</div>
+<!-- Role Selection Hero -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-user-md"></i>
+      Bác sĩ
+    </div>
+    <h1 class="hero-title">Xin chào, Bác sĩ</h1>
+    <p class="hero-subtitle">Chào mừng đến với Hệ thống Quản lý Bệnh viện. Đăng nhập hoặc ứng tuyển để bắt đầu công việc.</p>
+    <div class="hero-actions">
+      <a href="/doctorsignup" class="btn btn-primary btn-lg">
+        <i class="fas fa-stethoscope"></i>
+        Ứng tuyển
+      </a>
+      <a href="/doctorlogin" class="btn btn-secondary btn-lg">
+        <i class="fas fa-sign-in-alt"></i>
+        Đăng nhập
+      </a>
+    </div>
+  </div>
+</section>
 
 {% endblock content %}

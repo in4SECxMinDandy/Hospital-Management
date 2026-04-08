@@ -1,24 +1,535 @@
 {% extends 'hospital/homebase.html' %}
 {% load static %}
-{% block title %}Bệnh nhân — Clinic Pro{% endblock %}
+{% block title %}Bệnh nhân - Clinic Pro{% endblock %}
 
 {% block content %}
-<div class="hero-patient">
-  <h1>Xin chào, bệnh nhân</h1>
-  <p class="lead">Chào mừng đến với Hệ thống Quản lý Bệnh viện.</p>
-  <p class="lead">Đăng nhập hoặc đăng ký để đặt lịch khám, xem lịch hẹn và theo dõi hồ sơ.</p>
-  <div class="hero-actions">
-    <a class="btn btn-primary btn-lg" href="/patientlogin">
-      <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
-      Đăng nhập
-    </a>
-    <a class="btn btn-secondary btn-lg" href="/patientsignup">
-      <i class="fas fa-user-plus" aria-hidden="true"></i>
-      Đăng ký tài khoản
-    </a>
+<style>
+  .patient-entry-page {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 72px - 132px);
+    padding: 118px 48px 80px;
+    background:
+      radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 24%),
+      radial-gradient(circle at top right, rgba(37, 99, 235, 0.10), transparent 28%),
+      linear-gradient(180deg, #f7fbff 0%, #ffffff 50%, #f8fafc 100%);
+  }
+
+  .patient-entry-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.30), transparent 72%);
+    pointer-events: none;
+  }
+
+  .patient-entry-shell {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    gap: 26px;
+  }
+
+  .patient-entry-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+    gap: 26px;
+    align-items: stretch;
+  }
+
+  .patient-entry-copy,
+  .patient-entry-panel,
+  .patient-entry-feature,
+  .patient-entry-cta {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 24px 50px -34px rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(10px);
+  }
+
+  .patient-entry-copy {
+    border-radius: 32px;
+    padding: 40px;
+  }
+
+  .patient-entry-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(220, 252, 231, 0.92);
+    color: var(--success-600);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 22px;
+  }
+
+  .patient-entry-copy h1 {
+    margin: 0 0 18px;
+    color: var(--slate-900);
+    font-size: clamp(2.5rem, 4.6vw, 4.1rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    max-width: 11ch;
+  }
+
+  .patient-entry-lead {
+    margin: 0 0 16px;
+    color: var(--slate-600);
+    font-size: 1.12rem;
+    line-height: 1.8;
+    max-width: 60ch;
+  }
+
+  .patient-entry-note {
+    margin: 0 0 30px;
+    color: var(--slate-500);
+    line-height: 1.75;
+  }
+
+  .patient-entry-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .patient-entry-actions .btn {
+    min-width: 200px;
+  }
+
+  .patient-entry-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .patient-entry-quick-item {
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(236, 253, 245, 0.96), rgba(255, 255, 255, 0.96));
+    border: 1px solid rgba(167, 243, 208, 0.9);
+  }
+
+  .patient-entry-quick-item strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--slate-900);
+    font-size: 1.08rem;
+  }
+
+  .patient-entry-quick-item span {
+    color: var(--slate-600);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .patient-entry-panel {
+    border-radius: 30px;
+    padding: 28px;
+    display: grid;
+    gap: 18px;
+    align-content: start;
+  }
+
+  .patient-entry-panel-head {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .patient-entry-panel-title {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .patient-entry-panel-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--success-600), #047857);
+    color: #fff;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .patient-entry-panel h2 {
+    margin: 0 0 4px;
+    color: var(--slate-900);
+    font-size: 1.18rem;
+  }
+
+  .patient-entry-panel-subtitle {
+    margin: 0;
+    color: var(--slate-500);
+    font-size: 0.95rem;
+  }
+
+  .patient-entry-status {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(5, 150, 105, 0.10);
+    color: var(--success-600);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .patient-entry-steps {
+    display: grid;
+    gap: 12px;
+  }
+
+  .patient-entry-step {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid rgba(226, 232, 240, 0.92);
+  }
+
+  .patient-entry-step-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-600);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .patient-entry-step strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--slate-900);
+  }
+
+  .patient-entry-step p {
+    margin: 0;
+    color: var(--slate-600);
+    line-height: 1.65;
+  }
+
+  .patient-entry-panel-note {
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: rgba(239, 246, 255, 0.95);
+    border: 1px solid rgba(191, 219, 254, 0.92);
+    color: var(--slate-700);
+    line-height: 1.7;
+  }
+
+  .patient-entry-section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .patient-entry-section-head h2 {
+    margin: 0 0 8px;
+    color: var(--slate-900);
+    font-size: clamp(1.9rem, 3vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .patient-entry-section-head p {
+    margin: 0;
+    color: var(--slate-600);
+    max-width: 62ch;
+    line-height: 1.7;
+  }
+
+  .patient-entry-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .patient-entry-feature {
+    border-radius: 26px;
+    padding: 26px;
+  }
+
+  .patient-entry-feature i {
+    width: 52px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    font-size: 21px;
+  }
+
+  .patient-entry-feature:nth-child(1) i {
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--primary-600);
+  }
+
+  .patient-entry-feature:nth-child(2) i {
+    background: rgba(5, 150, 105, 0.12);
+    color: var(--success-600);
+  }
+
+  .patient-entry-feature:nth-child(3) i {
+    background: rgba(245, 158, 11, 0.14);
+    color: var(--warning-600);
+  }
+
+  .patient-entry-feature h3 {
+    margin: 0 0 10px;
+    color: var(--slate-900);
+    font-size: 1.1rem;
+  }
+
+  .patient-entry-feature p {
+    margin: 0;
+    color: var(--slate-600);
+    line-height: 1.72;
+  }
+
+  .patient-entry-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) auto;
+    align-items: center;
+    gap: 24px;
+    padding: 30px 34px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(5, 150, 105, 0.90));
+    color: #fff;
+  }
+
+  .patient-entry-cta h2 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    line-height: 1.1;
+  }
+
+  .patient-entry-cta p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.75;
+    max-width: 58ch;
+  }
+
+  .patient-entry-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+
+  .patient-entry-cta .btn-outline {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+  }
+
+  .patient-entry-cta .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.44);
+    color: #fff;
+  }
+
+  @media (max-width: 1080px) {
+    .patient-entry-hero,
+    .patient-entry-features,
+    .patient-entry-cta {
+      grid-template-columns: 1fr;
+    }
+
+    .patient-entry-copy h1 {
+      max-width: none;
+    }
+
+    .patient-entry-cta-actions {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .patient-entry-page {
+      padding: 104px 20px 64px;
+    }
+
+    .patient-entry-copy,
+    .patient-entry-panel,
+    .patient-entry-feature,
+    .patient-entry-cta {
+      padding: 22px;
+    }
+
+    .patient-entry-quick-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .patient-entry-section-head {
+      flex-direction: column;
+      align-items: start;
+    }
+
+    .patient-entry-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<section class="patient-entry-page">
+  <div class="patient-entry-shell">
+    <div class="patient-entry-hero">
+      <article class="patient-entry-copy">
+        <p class="patient-entry-badge" role="status">
+          <i class="fas fa-user-injured" aria-hidden="true"></i>
+          Khu vực bệnh nhân
+        </p>
+        <h1>Chủ động đặt lịch và theo dõi hồ sơ dễ hơn</h1>
+        <p class="patient-entry-lead">
+          Đây là điểm bắt đầu dành cho bệnh nhân muốn đăng nhập, tạo tài khoản và sử dụng các chức năng đặt lịch khám
+          trong hệ thống Clinic Pro.
+        </p>
+        <p class="patient-entry-note">
+          Sau khi đăng nhập, bạn có thể xem lịch hẹn cá nhân, theo dõi hồ sơ và làm việc với bác sĩ trên cùng một luồng
+          thông tin rõ ràng hơn.
+        </p>
+
+        <div class="patient-entry-actions">
+          <a class="btn btn-primary btn-lg" href="/patientlogin">
+            <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+            Đăng nhập
+          </a>
+          <a class="btn btn-outline btn-lg" href="/patientsignup">
+            <i class="fas fa-user-plus" aria-hidden="true"></i>
+            Đăng ký tài khoản
+          </a>
+        </div>
+
+        <div class="patient-entry-quick-grid" aria-label="Lợi ích chính">
+          <div class="patient-entry-quick-item">
+            <strong>Đặt lịch nhanh</strong>
+            <span>Chọn bác sĩ và gửi yêu cầu khám từ tài khoản cá nhân.</span>
+          </div>
+          <div class="patient-entry-quick-item">
+            <strong>Theo dõi lịch hẹn</strong>
+            <span>Xem trạng thái lịch đã đặt mà không cần liên hệ thủ công.</span>
+          </div>
+          <div class="patient-entry-quick-item">
+            <strong>Hồ sơ tập trung</strong>
+            <span>Cập nhật và xem lại thông tin cá nhân trên cùng một nơi.</span>
+          </div>
+        </div>
+      </article>
+
+      <aside class="patient-entry-panel" aria-label="Quy trình cho bệnh nhân">
+        <div class="patient-entry-panel-head">
+          <div class="patient-entry-panel-title">
+            <div class="patient-entry-panel-icon">
+              <i class="fas fa-calendar-heart" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h2>Quy trình sử dụng rõ ràng</h2>
+              <p class="patient-entry-panel-subtitle">Đi từ đăng ký đến lịch khám mà không bị rối luồng.</p>
+            </div>
+          </div>
+          <span class="patient-entry-status">3 bước chính</span>
+        </div>
+
+        <div class="patient-entry-steps">
+          <div class="patient-entry-step">
+            <span class="patient-entry-step-number">1</span>
+            <div>
+              <strong>Tạo tài khoản hoặc đăng nhập</strong>
+              <p>Nếu chưa có tài khoản, bạn có thể đăng ký ngay để bắt đầu sử dụng khu vực bệnh nhân.</p>
+            </div>
+          </div>
+          <div class="patient-entry-step">
+            <span class="patient-entry-step-number">2</span>
+            <div>
+              <strong>Chọn bác sĩ và gửi lịch hẹn</strong>
+              <p>Sau khi vào hệ thống, bạn có thể đặt lịch khám và theo dõi trạng thái xử lý của từng yêu cầu.</p>
+            </div>
+          </div>
+          <div class="patient-entry-step">
+            <span class="patient-entry-step-number">3</span>
+            <div>
+              <strong>Xem hồ sơ và thông tin liên quan</strong>
+              <p>Lịch hẹn, hồ sơ cá nhân và các cập nhật cần thiết được tập trung trong khu vực tài khoản của bạn.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="patient-entry-panel-note">
+          Đặt lịch và xem lịch hẹn khả dụng sau khi đăng nhập trong menu <strong>Lịch hẹn</strong> của trang bệnh nhân.
+        </div>
+      </aside>
+    </div>
+
+    <section aria-labelledby="patient-feature-heading">
+      <div class="patient-entry-section-head">
+        <div>
+          <h2 id="patient-feature-heading">Những gì bạn có thể làm sau khi đăng nhập</h2>
+          <p>
+            Giao diện bệnh nhân được tối ưu để tập trung vào các thao tác thực tế: xem lịch, theo dõi hồ sơ và làm việc
+            với thông tin khám chữa bệnh mà không phải đi qua nhiều màn hình dư thừa.
+          </p>
+        </div>
+      </div>
+
+      <div class="patient-entry-features">
+        <article class="patient-entry-feature">
+          <i class="fas fa-notes-medical" aria-hidden="true"></i>
+          <h3>Quản lý hồ sơ cá nhân</h3>
+          <p>Cập nhật thông tin cần thiết và xem lại hồ sơ trong cùng một khu vực thay vì phân tán ở nhiều trang khác nhau.</p>
+        </article>
+        <article class="patient-entry-feature">
+          <i class="fas fa-calendar-days" aria-hidden="true"></i>
+          <h3>Theo dõi lịch khám</h3>
+          <p>Xem các lịch đã đặt, trạng thái xử lý và thông tin liên quan để chủ động hơn trong việc đi khám.</p>
+        </article>
+        <article class="patient-entry-feature">
+          <i class="fas fa-user-doctor" aria-hidden="true"></i>
+          <h3>Kết nối với bác sĩ</h3>
+          <p>Tiếp cận danh sách bác sĩ trong hệ thống và gửi yêu cầu khám theo quy trình rõ ràng, dễ hiểu.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="patient-entry-cta" aria-label="Kêu gọi hành động">
+      <div>
+        <h2>Bắt đầu khu vực bệnh nhân ngay bây giờ</h2>
+        <p>
+          Nếu bạn đã có tài khoản, hãy đăng nhập để tiếp tục. Nếu chưa có, tạo tài khoản mới để sử dụng chức năng đặt
+          lịch và theo dõi thông tin cá nhân trong hệ thống.
+        </p>
+      </div>
+      <div class="patient-entry-cta-actions">
+        <a class="btn btn-primary btn-lg" href="/patientlogin">
+          <i class="fas fa-right-to-bracket" aria-hidden="true"></i>
+          Vào trang đăng nhập
+        </a>
+        <a class="btn btn-outline btn-lg" href="/patientsignup">
+          <i class="fas fa-address-card" aria-hidden="true"></i>
+          Tạo tài khoản mới
+        </a>
+      </div>
+    </section>
   </div>
-  <p class="lead" style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
-    Đặt lịch và xem lịch hẹn chỉ khả dụng sau khi đăng nhập (menu <strong>Lịch hẹn</strong> trên trang bệnh nhân).
-  </p>
-</div>
+</section>
 {% endblock content %}

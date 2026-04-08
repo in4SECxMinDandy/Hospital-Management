@@ -1,53 +1,37 @@
-<!DOCTYPE html>
+{% extends 'hospital/homebase.html' %}
+{% load static %}
+{% block title %}Chờ phê duyệt - Clinic Dashboard{% endblock %}
+{% block content %}
 
-<html lang="en" dir="ltr">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý Bệnh viện</title>
-
-
-  <style media="screen">
-    .jumbotron {
-      margin-top: 0px;
-      margin-bottom: 0px;
-    }
-
-    .jumbotron h1 {
-      text-align: center;
-    }
-
-    .alert {
-      margin: 0px;
-    }
-  </style>
-
-</head>
-
-<body>
-  {% include "hospital/navbar.html" %}
-  <br>
-  <br>
-
-  <div class="jumbotron" style="margin-top: 0px;
-    margin-bottom: 0px;">
-    <h1 class="display-4">Xin chào {{request.user.first_name}}</h1>
-    <p class="lead">Tài khoản của bạn chưa được phê duyệt cho đến nay <br><br>Đội ngũ của chúng tôi đang kiểm tra hồ sơ
-      của bạn <br><br> Tài khoản của bạn sẽ được xác nhận sớm !!!</p>
-    <hr class="my-4">
-    <p>Kiểm tra lại sau</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" href="/logout" role="button">Đăng xuất</a>
-    </p>
+<!-- Pending Approval Card -->
+<div class="hero-section" style="min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+  <div class="hero-content" style="max-width: 560px;">
+    <div class="hero-badge" style="background: var(--warning-50); color: var(--warning-600); border: 1px solid var(--warning-200);">
+      <i class="fas fa-clock"></i>
+      Đang chờ phê duyệt
+    </div>
+    <h1 class="hero-title">Xin chào, {{ request.user.first_name }}!</h1>
+    <p class="hero-subtitle">Đơn ứng tuyển của bạn đang được xem xét.</p>
+    <div style="background: var(--primary-50); padding: 24px; border-radius: var(--radius-xl); margin: 24px 0; text-align: left;">
+      <div style="display: flex; gap: 16px; align-items: flex-start;">
+        <div style="width: 44px; height: 44px; background: var(--primary-100); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <i class="fas fa-info-circle" style="color: var(--primary-600); font-size: 20px;"></i>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 16px; color: var(--text-primary);">Hồ sơ của bạn đang được xem xét</h4>
+          <p style="margin: 0; font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+            Đội ngũ quản trị đang kiểm tra hồ sơ ứng tuyển của bạn. Chúng tôi sẽ thông báo khi tài khoản được xác nhận. Vui lòng kiểm tra lại sau.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-actions" style="justify-content: center;">
+      <a href="/logout" class="btn btn-secondary btn-lg">
+        <i class="fas fa-sign-out-alt"></i>
+        Đăng xuất
+      </a>
+    </div>
   </div>
+</div>
 
-  {% include "hospital/footer.html" %}
-</body>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
-</html>
+{% endblock content %}

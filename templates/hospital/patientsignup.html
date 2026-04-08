@@ -52,8 +52,9 @@
             {% if patientForm.symptoms.errors %}<div class="form-error-text">{{ patientForm.symptoms.errors.0 }}</div>{% endif %}
           </div>
           <div class="form-group-auth">
-            <label for="id_assignedDoctorId">Bác sĩ phụ trách</label>
+            <label for="id_assignedDoctorId">Bác sĩ phụ trách (tùy chọn)</label>
             {% render_field patientForm.assignedDoctorId class="form-control-auth" %}
+            <span class="form-error-text" style="color: var(--text-secondary);">Bạn có thể bỏ qua bước này và chọn bác sĩ khi đặt lịch hẹn.</span>
             {% if patientForm.assignedDoctorId.errors %}<div class="form-error-text">{{ patientForm.assignedDoctorId.errors.0 }}</div>{% endif %}
           </div>
           <div class="form-group-auth" style="grid-column: 1 / -1;">

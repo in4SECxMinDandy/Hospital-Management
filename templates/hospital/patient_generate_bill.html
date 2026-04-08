@@ -1,134 +1,399 @@
 {% extends 'hospital/admin_base.html' %}
-{% load static %}
+{% block title %}Tạo hóa đơn xuất viện - Clinic Pro{% endblock %}
+
 {% block content %}
+<style>
+  .bill-page {
+    display: grid;
+    gap: 24px;
+  }
 
-    <title>Mẫu hóa đơn đơn giản</title>
+  .bill-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 24px;
+  }
 
-  <br><br><br>
-<div class="invoice-box">
-  <table cellpadding="0" cellspacing="0">
-    <tr class="top">
-      <td colspan="2">
-        <table>
-          <tr>
-            <td class="title">
-              <h1>Quản lý Bệnh viện</h1>
-            </td>
+  .bill-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 24px 50px -34px rgba(15, 23, 42, 0.22);
+    border-radius: 28px;
+  }
 
-            <td>
+  .bill-card-body {
+    padding: 28px;
+  }
 
-              Ngày nhập viện: {{admitDate}}<br>
-              Ngày xuất viện: {{todayDate}}<br>
-              Số ngày nằm viện: {{day}}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+  .bill-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.10);
+    color: var(--primary-700);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
 
-    <tr class="information">
-      <td colspan="2">
-        <table>
-          <tr>
-            <td>
-              Tên Bệnh nhân : {{name}}<br>
-              Số điện thoại : {{mobile}}<br>
-              Địa chỉ : {{address}}<br>
-            </td>
+  .bill-title {
+    margin: 0 0 8px;
+    color: var(--text-primary);
+    font-size: clamp(2rem, 3.2vw, 2.7rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
 
-            <td>
-              Tên Bác sĩ :<br>
-              {{assignedDoctorName}}<br>
+  .bill-subtitle {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
 
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+  .bill-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 22px;
+  }
 
-    <tr class="heading">
-      <td>
-        Bệnh và Triệu chứng
-      </td>
-      <td>
+  .bill-info-item {
+    padding: 18px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    border: 1px solid var(--border-color-light);
+  }
 
-      </td>
+  .bill-info-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 
-    </tr>
+  .bill-info-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.6;
+  }
 
-    <tr class="details">
-      <td>
-        {{symptoms}}
-      </td>
-    </tr>
-    <tr class="heading">
-      <td>
-        Khoản mục
-      </td>
+  .bill-info-item.full {
+    grid-column: 1 / -1;
+  }
 
-      <td>
-        Giá
-      </td>
-    </tr>
-    <form method="post">
-      {% csrf_token %}
+  .bill-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
 
-      <tr class="item">
-        <td>
-          Tiền phòng (Mỗi ngày)
-        </td>
+  .bill-form-header h2,
+  .bill-summary-card h2 {
+    margin: 0 0 6px;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+  }
 
-        <td>
-          <input type="number" name="roomCharge" placeholder="Nhập số tiền" value="">
-        </td>
-      </tr>
+  .bill-form-header p,
+  .bill-summary-card p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
 
-      <tr class="item">
-        <td>
-          Phí Bác sĩ
-        </td>
+  .bill-tag {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(5, 150, 105, 0.10);
+    color: var(--success-600);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-        <td>
-          <input type="number" name="doctorFee" placeholder="Nhập số tiền" value="">
-        </td>
-      </tr>
+  .bill-alert {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #b91c1c;
+    line-height: 1.6;
+  }
 
-      <tr class="item">
-        <td>
-          Tiền thuốc
-        </td>
+  .bill-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 
-        <td>
-          <input type="number" name="medicineCost" placeholder="Nhập số tiền" value="">
-        </td>
-      </tr>
+  .bill-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-      <tr class="item last">
-        <td>
-          Chi phí khác
-        </td>
+  .bill-form-group label {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+  }
 
-        <td>
-          <input type="number" name="OtherCharge" placeholder="Nhập số tiền" value="">
-        </td>
-      </tr>
+  .bill-form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border-color);
+    background: #fff;
+    color: var(--text-primary);
+    font: inherit;
+    box-sizing: border-box;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
 
-      <tr class="total">
-        <td></td>
+  .bill-form-group input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
 
-        <td>
-          <input type="submit" name="submit" value="Tạo hóa đơn">
-        </td>
-      </tr>
+  .bill-help {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.6;
+  }
 
-    </form>
-  </table>
+  .bill-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .bill-summary-card {
+    padding: 28px;
+  }
+
+  .bill-summary-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 22px;
+  }
+
+  .bill-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color-light);
+    color: var(--text-secondary);
+  }
+
+  .bill-summary-row strong {
+    color: var(--text-primary);
+  }
+
+  .bill-summary-row.total {
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 2px solid var(--border-color);
+    border-bottom: 0;
+    font-size: 1.08rem;
+  }
+
+  .bill-summary-row.total strong:last-child {
+    color: var(--primary-600);
+    font-size: 1.2rem;
+  }
+
+  .bill-summary-note {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.16);
+    color: #92400e;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 1024px) {
+    .bill-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .bill-card-body,
+    .bill-summary-card {
+      padding: 22px;
+    }
+
+    .bill-info-grid,
+    .bill-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .bill-actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
+    .bill-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="bill-page">
+  <div class="page-header animate-fadeInUp">
+    <div class="page-header-content">
+      <h1 class="page-title">Tạo hóa đơn xuất viện</h1>
+      <p class="page-subtitle">Nhập chi phí điều trị để tạo hóa đơn chuyên nghiệp và tải PDF cho bệnh nhân.</p>
+    </div>
+  </div>
+
+  <div class="bill-layout">
+    <section class="bill-card animate-fadeInUp">
+      <div class="bill-card-body">
+        <div class="bill-kicker">
+          <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+          Hồ sơ thanh toán
+        </div>
+        <h2 class="bill-title">Chuẩn bị hóa đơn cho {{ name }}</h2>
+        <p class="bill-subtitle">
+          Kiểm tra lại thông tin bệnh nhân và nhập chi phí theo từng hạng mục. Hệ thống sẽ tự tính tổng tiền và tạo hóa đơn xuất viện.
+        </p>
+
+        <div class="bill-info-grid">
+          <div class="bill-info-item">
+            <span class="bill-info-label">Bệnh nhân</span>
+            <div class="bill-info-value">{{ name }}</div>
+          </div>
+          <div class="bill-info-item">
+            <span class="bill-info-label">Bác sĩ phụ trách</span>
+            <div class="bill-info-value">{{ assignedDoctorName }}</div>
+          </div>
+          <div class="bill-info-item">
+            <span class="bill-info-label">Ngày nhập viện</span>
+            <div class="bill-info-value">{{ admitDate }}</div>
+          </div>
+          <div class="bill-info-item">
+            <span class="bill-info-label">Số ngày nằm viện</span>
+            <div class="bill-info-value">{{ day }} ngày</div>
+          </div>
+          <div class="bill-info-item full">
+            <span class="bill-info-label">Triệu chứng</span>
+            <div class="bill-info-value">{{ symptoms }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bill-card bill-summary-card animate-fadeInUp" style="animation-delay: 0.08s;">
+      <h2>Tóm tắt dự kiến</h2>
+      <p>Thông tin này cập nhật theo các giá trị bạn nhập trước khi lưu hóa đơn.</p>
+
+      <div class="bill-summary-grid">
+        <div class="bill-summary-row">
+          <span>Tiền phòng mỗi ngày</span>
+          <strong>{{ roomChargePerDayDisplay }}</strong>
+        </div>
+        <div class="bill-summary-row">
+          <span>Tiền phòng {{ day }} ngày</span>
+          <strong>{{ roomChargeDisplay }}</strong>
+        </div>
+        <div class="bill-summary-row">
+          <span>Phí bác sĩ</span>
+          <strong>{{ doctorFeeDisplay }}</strong>
+        </div>
+        <div class="bill-summary-row">
+          <span>Tiền thuốc</span>
+          <strong>{{ medicineCostDisplay }}</strong>
+        </div>
+        <div class="bill-summary-row">
+          <span>Chi phí khác</span>
+          <strong>{{ otherChargeDisplay }}</strong>
+        </div>
+        <div class="bill-summary-row total">
+          <strong>Tổng cộng</strong>
+          <strong>{{ totalDisplay }}</strong>
+        </div>
+      </div>
+
+      <div class="bill-summary-note">
+        Mẹo: chỉ nhập số nguyên theo đơn vị VND, ví dụ <strong>1500000</strong> cho 1.500.000 VND.
+      </div>
+    </section>
+  </div>
+
+  <section class="bill-card animate-fadeInUp" style="animation-delay: 0.12s;">
+    <div class="bill-card-body">
+      <div class="bill-form-header">
+        <div>
+          <h2>Nhập chi phí hóa đơn</h2>
+          <p>Hệ thống sẽ nhân tiền phòng theo số ngày nằm viện và cộng các khoản còn lại để ra tổng tiền.</p>
+        </div>
+        <span class="bill-tag">Mã hóa đơn: {{ invoiceNumber }}</span>
+      </div>
+
+      {% if errorMessage %}
+      <div class="bill-alert">
+        <strong>Không thể tạo hóa đơn.</strong> {{ errorMessage }}
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="bill-form-grid">
+          <div class="bill-form-group">
+            <label for="id_roomCharge">Tiền phòng mỗi ngày</label>
+            <input type="number" min="0" step="1000" inputmode="numeric" name="roomCharge" id="id_roomCharge" value="{{ roomChargePerDay }}">
+            <span class="bill-help">Khoản này sẽ được nhân với {{ day }} ngày nằm viện.</span>
+          </div>
+
+          <div class="bill-form-group">
+            <label for="id_doctorFee">Phí bác sĩ</label>
+            <input type="number" min="0" step="1000" inputmode="numeric" name="doctorFee" id="id_doctorFee" value="{{ doctorFee }}">
+            <span class="bill-help">Chi phí khám và theo dõi điều trị.</span>
+          </div>
+
+          <div class="bill-form-group">
+            <label for="id_medicineCost">Tiền thuốc</label>
+            <input type="number" min="0" step="1000" inputmode="numeric" name="medicineCost" id="id_medicineCost" value="{{ medicineCost }}">
+            <span class="bill-help">Tổng chi phí thuốc trong đợt điều trị.</span>
+          </div>
+
+          <div class="bill-form-group">
+            <label for="id_OtherCharge">Chi phí khác</label>
+            <input type="number" min="0" step="1000" inputmode="numeric" name="OtherCharge" id="id_OtherCharge" value="{{ OtherCharge }}">
+            <span class="bill-help">Ví dụ: xét nghiệm, vật tư hoặc phụ phí bổ sung.</span>
+          </div>
+        </div>
+
+        <div class="bill-actions">
+          <a href="/admin-discharge-patient" class="btn btn-secondary">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            Quay lại danh sách
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-file-circle-check" aria-hidden="true"></i>
+            Tạo hóa đơn
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </div>
-
-<!--
-   developed By : sumit kumar
-   facebook : fb.com/sumit.luv
-   youtube : youtube.com/AT05s
-   -->
-
 {% endblock content %}

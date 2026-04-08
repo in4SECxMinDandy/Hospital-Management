@@ -1,104 +1,224 @@
 <!DOCTYPE html>
-{% load widget_tweaks %}
-<html lang="en" dir="ltr">
-
+{% load static %}
+<html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Quản lý Bệnh viện</title>
-
-
-  <style type="text/css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dang nhap Bac si - Clinic Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563EB'><path d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static '/style.css' %}">
+  <style>
     body {
-      color: #aa082e;
-      background-color: #b6bde7;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
     }
 
-    a:link {
-      text-decoration: none;
+    .auth-shell {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
     }
 
-    .note {
-      text-align: center;
-      height: 80px;
-      background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+    .auth-visual {
+      padding: 48px;
       color: #fff;
-      font-weight: bold;
-      line-height: 80px;
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
     }
 
-    .form-content {
-      padding: 5%;
-      border: 1px solid #ced4da;
-      margin-bottom: 2%;
+    .auth-visual h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .auth-visual p {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .auth-points {
+      display: grid;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .auth-points div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-form {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-form h2 {
+      margin: 0 0 8px;
+      color: #0f172a;
+    }
+
+    .auth-form p {
+      margin: 0 0 24px;
+      color: #64748b;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #334155;
     }
 
     .form-control {
-      border-radius: 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      background: #f8fafc;
     }
 
-    .btnSubmit {
+    .form-control:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      background: #fff;
+    }
+
+    .form-remember {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+
+    .alert-danger {
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 18px;
       border: none;
-      border-radius: 1.5rem;
-      padding: 1%;
-      width: 20%;
-      cursor: pointer;
-      background: #0062cc;
+      border-radius: 12px;
+      background: #2563eb;
       color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    @media (max-width: 768px) {
+      .auth-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-visual {
+        display: none;
+      }
     }
   </style>
-
 </head>
-
 <body>
-  {% include "hospital/navbar.html" %}
-  <br>
-  <br>
-  <br><br>
-
-  <!--- login page for doctor by admin(sumit)  ---------->
-  <form method="post">
-    {% csrf_token %}
-    <div class="container register-form">
-      <div class="form">
-        <div class="note">
-          <p>Trang đăng nhập Bác sĩ</p>
-        </div>
-
-        <div class="form-content">
-          <div class="row">
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.username class="form-control" placeholder="Tên đăng nhập" %}
-              </div>
-
-            </div>
-            <div class="col-md-6">
-
-              <div class="form-group">
-                {% render_field form.password class="form-control" placeholder="Mật khẩu" %}
-              </div>
-
-            </div>
-          </div>
-          <button type="submit" class="btnSubmit">Đăng nhập</button>
-          <div class="text-center">Chưa có tài khoản? <a href="doctorsignup">Đăng ký tại đây</a></div>
-        </div>
+  <div class="auth-shell">
+    <div class="auth-visual">
+      <div style="font-size: 42px;"><i class="fas fa-user-doctor"></i></div>
+      <h1>Dang nhap Bac si</h1>
+      <p>Trang nay danh cho tai khoan bac si da duoc cap quyen truy cap he thong.</p>
+      <div class="auth-points">
+        <div><i class="fas fa-check-circle"></i><span>Xem danh sach benh nhan duoc phan cong</span></div>
+        <div><i class="fas fa-check-circle"></i><span>Theo doi lich hen va dieu tri</span></div>
+        <div><i class="fas fa-check-circle"></i><span>Cap nhat thong tin kham chua benh</span></div>
       </div>
     </div>
 
-  </form>
+    <div class="auth-form">
+      <h2>Chao mung tro lai</h2>
+      <p>Dang nhap bang tai khoan bac si hien co.</p>
 
-  <br><br><br>
-  <!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/AT05s
-  -->
+      <div class="role-badge">
+        <i class="fas fa-user-md"></i>
+        <span>Bac si</span>
+      </div>
 
-  {% include "hospital/footer.html" %}
+      {% if form.errors %}
+      <div class="alert-danger">
+        Ten dang nhap hoac mat khau khong dung.
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label" for="id_username">Ten dang nhap</label>
+          <input type="text" class="form-control" id="id_username" name="username" placeholder="Nhap ten dang nhap" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="id_password">Mat khau</label>
+          <input type="password" class="form-control" id="id_password" name="password" placeholder="Nhap mat khau" required>
+        </div>
+
+        <div class="form-remember">
+          <label><input type="checkbox" name="remember"> Ghi nho dang nhap</label>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-sign-in-alt"></i>
+          Dang nhap Bac si
+        </button>
+      </form>
+    </div>
+  </div>
 </body>
-
 </html>

@@ -80,6 +80,14 @@
             <span class="nav-item-text">Thông tin xuất viện</span>
           </a>
         </div>
+        <div class="nav-section">
+          <div class="nav-section-title">Hồ sơ</div>
+
+          <a href="/patient-profiles" class="nav-item {% if 'patient-profiles' in request.path %}active{% endif %}">
+            <span class="nav-item-icon"><i class="fas fa-user-pen"></i></span>
+            <span class="nav-item-text">Hồ sơ cá nhân</span>
+          </a>
+        </div>
       </nav>
 
       <!-- User Section -->
@@ -143,7 +151,7 @@
               <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-tertiary); margin-left: 4px;"></i>
             </button>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">
+              <a href="/patient-profiles" class="dropdown-item">
                 <i class="fas fa-user"></i>
                 Hồ sơ cá nhân
               </a>

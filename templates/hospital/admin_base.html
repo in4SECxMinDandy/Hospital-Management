@@ -126,19 +126,6 @@
         </div>
 
         <div class="topbar-right">
-          <button class="topbar-icon-btn" title="Thông báo">
-            <i class="fas fa-bell"></i>
-            {% if pendingdoctorcount|add:pendingpatientcount|add:pendingappointmentcount > 0 %}
-            <span class="badge"></span>
-            {% endif %}
-          </button>
-          
-          <button class="topbar-icon-btn" title="Tin nhắn">
-            <i class="fas fa-envelope"></i>
-          </button>
-          
-          <div class="topbar-divider"></div>
-          
           <div class="dropdown">
             <button class="topbar-user" type="button">
               <div class="topbar-user-avatar">

@@ -1,0 +1,33 @@
+{"version":8,"type":"context-options","origin":"testRunner","browserName":"","playwrightVersion":"1.59.1","options":{},"platform":"win32","wallTime":1775530364333,"monotonicTime":20045.327,"sdkLanguage":"javascript"}
+{"type":"before","callId":"hook@1","stepId":"hook@1","startTime":20054.362,"class":"Test","method":"hook","title":"Before Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@21","stepId":"fixture@21","parentId":"hook@1","startTime":20077.031,"class":"Test","method":"fixture","title":"Fixture \"request\"","params":{},"stack":[]}
+{"type":"before","callId":"pw:api@22","stepId":"pw:api@22","parentId":"fixture@21","startTime":20078.398,"class":"Test","method":"pw:api","title":"Create request context","params":{"acceptDownloads":"true","bypassCSP":"false","colorScheme":"light","deviceScaleFactor":"1","hasTouch":"false","ignoreHTTPSErrors":"false","isMobile":"false","javaScriptEnabled":"true","locale":"en-US","offline":"false","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36","viewport":"Object","baseURL":"http://localhost:8000","serviceWorkers":"allow","extraHTTPHeaders":"undefined","storageState":"undefined","tracesDir":"C:\\Users\\haqua\\Documents\\GitHub\\Hospital-Management\\test-results\\.playwright-artifacts-0\\traces","clientCertificates":"undefined"},"stack":[]}
+{"type":"after","callId":"pw:api@22","endTime":20084.695,"annotations":[]}
+{"type":"after","callId":"fixture@21","endTime":20089.721,"annotations":[]}
+{"type":"after","callId":"hook@1","endTime":20089.828,"annotations":[]}
+{"type":"before","callId":"pw:api@23","stepId":"pw:api@23","startTime":20093.223,"class":"Test","method":"pw:api","title":"GET \"/\"","params":{"url":"http://localhost:8000/","params":"undefined","encodedParams":"undefined","method":"GET","headers":"undefined","postData":"undefined","jsonData":"undefined","formData":"undefined","multipartData":"undefined","timeout":"10000","failOnStatusCode":"undefined","ignoreHTTPSErrors":"undefined","maxRedirects":"undefined","maxRetries":"undefined","__testHookLookup":"undefined"},"stack":[{"file":"C:\\Users\\haqua\\Documents\\GitHub\\Hospital-Management\\tests\\e2e\\api\\endpoints.spec.ts","line":64,"column":36}]}
+{"type":"after","callId":"pw:api@23","endTime":20100.041,"annotations":[]}
+{"type":"before","callId":"expect@24","stepId":"expect@24","startTime":20101.457,"class":"Test","method":"expect","title":"Expect \"toBe\"","params":{"expected":"DENY"},"stack":[{"file":"C:\\Users\\haqua\\Documents\\GitHub\\Hospital-Management\\tests\\e2e\\api\\endpoints.spec.ts","line":65,"column":51}]}
+{"type":"after","callId":"expect@24","endTime":20101.769,"annotations":[]}
+{"type":"before","callId":"hook@25","stepId":"hook@25","startTime":20102.188,"class":"Test","method":"hook","title":"After Hooks","params":{},"stack":[]}
+{"type":"before","callId":"fixture@26","stepId":"fixture@26","parentId":"hook@25","startTime":20103.769,"class":"Test","method":"fixture","title":"Fixture \"request\"","params":{},"stack":[]}
+{"type":"after","callId":"fixture@26","endTime":20125.221,"annotations":[]}
+{"type":"before","callId":"fixture@30","stepId":"fixture@30","parentId":"hook@25","startTime":20126.755,"class":"Test","method":"fixture","title":"Fixture \"baseURL\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@30","endTime":20126.948,"annotations":[]}
+{"type":"before","callId":"fixture@31","stepId":"fixture@31","parentId":"hook@25","startTime":20127.363,"class":"Test","method":"fixture","title":"Fixture \"userAgent\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@31","endTime":20127.484,"annotations":[]}
+{"type":"before","callId":"fixture@33","stepId":"fixture@33","parentId":"hook@25","startTime":20130.345,"class":"Test","method":"fixture","title":"Fixture \"viewport\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@33","endTime":20130.458,"annotations":[]}
+{"type":"before","callId":"fixture@40","stepId":"fixture@40","parentId":"hook@25","startTime":20132.675,"class":"Test","method":"fixture","title":"Fixture \"isMobile\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@40","endTime":20132.738,"annotations":[]}
+{"type":"before","callId":"fixture@44","stepId":"fixture@44","parentId":"hook@25","startTime":20135.712,"class":"Test","method":"fixture","title":"Fixture \"hasTouch\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@44","endTime":20135.792,"annotations":[]}
+{"type":"before","callId":"fixture@46","stepId":"fixture@46","parentId":"hook@25","startTime":20136.438,"class":"Test","method":"fixture","title":"Fixture \"deviceScaleFactor\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@46","endTime":20136.5,"annotations":[]}
+{"type":"before","callId":"fixture@54","stepId":"fixture@54","parentId":"hook@25","startTime":20138.835,"class":"Test","method":"fixture","title":"Fixture \"navigationTimeout\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@54","endTime":20138.89,"annotations":[]}
+{"type":"before","callId":"fixture@55","stepId":"fixture@55","parentId":"hook@25","startTime":20139.168,"class":"Test","method":"fixture","title":"Fixture \"actionTimeout\"","params":{},"stack":[{"file":"project#chromium","line":1,"column":1}],"group":"configuration"}
+{"type":"after","callId":"fixture@55","endTime":20139.226,"annotations":[]}
+{"type":"after","callId":"hook@25","endTime":20139.324,"annotations":[]}
+{"type":"before","callId":"attach@344d6ea0cfa4d23930c1da55bbdaf54f","stepId":"attach@344d6ea0cfa4d23930c1da55bbdaf54f","startTime":20205.22,"class":"Test","method":"test.attach","title":"Attach \"trace\"","params":{},"stack":[]}
+{"type":"after","callId":"attach@344d6ea0cfa4d23930c1da55bbdaf54f","endTime":20205.332,"attachments":[]}

@@ -1,23 +1,23 @@
 {% extends 'hospital/homebase.html' %}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+{% load static %}
+{% block title %}Quan tri vien - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom:0px;">
-  <h1 class="display-4" style="text-align:center;">Xin chào, Quản trị viên</h1>
-  <p class="lead">Chào mừng đến với Hệ thống Quản lý Bệnh viện.</p>
-  <hr class="my-4">
-  <p>Bạn có thể truy cập các tính năng khác sau khi Đăng nhập/Đăng ký.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="/adminsignup" role="button">Đăng ký</a>
-    <a class="btn btn-primary btn-lg" href="/adminlogin" role="button">Đăng nhập</a>
-  </p>
-</div>
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-shield-alt"></i>
+      Quan tri vien
+    </div>
+    <h1 class="hero-title">Dang nhap Quan tri vien</h1>
+    <p class="hero-subtitle">Su dung tai khoan quan tri hien co de truy cap he thong.</p>
+    <div class="hero-actions">
+      <a href="/adminlogin" class="btn btn-primary btn-lg">
+        <i class="fas fa-sign-in-alt"></i>
+        Dang nhap
+      </a>
+    </div>
+  </div>
+</section>
 
 {% endblock content %}

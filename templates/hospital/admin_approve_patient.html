@@ -1,56 +1,99 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Duyệt Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
-{%load static%}
 
-      <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách Bệnh nhân xin nhập viện</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Bệnh nhân chờ duyệt</h1>
+    <p class="page-subtitle">Xem và phê duyệt các đăng ký bệnh nhân mới</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-view-patient" class="btn btn-secondary">
+      <i class="fas fa-list"></i>
+      Tất cả Bệnh nhân
+    </a>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="pendingPatientsTable">
       <thead>
         <tr>
-          <th>Tên</th>
-          <th>Ảnh đại diện</th>
+          <th>Bệnh nhân</th>
           <th>Triệu chứng</th>
           <th>Điện thoại</th>
           <th>Địa chỉ</th>
-          <th>Duyệt</th>
-          <th>Từ chối</th>
+          <th style="text-align: center;">Thao tác</th>
         </tr>
       </thead>
-      {% for p in patients %}
-      <tr>
-        <td> {{p.get_name}}</td>
-        <td>
-          {% if p.profile_pic %}
-          <img src="{{ p.profile_pic.url }}" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
-          {% else %}
-          <img src="https://ui-avatars.com/api/?name={{ p.get_name|urlencode }}&background=94a3b8&color=fff" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
-          {% endif %}
-        </td>
-        <td>{{p.symptoms}}</td>
-        <td>{{p.mobile}}</td>
-        <td>{{p.address}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'approve-patient' p.id  %}"><span
-              class="glyphicon glyphicon-ok"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'reject-patient' p.id  %}"><span
-              class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for p in patients %}
+        <tr class="stagger-item" data-name="{{ p.get_name|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if p.profile_pic %}
+                <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                {% else %}
+                {{ p.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.get_name }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.address }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: center;">
+              <button type="button" class="action-btn view" title="Duyệt"
+                      onclick="ClinicAPI.handleAction('{% url 'approve-patient' p.id %}', 'Xác nhận duyệt bệnh nhân {{ p.get_name }}?', '/admin-approve-patient', { successMessage: 'Bệnh nhân đã được duyệt.' })">
+                <i class="fas fa-check"></i>
+              </button>
+              <button type="button" class="action-btn delete" title="Từ chối"
+                      onclick="ClinicAPI.handleDelete('{% url 'reject-patient' p.id %}', 'Xác nhận từ chối bệnh nhân {{ p.get_name }}?', '/admin-approve-patient')">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <h3 class="empty-state-title">Không có bệnh nhân chờ duyệt</h3>
+              <p class="empty-state-description">Tất cả đăng ký bệnh nhân đã được xử lý.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
-
+  <!-- Pagination Info -->
+  {% if patients %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ patients|length }} bệnh nhân đang chờ duyệt
+    </div>
+  </div>
+  {% endif %}
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
 
 {% endblock content %}

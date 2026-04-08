@@ -1,0 +1,106 @@
+System check identified some issues:
+
+WARNINGS:
+hospital.Appointment: (models.W042) Auto-created primary key used when not defining a primary key type, by default 'django.db.models.AutoField'.
+	HINT: Configure the DEFAULT_AUTO_FIELD setting or the HospitalConfig.default_auto_field attribute to point to a subclass of AutoField, e.g. 'django.db.models.BigAutoField'.
+hospital.Doctor: (models.W042) Auto-created primary key used when not defining a primary key type, by default 'django.db.models.AutoField'.
+	HINT: Configure the DEFAULT_AUTO_FIELD setting or the HospitalConfig.default_auto_field attribute to point to a subclass of AutoField, e.g. 'django.db.models.BigAutoField'.
+hospital.Patient: (models.W042) Auto-created primary key used when not defining a primary key type, by default 'django.db.models.AutoField'.
+	HINT: Configure the DEFAULT_AUTO_FIELD setting or the HospitalConfig.default_auto_field attribute to point to a subclass of AutoField, e.g. 'django.db.models.BigAutoField'.
+hospital.PatientDischargeDetails: (models.W042) Auto-created primary key used when not defining a primary key type, by default 'django.db.models.AutoField'.
+	HINT: Configure the DEFAULT_AUTO_FIELD setting or the HospitalConfig.default_auto_field attribute to point to a subclass of AutoField, e.g. 'django.db.models.BigAutoField'.
+
+System check identified 4 issues (0 silenced).
+[08/Apr/2026 19:51:06] "HEAD / HTTP/1.1" 200 0
+[08/Apr/2026 19:59:01] "GET /doctorsignup HTTP/1.1" 200 11793
+[08/Apr/2026 19:59:06] "GET /doctorsignup HTTP/1.1" 200 11793
+[08/Apr/2026 19:59:10] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 19:59:41] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 19:59:45] "GET /patientsignup HTTP/1.1" 200 14393
+[08/Apr/2026 19:59:45] "GET /static/css/forms.css HTTP/1.1" 304 0
+[08/Apr/2026 19:59:49] "GET /patientlogin HTTP/1.1" 200 11822
+[08/Apr/2026 20:00:16] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:00:19] "GET /adminlogin HTTP/1.1" 200 5825
+[08/Apr/2026 20:03:29] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:34] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:34] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:35] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:35] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:36] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:41] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:44] "GET /adminlogin HTTP/1.1" 200 5825
+[08/Apr/2026 20:03:49] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:03:51] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:03:56] "GET /patientclick HTTP/1.1" 200 11221
+[08/Apr/2026 20:03:57] "GET /patientlogin HTTP/1.1" 200 11822
+[08/Apr/2026 20:04:03] "GET /patientsignup HTTP/1.1" 200 14393
+[08/Apr/2026 20:04:08] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 20:04:08] "GET /static/style.css HTTP/1.1" 304 0
+[08/Apr/2026 20:04:08] "GET /static/css/design-tokens.css HTTP/1.1" 304 0
+[08/Apr/2026 20:04:08] "GET /static/css/accessibility.css HTTP/1.1" 304 0
+[08/Apr/2026 20:04:08] "GET /static/css/components.css HTTP/1.1" 304 0
+[08/Apr/2026 20:06:23] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 20:06:24] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:06:25] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 20:06:27] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:06:27] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:06:49] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:06:51] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:06:53] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:06:54] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 20:06:55] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:07:07] "GET /patientclick HTTP/1.1" 200 11221
+[08/Apr/2026 20:07:13] "GET /patientsignup HTTP/1.1" 200 14393
+[08/Apr/2026 20:07:15] "GET /patientlogin HTTP/1.1" 200 11822
+[08/Apr/2026 20:07:20] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:07:21] "GET /aboutus HTTP/1.1" 200 11101
+[08/Apr/2026 20:07:23] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:07:26] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:07:36] "GET /patientsignup HTTP/1.1" 200 14393
+[08/Apr/2026 20:07:39] "GET /patientsignup HTTP/1.1" 200 14393
+[08/Apr/2026 20:07:42] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:08:41] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:08:58] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:09:33] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:21:43] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:21:46] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:21:47] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:21:49] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:21:51] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:21:51] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:21:52] "GET / HTTP/1.1" 200 16961
+Not Found: /home
+[08/Apr/2026 20:21:56] "GET /home HTTP/1.1" 404 10574
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[08/Apr/2026 20:22:00] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10706
+Not Found: /selectlogin
+[08/Apr/2026 20:22:21] "GET /selectlogin HTTP/1.1" 404 10595
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[08/Apr/2026 20:22:21] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10706
+Not Found: /doctors
+[08/Apr/2026 20:22:49] "GET /doctors HTTP/1.1" 404 10583
+[08/Apr/2026 20:22:58] "GET /doctorlogin HTTP/1.1" 200 5750
+Not Found: /home
+[08/Apr/2026 20:24:50] "GET /home HTTP/1.1" 404 10574
+Not Found: /selectlogin
+[08/Apr/2026 20:24:53] "GET /selectlogin HTTP/1.1" 404 10595
+[08/Apr/2026 20:25:11] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:25:16] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:25:23] "GET / HTTP/1.1" 200 16961
+Not Found: /home
+[08/Apr/2026 20:25:26] "GET /home HTTP/1.1" 404 10574
+Not Found: /selectlogin
+[08/Apr/2026 20:25:42] "GET /selectlogin HTTP/1.1" 404 10595
+[08/Apr/2026 20:32:55] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:32:58] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:33:01] "GET /adminlogin HTTP/1.1" 200 5825
+[08/Apr/2026 20:33:41] "GET / HTTP/1.1" 200 16961
+Not Found: /home
+[08/Apr/2026 20:33:45] "GET /home HTTP/1.1" 404 10574
+[08/Apr/2026 20:36:36] "GET / HTTP/1.1" 200 16961
+Not Found: /home
+[08/Apr/2026 20:36:42] "GET /home HTTP/1.1" 404 10574
+[08/Apr/2026 20:36:59] "GET /adminclick HTTP/1.1" 200 10856
+[08/Apr/2026 20:37:09] "GET / HTTP/1.1" 200 16961
+[08/Apr/2026 20:37:10] "GET /contactus HTTP/1.1" 200 23050
+[08/Apr/2026 20:37:10] "GET /aboutus HTTP/1.1" 200 11101

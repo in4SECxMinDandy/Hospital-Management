@@ -11,7 +11,8 @@ Youtube :youtube.com/AT05s
 
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+from django.views.generic.base import RedirectView
 from hospital import views
 from django.contrib.auth.views import LoginView,LogoutView
 
@@ -19,16 +20,27 @@ from django.contrib.auth.views import LoginView,LogoutView
 #-------------FOR ADMIN RELATED URLS
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home_view,name=''),
+    path('', views.home_view, name=''),
+    path('home', views.home_view, name='home'),
+    path('home/', RedirectView.as_view(pattern_name='home', permanent=False)),
+    path('api/', include('hospital.api_urls')),
+    path('favicon.ico', RedirectView.as_view(url='/static/images/admin.png', permanent=False)),
 
 
     path('aboutus', views.aboutus_view),
+    path('aboutus/', views.aboutus_view),
     path('contactus', views.contactus_view),
+    path('contactus/', views.contactus_view),
 
 
-    path('adminclick', views.adminclick_view),
+    path('adminclick', RedirectView.as_view(pattern_name='selectlogin', permanent=False)),
+    path('adminclick/', RedirectView.as_view(pattern_name='selectlogin', permanent=False)),
+    path('selectlogin', views.selectlogin_view, name='selectlogin'),
+    path('selectlogin/', RedirectView.as_view(pattern_name='selectlogin', permanent=False)),
     path('doctorclick', views.doctorclick_view),
+    path('doctorclick/', views.doctorclick_view),
     path('patientclick', views.patientclick_view),
+    path('patientclick/', views.patientclick_view),
 
     path('adminsignup', views.admin_signup_view),
     path('doctorsignup', views.doctor_signup_view,name='doctorsignup'),
@@ -100,6 +112,7 @@ urlpatterns +=[
 urlpatterns +=[
 
     path('patient-dashboard', views.patient_dashboard_view,name='patient-dashboard'),
+    path('patient-profiles', views.patient_profile_view,name='patient-profiles'),
     path('patient-appointment', views.patient_appointment_view,name='patient-appointment'),
     path('patient-book-appointment', views.patient_book_appointment_view,name='patient-book-appointment'),
     path('patient-view-appointment', views.patient_view_appointment_view,name='patient-view-appointment'),

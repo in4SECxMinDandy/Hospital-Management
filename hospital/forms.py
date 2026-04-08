@@ -53,7 +53,12 @@ class PatientForm(forms.ModelForm):
     #this is the extrafield for linking patient and their assigend doctor
     #this will show dropdown __str__ method doctor model is shown on html so override it
     #to_field_name this will fetch corresponding value  user_id present in Doctor model and return it
-    assignedDoctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên và Khoa", to_field_name="user_id")
+    assignedDoctorId=forms.ModelChoiceField(
+        queryset=models.Doctor.objects.all().filter(status=True),
+        empty_label="Chưa chọn bác sĩ",
+        to_field_name="user_id",
+        required=False,
+    )
     class Meta:
         model=models.Patient
         # LOAI BO: status - chi admin moi set duoc thong qua view
@@ -77,22 +82,50 @@ class PatientForm(forms.ModelForm):
 
 
 
+class PatientProfileUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
+
+class PatientProfileForm(forms.ModelForm):
+    class Meta:
+        model = models.Patient
+        fields = ['mobile', 'address', 'symptoms', 'profile_pic']
+
+    def clean_mobile(self):
+        mobile = self.cleaned_data.get('mobile')
+        if mobile:
+            import re
+            if not re.match(r'^0\d{9}$', mobile):
+                raise forms.ValidationError('Sá»‘ Ä‘iá»‡n thoáº¡i pháº£i cÃ³ 10 chá»¯ sá»‘ vÃ  báº¯t Ä‘áº§u báº±ng sá»‘ 0')
+        return mobile
+
+    def clean_symptoms(self):
+        symptoms = self.cleaned_data.get('symptoms')
+        if symptoms and len(symptoms) < 3:
+            raise forms.ValidationError('MÃ´ táº£ triá»‡u chá»©ng pháº£i cÃ³ Ã­t nháº¥t 3 kÃ½ tá»±')
+        return symptoms
+
+
 class AppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên bác sĩ và Khoa", to_field_name="user_id")
     patientId=forms.ModelChoiceField(queryset=models.Patient.objects.all().filter(status=True),empty_label="Tên bệnh nhân và Triệu chứng", to_field_name="user_id")
     appointmentDate=forms.DateField(widget=forms.DateInput(attrs={'type':'date'}),required=False)
+    appointmentTime=forms.ChoiceField(choices=models.appointment_time_slots, required=True)
     class Meta:
         model=models.Appointment
-        fields=['description','status','appointmentDate']
+        fields=['description','status','appointmentDate','appointmentTime']
 
 
 class PatientAppointmentForm(forms.ModelForm):
     doctorId=forms.ModelChoiceField(queryset=models.Doctor.objects.all().filter(status=True),empty_label="Tên bác sĩ và Khoa", to_field_name="user_id")
     appointmentDate=forms.DateField(widget=forms.DateInput(attrs={'type':'date'}),required=False)
+    appointmentTime=forms.ChoiceField(choices=models.appointment_time_slots, required=True)
     class Meta:
         model=models.Appointment
         # status luon dat trong view (False = cho duyet) de tranh loi form / thieu field tren template
-        fields=['description','appointmentDate']
+        fields=['description','appointmentDate','appointmentTime']
 
 
 #for contact us page

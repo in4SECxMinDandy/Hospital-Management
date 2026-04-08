@@ -102,7 +102,9 @@
               <span style="color: var(--text-secondary);">{{ a.description|truncatechars:30 }}</span>
             </td>
             <td>
-              <span style="color: var(--text-secondary);">{{ a.appointmentDate }}</span>
+              <span style="color: var(--text-secondary);">
+                {{ a.appointmentDate }}{% if a.appointmentTime %} lúc {{ a.appointmentTime }}{% endif %}
+              </span>
             </td>
           </tr>
           {% empty %}
@@ -209,10 +211,10 @@
 
       <a href="/doctor-delete-appointment" class="menu-card warning">
         <div class="menu-card-icon">
-          <i class="fas fa-calendar-times"></i>
+          <i class="fas fa-clock-rotate-left"></i>
         </div>
-        <h4 class="menu-card-title">Xóa lịch hẹn</h4>
-        <p class="menu-card-description">Hủy lịch hẹn không hợp lệ</p>
+        <h4 class="menu-card-title">Lich su</h4>
+        <p class="menu-card-description">Xem lich su cua benh nhan da tung hen voi ban</p>
       </a>
 
       <a href="/doctor-view-discharge-patient" class="menu-card info">

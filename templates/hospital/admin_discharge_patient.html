@@ -1,42 +1,89 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Xuất viện - Clinic Dashboard{% endblock %}
 {% block content %}
 
-      <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Xuất viện</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Quản lý Xuất viện</h1>
+    <p class="page-subtitle">Xử lý xuất viện và tải hóa đơn cho bệnh nhân</p>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="dischargePatientsTable">
       <thead>
         <tr>
-          <th>Tên</th>
+          <th>Bệnh nhân</th>
           <th>Triệu chứng</th>
           <th>Điện thoại</th>
-          <th>Xuất viện</th>
+          <th>Ngày nhập viện</th>
+          <th style="text-align: right;">Thao tác</th>
         </tr>
       </thead>
-      {% for p in patients %}
-      <tr>
-        <td> {{p.get_name}}</td>
-        <td>{{p.symptoms}}</td>
-        <td>{{p.mobile}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'discharge-patient' p.id  %}"><span
-              class="glyphicon glyphicon-log-out"></span></a></td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for p in patients %}
+        <tr class="stagger-item" data-name="{{ p.get_name|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if p.profile_pic %}
+                <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                {% else %}
+                {{ p.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.get_name }}</span>
+                <span class="cell-user-email">ID: {{ p.id }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.admitDate }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: flex-end;">
+              <a href="{% url 'discharge-patient' p.id %}" class="action-btn view" title="Xuất viện">
+                <i class="fas fa-sign-out-alt"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+              <h3 class="empty-state-title">Không có bệnh nhân cần xuất viện</h3>
+              <p class="empty-state-description">Tất cả bệnh nhân đang nhập viện đã được xử lý.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
-
+  <!-- Pagination Info -->
+  {% if patients %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ patients|length }} bệnh nhân đang điều trị
+    </div>
+  </div>
+  {% endif %}
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
 
 {% endblock content %}

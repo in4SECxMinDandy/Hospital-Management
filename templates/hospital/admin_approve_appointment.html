@@ -1,47 +1,106 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Duyệt Lịch hẹn - Clinic Dashboard{% endblock %}
 {% block content %}
 
-      <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách lịch hẹn chờ duyệt</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Lịch hẹn chờ duyệt</h1>
+    <p class="page-subtitle">Xem và phê duyệt các yêu cầu đặt lịch hẹn mới</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-view-appointment" class="btn btn-secondary">
+      <i class="fas fa-list"></i>
+      Tất cả Lịch hẹn
+    </a>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="pendingAppointmentsTable">
       <thead>
         <tr>
-          <th>Tên Bác sĩ</th>
-          <th>Tên Bệnh nhân</th>
+          <th>Bác sĩ</th>
+          <th>Bệnh nhân</th>
           <th>Mô tả</th>
-          <th>Ngày</th>
-          <th>Duyệt</th>
-          <th>Từ chối</th>
+          <th>Ngày hẹn</th>
+          <th>Giờ hẹn</th>
+          <th style="text-align: center;">Thao tác</th>
         </tr>
       </thead>
-      {% for a in appointments %}
-      <tr>
-        <td> {{a.doctorName}}</td>
-        <td>{{a.patientName}}</td>
-        <td>{{a.description}}</td>
-        <td>{{a.appointmentDate}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'approve-appointment' a.id  %}"><span
-              class="glyphicon glyphicon-ok"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'reject-appointment' a.id  %}"><span
-              class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for a in appointments %}
+        <tr class="stagger-item" data-doctor="{{ a.doctorName|lower }}" data-patient="{{ a.patientName|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ a.doctorName }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ a.patientName }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.description|truncatechars:50 }}</span>
+          </td>
+          <td>
+            <span class="badge badge-primary">{{ a.appointmentDate }}</span>
+          </td>
+          <td>
+            <span class="badge badge-primary">{{ a.appointmentTime|default:"—" }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: center;">
+              <button type="button" class="action-btn view" title="Duyệt"
+                      onclick="ClinicAPI.handleAction('{% url 'approve-appointment' a.id %}', 'Xác nhận duyệt lịch hẹn này?', '/admin-approve-appointment', { method: 'POST', successMessage: 'Lịch hẹn đã được duyệt.' })">
+                <i class="fas fa-check"></i>
+              </button>
+              <button type="button" class="action-btn delete" title="Từ chối"
+                      onclick="ClinicAPI.handleDelete('{% url 'reject-appointment' a.id %}', 'Xác nhận từ chối lịch hẹn này?', '/admin-approve-appointment')">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <h3 class="empty-state-title">Không có lịch hẹn chờ duyệt</h3>
+              <p class="empty-state-description">Tất cả yêu cầu đặt lịch đã được xử lý.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 
-
+  <!-- Pagination Info -->
+  {% if appointments %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ appointments|length }} lịch hẹn đang chờ duyệt
+    </div>
+  </div>
+  {% endif %}
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
 
 {% endblock content %}

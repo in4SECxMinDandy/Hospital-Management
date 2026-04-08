@@ -1,46 +1,83 @@
 {% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% block title %}Bệnh nhân đã xuất viện - Clinic Dashboard{% endblock %}
 {% block content %}
-{%load static%}
 
-  <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách Bệnh nhân đã xuất viện</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Tên</th>
-
-          <th>Ngày nhập viện</th>
-          <th>Ngày xuất viện</th>
-          <th>Triệu chứng</th>
-          <th>Điện thoại</th>
-          <th>Địa chỉ</th>
-
-        </tr>
-      </thead>
-      {% for p in dischargedpatients %}
-      <tr>
-        <td> {{p.patientName}}</td>
-        <td>{{p.admitDate}}</td>
-        <td>{{p.releaseDate}}</td>
-        <td>{{p.symptoms}}</td>
-        <td>{{p.mobile}}</td>
-        <td>{{p.address}}</td>
-      </tr>
-      {% endfor %}
-    </table>
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Bệnh nhân đã xuất viện</h1>
+    <p class="page-subtitle">Xem thông tin các bệnh nhân đã hoàn thành điều trị</p>
   </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="dischargedPatientsTable">
+      <thead>
+        <tr>
+          <th>Bệnh nhân</th>
+          <th>Triệu chứng</th>
+          <th>Ngày nhập</th>
+          <th>Ngày xuất</th>
+          <th>Điện thoại</th>
+          <th>Địa chỉ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in dischargedpatients %}
+        <tr class="stagger-item" data-name="{{ p.patientName|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {{ p.patientName|slice:":1" }}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.patientName }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.admitDate }}</span>
+          </td>
+          <td>
+            <span class="badge badge-success">{{ p.releaseDate }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.address }}</span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+              </div>
+              <h3 class="empty-state-title">Không có bệnh nhân đã xuất viện</h3>
+              <p class="empty-state-description">Danh sách trống.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if dischargedpatients %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ dischargedpatients|length }} bệnh nhân đã xuất viện
+    </div>
+  </div>
+  {% endif %}
+</div>
 
 {% endblock content %}

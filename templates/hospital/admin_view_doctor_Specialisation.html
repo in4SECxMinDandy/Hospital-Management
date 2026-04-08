@@ -1,37 +1,81 @@
 {% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Bác sĩ theo Khoa - Clinic Dashboard{% endblock %}
 {% block content %}
 
-  <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Khoa và Bác sĩ</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Bác sĩ theo Khoa</h1>
+    <p class="page-subtitle">Xem danh sách bác sĩ được phân loại theo chuyên khoa</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-view-doctor" class="btn btn-secondary">
+      <i class="fas fa-list"></i>
+      Tất cả Bác sĩ
+    </a>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="doctorsTable">
       <thead>
         <tr>
           <th>Khoa</th>
-          <th>Tên Bác sĩ</th>
+          <th>Bác sĩ</th>
           <th>Điện thoại</th>
         </tr>
       </thead>
-      {% for d in doctors %}
-      <tr>
-        <td>{{d.department}}</td>
-        <td> {{d.get_name}}</td>
-        <td>{{d.mobile}}</td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for d in doctors %}
+        <tr class="stagger-item" data-department="{{ d.department|lower }}">
+          <td>
+            <span class="badge badge-primary">{{ d.department }}</span>
+          </td>
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if d.profile_pic %}
+                <img src="{{ d.profile_pic.url }}" alt="{{ d.get_name }}">
+                {% else %}
+                {{ d.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ d.get_name }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ d.mobile }}</span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <h3 class="empty-state-title">Không có bác sĩ nào</h3>
+              <p class="empty-state-description">Danh sách bác sĩ theo khoa trống.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
+
+  {% if doctors %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ doctors|length }} bác sĩ
+    </div>
+  </div>
+  {% endif %}
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
 
 {% endblock content %}

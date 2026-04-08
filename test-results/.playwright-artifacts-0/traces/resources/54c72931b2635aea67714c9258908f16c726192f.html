@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+
+<html lang="vi-VN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinic Dashboard - Hệ thống Quản lý Bệnh viện</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563EB'><path d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z'/></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/css/design-tokens.css">
+  <link rel="stylesheet" href="/static/css/accessibility.css">
+  <link rel="stylesheet" href="/static/css/components.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* Landing Navbar */
+    .landing-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 48px;
+    }
+
+    .landing-navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .landing-navbar-brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .landing-navbar-brand-text {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .landing-navbar-menu {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-left: auto;
+    }
+
+    .landing-navbar-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--slate-600);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .landing-navbar-link:hover {
+      color: var(--primary-600);
+    }
+
+    .landing-navbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      border-radius: var(--radius-lg);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--primary-600);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-700);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+      color: var(--text-primary);
+    }
+
+    .btn-lg {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    .btn-danger {
+      background: var(--danger-500);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-600);
+      color: white;
+    }
+
+    /* Landing Hero */
+    .landing-hero {
+      padding: 160px 48px 80px;
+      background: linear-gradient(135deg, var(--slate-50) 0%, var(--primary-50) 100%);
+      text-align: center;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .landing-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--primary-100);
+      color: var(--primary-700);
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .landing-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      max-width: 800px;
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .landing-hero p {
+      font-size: 18px;
+      max-width: 600px;
+      margin-bottom: 32px;
+      color: var(--slate-600);
+    }
+
+    .landing-hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Landing Section */
+    .landing-section {
+      padding: 80px 48px;
+    }
+
+    .landing-section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .landing-section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .landing-section-subtitle {
+      font-size: 18px;
+      color: var(--slate-600);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .landing-features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Card */
+    .card {
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color-light);
+      overflow: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color-light);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all var(--transition-base);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 24px;
+    }
+
+    .stat-card.primary .stat-icon { background: var(--primary-50); color: var(--primary-600); }
+    .stat-card.success .stat-icon { background: var(--success-50); color: var(--success-600); }
+    .stat-card.warning .stat-icon { background: var(--warning-50); color: var(--warning-600); }
+    .stat-card.danger .stat-icon { background: var(--danger-50); color: var(--danger-600); }
+
+    .stat-content {
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--slate-600);
+      font-weight: 500;
+    }
+
+    /* Stagger Animation */
+    .stagger-item {
+      opacity: 0;
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+    .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+    .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+    .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+    .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+    .stagger-item:nth-child(6) { animation-delay: 0.3s; }
+
+    /* Footer */
+    footer {
+      background: var(--slate-900);
+      padding: 48px;
+      color: var(--slate-400);
+    }
+
+    footer p {
+      text-align: center;
+      margin: 0;
+      color: var(--slate-400);
+    }
+
+    footer a {
+      color: var(--slate-400);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .landing-navbar {
+        padding: 0 24px;
+      }
+
+      .landing-navbar-menu {
+        display: none;
+      }
+
+      .landing-hero {
+        padding: 120px 24px 60px;
+      }
+
+      .landing-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .landing-section {
+        padding: 60px 24px;
+      }
+
+      .landing-section-title {
+        font-size: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Bỏ qua đến nội dung</a>
+  <!-- Navbar -->
+  <nav class="landing-navbar" aria-label="Điều hướng chính">
+    <a href="/" class="landing-navbar-brand">
+      <div class="landing-navbar-brand-icon">
+        <i class="fas fa-hospital"></i>
+      </div>
+      <span class="landing-navbar-brand-text">Clinic Pro</span>
+    </a>
+
+    <div class="landing-navbar-menu">
+      <a href="/aboutus" class="landing-navbar-link">Về chúng tôi</a>
+      <a href="/contactus" class="landing-navbar-link">Liên hệ</a>
+    </div>
+
+    <div class="landing-navbar-actions">
+      <a href="/adminclick" class="btn btn-outline">
+        <i class="fas fa-user-shield"></i>
+        Quản trị
+      </a>
+      <a href="/patientclick" class="btn btn-primary">
+        <i class="fas fa-calendar-check"></i>
+        Đặt lịch hẹn
+      </a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main id="main-content" class="landing-content-main" role="main">
+  
+
+<!-- Hero Section -->
+<section class="landing-hero">
+  <div class="landing-hero-badge">
+    <i class="fas fa-heartbeat"></i>
+    Hệ thống quản lý bệnh viện hiện đại
+  </div>
+  
+  <h1>Chăm sóc sức khỏe<br><span style="color: var(--primary-600);">Chuyên nghiệp</span></h1>
+  
+  <p>Nền tảng quản lý y tế toàn diện, giúp quản lý bệnh viện một cách hiệu quả với công nghệ tiên tiến nhất.</p>
+  
+  <div class="landing-hero-actions">
+    <a href="/patientclick" class="btn btn-primary btn-lg">
+      <i class="fas fa-calendar-check"></i>
+      Đặt lịch hẹn ngay
+    </a>
+    <a href="/aboutus" class="btn btn-outline btn-lg">
+      <i class="fas fa-info-circle"></i>
+      Tìm hiểu thêm
+    </a>
+  </div>
+  
+  <!-- Stats -->
+  <div class="stats-grid" style="margin-top: 64px; max-width: 800px;">
+    <div class="stat-card primary stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Bác sĩ chuyên nghiệp</div>
+      </div>
+    </div>
+    
+    <div class="stat-card success stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">1000+</div>
+        <div class="stat-label">Bệnh nhân đã điều trị</div>
+      </div>
+    </div>
+    
+    <div class="stat-card warning stagger-item">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">500+</div>
+        <div class="stat-label">Lịch hẹn mỗi tháng</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="landing-section" style="background: white;">
+  <div class="landing-section-header">
+    <h2 class="landing-section-title">Tính năng nổi bật</h2>
+    <p class="landing-section-subtitle">
+      Hệ thống được thiết kế để đáp ứng mọi nhu cầu quản lý y tế của bạn
+    </p>
+  </div>
+  
+  <div class="landing-features-grid">
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--primary-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--primary-600);">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Quản lý Bác sĩ</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Theo dõi và quản lý thông tin bác sĩ, phân công công việc hiệu quả
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--success-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--success-600);">
+        <i class="fas fa-users"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Quản lý Bệnh nhân</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Lưu trữ và theo dõi hồ sơ bệnh nhân một cách chi tiết và chính xác
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--warning-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--warning-600);">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Đặt lịch hẹn</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Hệ thống đặt lịch trực tuyến, giúp bệnh nhân dễ dàng đặt hẹn khám bệnh
+      </p>
+    </div>
+    
+    <div class="card stagger-item" style="padding: 32px; text-align: center;">
+      <div style="width: 64px; height: 64px; background: var(--danger-50); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--danger-600);">
+        <i class="fas fa-file-invoice-dollar"></i>
+      </div>
+      <h4 style="margin-bottom: 12px;">Thanh toán</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">
+        Tính toán và xuất hóa đơn tự động, hỗ trợ nhiều hình thức thanh toán
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="landing-section" style="background: linear-gradient(135deg, var(--slate-900) 0%, var(--primary-900) 100%); color: white; text-align: center;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 16px; color: white;">
+      Sẵn sàng bắt đầu?
+    </h2>
+    <p style="font-size: 1.125rem; color: rgba(255,255,255,0.8); margin-bottom: 32px;">
+      Đăng ký ngay hôm nay để trải nghiệm hệ thống quản lý bệnh viện hiện đại nhất
+    </p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a href="/patientsignup" class="btn btn-primary btn-lg" style="background: white; color: var(--primary-600);">
+        <i class="fas fa-user-plus"></i>
+        Đăng ký Bệnh nhân
+      </a>
+      <a href="/doctorsignup" class="btn btn-outline btn-lg" style="border-color: white; color: white;">
+        <i class="fas fa-user-md"></i>
+        Đăng ký Bác sĩ
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Emergency Section -->
+<section class="landing-section" style="background: var(--danger-50);">
+  <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+    <div style="width: 80px; height: 80px; background: var(--danger-500); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 36px; color: white;">
+      <i class="fas fa-phone-alt"></i>
+    </div>
+    <h2 style="margin-bottom: 16px;">Cần cấp cứu?</h2>
+    <p style="font-size: 1.25rem; color: var(--danger-700); margin-bottom: 24px;">
+      Gọi ngay đường dây nóng cấp cứu: <strong>1900-xxxx</strong>
+    </p>
+    <a href="/patientclick" class="btn btn-danger btn-lg">
+      <i class="fas fa-calendar-check"></i>
+      Đặt lịch hẹn khẩn cấp
+    </a>
+  </div>
+</section>
+
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Clinic Pro - Hệ thống Quản lý Bệnh viện | <a href="/aboutus">Về chúng tôi</a> | <a href="/contactus">Liên hệ</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>

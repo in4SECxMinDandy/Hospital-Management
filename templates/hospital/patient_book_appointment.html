@@ -54,6 +54,19 @@
         </div>
 
         <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label required">Giờ hẹn trong giờ hành chính</label>
+              {% render_field appointmentForm.appointmentTime class="form-control form-select" %}
+              {% if appointmentForm.appointmentTime.errors %}
+                <div class="form-error">{{ appointmentForm.appointmentTime.errors }}</div>
+              {% endif %}
+              <div class="form-text">Khung giờ áp dụng từ 08:00 đến 16:00, nghỉ trưa từ 12:00 đến 13:00.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
           <div class="col-md-12">
             <div class="form-group">
               <label class="form-label required">Mô tả triệu chứng</label>

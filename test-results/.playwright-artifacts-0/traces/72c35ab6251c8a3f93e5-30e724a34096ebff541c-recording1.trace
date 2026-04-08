@@ -1,0 +1,17 @@
+{"version":8,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.59.1","options":{},"platform":"win32","wallTime":1775530364375,"monotonicTime":20087.788,"sdkLanguage":"javascript","contextId":"request-context@2d2d3838085b2ca5355d7f8b0fbbfb29","title":"api\\endpoints.spec.ts:63 › API Security Headers › should include X-Frame-Options header"}
+{"type":"before","callId":"call@14","startTime":20094.116,"class":"APIRequestContext","method":"fetch","params":{"url":"http://localhost:8000/","method":"GET","timeout":10000},"stepId":"pw:api@23"}
+{"type":"log","callId":"call@14","time":20094.908,"message":"→ GET http://localhost:8000/"}
+{"type":"log","callId":"call@14","time":20094.978,"message":"  user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36"}
+{"type":"log","callId":"call@14","time":20094.994,"message":"  accept: */*"}
+{"type":"log","callId":"call@14","time":20095.005,"message":"  accept-encoding: gzip,deflate,br"}
+{"type":"log","callId":"call@14","time":20099.492,"message":"← 200 OK"}
+{"type":"log","callId":"call@14","time":20099.517,"message":"  date: Tue, 07 Apr 2026 02:52:44 GMT"}
+{"type":"log","callId":"call@14","time":20099.527,"message":"  server: WSGIServer/0.2 CPython/3.10.0"}
+{"type":"log","callId":"call@14","time":20099.536,"message":"  content-type: text/html; charset=utf-8"}
+{"type":"log","callId":"call@14","time":20099.545,"message":"  x-frame-options: DENY"}
+{"type":"log","callId":"call@14","time":20099.553,"message":"  content-length: 16961"}
+{"type":"log","callId":"call@14","time":20099.561,"message":"  vary: Cookie"}
+{"type":"log","callId":"call@14","time":20099.57,"message":"  x-content-type-options: nosniff"}
+{"type":"log","callId":"call@14","time":20099.578,"message":"  referrer-policy: same-origin"}
+{"type":"log","callId":"call@14","time":20099.586,"message":"  cross-origin-opener-policy: same-origin"}
+{"type":"after","callId":"call@14","endTime":20099.77,"result":{"response":{"url":"http://localhost:8000/","status":200,"statusText":"OK","headers":[{"name":"Date","value":"Tue, 07 Apr 2026 02:52:44 GMT"},{"name":"Server","value":"WSGIServer/0.2 CPython/3.10.0"},{"name":"Content-Type","value":"text/html; charset=utf-8"},{"name":"X-Frame-Options","value":"DENY"},{"name":"Content-Length","value":"16961"},{"name":"Vary","value":"Cookie"},{"name":"X-Content-Type-Options","value":"nosniff"},{"name":"Referrer-Policy","value":"same-origin"},{"name":"Cross-Origin-Opener-Policy","value":"same-origin"}],"fetchUid":"c6817d2d1feb6842c88f97fc2e32b08b"}}}

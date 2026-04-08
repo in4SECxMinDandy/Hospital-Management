@@ -1,52 +1,78 @@
 {% extends 'hospital/patient_base.html' %}
 {% load static %}
-{% block title %}Lịch hẹn của tôi — Clinic Pro{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/design-tokens.css' %}">
-<link rel="stylesheet" href="{% static 'css/table.css' %}">
-{% endblock %}
-
+{% block title %}Lịch hẹn của tôi - Clinic Dashboard{% endblock %}
 {% block content %}
-<div class="page-header">
+
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
   <div class="page-header-content">
     <h1 class="page-title">Lịch hẹn của bạn</h1>
-    <p class="page-subtitle">Các lịch đã đặt, gồm cả trạng thái chờ bác sĩ / quản trị xác nhận</p>
+    <p class="page-subtitle">Các lịch đã đặt, gồm cả trạng thái chờ bác sĩ xác nhận</p>
+  </div>
+  <div class="page-actions">
+    <a href="/patient-book-appointment" class="btn btn-primary">
+      <i class="fas fa-plus"></i>
+      Đặt lịch mới
+    </a>
   </div>
 </div>
 
-<div class="clinic-table-wrap">
-  <div class="table-heading">Danh sách lịch hẹn</div>
-  <div class="table-responsive">
-    <table class="clinic-table">
+<!-- Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table" id="appointmentsTable">
       <thead>
         <tr>
-          <th scope="col">Bác sĩ</th>
-          <th scope="col">Mô tả</th>
-          <th scope="col">Ngày</th>
-          <th scope="col">Trạng thái</th>
+          <th>Bác sĩ</th>
+          <th>Mô tả</th>
+          <th>Ngày hẹn</th>
+          <th>Giờ hẹn</th>
+          <th>Trạng thái</th>
         </tr>
       </thead>
       <tbody>
         {% for a in appointments %}
-        <tr>
-          <td>{{ a.doctorName }}</td>
-          <td>{{ a.description }}</td>
-          <td>{{ a.appointmentDate|default:"—" }}</td>
+        <tr class="stagger-item">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ a.doctorName }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.description|truncatechars:50 }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.appointmentDate|default:"—" }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ a.appointmentTime|default:"—" }}</span>
+          </td>
           <td>
             {% if a.status %}
-              <span class="badge-status badge-status--confirmed">Đã xác nhận</span>
+            <span class="badge badge-success">Đã xác nhận</span>
             {% else %}
-              <span class="badge-status badge-status--pending">Chờ duyệt</span>
+            <span class="badge badge-warning">Chờ duyệt</span>
             {% endif %}
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="4">
-            <div class="empty-state-table">
-              <p><strong>Chưa có lịch hẹn nào.</strong></p>
-              <p>Bạn có thể <a href="/patient-book-appointment">đặt lịch khám mới</a> hoặc quay lại <a href="/patient-appointment">trang lịch hẹn</a>.</p>
+          <td colspan="5">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-calendar"></i>
+              </div>
+              <h3 class="empty-state-title">Chưa có lịch hẹn nào</h3>
+              <p class="empty-state-description">Bạn chưa đặt lịch khám nào. Hãy đặt lịch để gặp bác sĩ.</p>
+              <a href="/patient-book-appointment" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Đặt lịch khám
+              </a>
             </div>
           </td>
         </tr>
@@ -54,5 +80,14 @@
       </tbody>
     </table>
   </div>
+
+  {% if appointments %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ appointments|length }} lịch hẹn
+    </div>
+  </div>
+  {% endif %}
 </div>
+
 {% endblock content %}

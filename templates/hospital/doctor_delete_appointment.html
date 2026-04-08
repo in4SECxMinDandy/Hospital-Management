@@ -1,47 +1,134 @@
 {% extends 'hospital/doctor_base.html' %}
-{% block content %}
 {% load static %}
 
-<div class="page-header">
+{% block title %}Lich su benh nhan - Clinic Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header animate-fadeInUp">
   <div class="page-header-content">
-    <h1 class="page-title">Xóa lịch hẹn</h1>
-    <p class="page-subtitle">Chỉ hiển thị lịch của bác sĩ đang đăng nhập</p>
+    <h1 class="page-title">Lich su benh nhan</h1>
+    <p class="page-subtitle">Chi hien thi benh nhan da tung dat lich voi ban, khong co che do xem tong quat nhu admin.</p>
   </div>
 </div>
 
-<div class="card">
+{% if forbidden %}
+<div class="card animate-fadeInUp" style="margin-bottom: 24px; border-left: 4px solid var(--warning);">
+  <div class="card-body" style="padding: 16px 20px;">
+    <strong>Bac si khong co quyen xoa lich hen. Trang nay chi dung de xem lich su.</strong>
+  </div>
+</div>
+{% endif %}
+
+<div class="stats-grid" style="margin-bottom: 24px;">
+  <div class="stat-card primary stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-users"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ history_rows|length }}</div>
+      <div class="stat-label">Benh nhan da tung hen</div>
+    </div>
+  </div>
+
+  <div class="stat-card info stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-clock-rotate-left"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ total_appointments }}</div>
+      <div class="stat-label">Tong lich hen da ghi nhan</div>
+    </div>
+  </div>
+
+  <div class="stat-card success stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-circle-check"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ confirmed_appointments }}</div>
+      <div class="stat-label">Lich hen da xac nhan</div>
+    </div>
+  </div>
+
+  <div class="stat-card warning stagger-item">
+    <div class="stat-icon">
+      <i class="fas fa-hourglass-half"></i>
+    </div>
+    <div class="stat-content">
+      <div class="stat-value">{{ pending_appointments }}</div>
+      <div class="stat-label">Lich hen cho duyet</div>
+    </div>
+  </div>
+</div>
+
+<div class="card animate-fadeInUp">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">Lich su theo benh nhan</h3>
+      <p class="card-subtitle">Bac si chi xem duoc lich su cua benh nhan da tung hen voi minh.</p>
+    </div>
+    <a href="/doctor-view-appointment" class="btn btn-sm btn-outline">
+      <i class="fas fa-eye"></i>
+      Xem danh sach lich hen
+    </a>
+  </div>
+
   <div class="table-container">
     <table class="data-table">
       <thead>
         <tr>
-          <th scope="col">Bệnh nhân</th>
-          <th scope="col">Ảnh</th>
-          <th scope="col">Mô tả</th>
-          <th scope="col">Xóa</th>
+          <th scope="col">Benh nhan</th>
+          <th scope="col">Lien he</th>
+          <th scope="col">Trieu chung</th>
+          <th scope="col">Tong lich hen</th>
+          <th scope="col">Lan gan nhat</th>
+          <th scope="col">Trang thai</th>
+          <th scope="col">Ghi chu gan nhat</th>
         </tr>
       </thead>
       <tbody>
-        {% for a, p in appointments %}
+        {% for row in history_rows %}
         <tr>
-          <td>{{ a.patientName }}</td>
           <td>
-            {% if p and p.profile_pic %}
-            <img src="{{ p.profile_pic.url }}" alt="" width="40" height="40" style="object-fit: cover; border-radius: 8px;">
-            {% else %}
-            <img src="https://ui-avatars.com/api/?name={{ a.patientName|urlencode }}&background=94a3b8&color=fff" alt="" width="40" height="40" style="border-radius: 8px;">
-            {% endif %}
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if row.patient and row.patient.profile_pic %}
+                <img src="{{ row.patient.profile_pic.url }}" alt="{{ row.patient_name }}">
+                {% else %}
+                {{ row.patient_name|slice:":1"|default:"?" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ row.patient_name }}</span>
+                <span style="color: var(--text-secondary); font-size: 13px;">
+                  {{ row.address|default:"Khong co dia chi" }}
+                </span>
+              </div>
+            </div>
           </td>
-          <td>{{ a.description }}</td>
+          <td style="color: var(--text-secondary);">
+            {{ row.mobile|default:"Khong co so dien thoai" }}
+          </td>
+          <td>{{ row.symptoms|default:"Chua co trieu chung" }}</td>
           <td>
-            <a class="btn btn-sm btn-danger" href="{% url 'delete-appointment' a.id %}" aria-label="Xóa lịch hẹn {{ a.patientName }}">
-              <i class="fas fa-trash-alt" aria-hidden="true"></i>
-            </a>
+            <strong>{{ row.total_appointments }}</strong>
           </td>
+          <td style="color: var(--text-secondary);">
+            <div>{{ row.latest_appointment.appointmentDate|default:"Chua co ngay hen" }}</div>
+            <div>{% if row.latest_appointment.appointmentTime %}{{ row.latest_appointment.appointmentTime }}{% else %}Chua co gio hen{% endif %}</div>
+          </td>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <span class="badge badge-primary">Da xac nhan: {{ row.confirmed_count }}</span>
+              <span class="badge badge-warning">Cho duyet: {{ row.pending_count }}</span>
+            </div>
+          </td>
+          <td>{{ row.latest_appointment.description|default:"Khong co ghi chu" }}</td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="4" class="text-center" style="padding: 40px; color: var(--text-secondary);">
-            Không có lịch để xóa.
+          <td colspan="7" class="text-center" style="padding: 40px; color: var(--text-secondary);">
+            Chua co lich su lich hen nao thuoc pham vi cua ban.
           </td>
         </tr>
         {% endfor %}

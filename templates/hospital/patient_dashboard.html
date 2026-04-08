@@ -103,6 +103,14 @@
   </div>
   <div class="card-body">
     <div class="menu-grid">
+      <a href="/patient-profiles" class="menu-card info">
+        <div class="menu-card-icon">
+          <i class="fas fa-user-pen"></i>
+        </div>
+        <h4 class="menu-card-title">Hồ sơ cá nhân</h4>
+        <p class="menu-card-description">Xem và cập nhật hồ sơ đang đồng bộ với Admin và bác sĩ</p>
+      </a>
+
       <a href="/patient-book-appointment" class="menu-card primary">
         <div class="menu-card-icon">
           <i class="fas fa-calendar-plus"></i>
@@ -117,14 +125,6 @@
         </div>
         <h4 class="menu-card-title">Lịch hẹn của tôi</h4>
         <p class="menu-card-description">Xem danh sách lịch hẹn đã đặt</p>
-      </a>
-
-      <a href="/patient-view-doctor" class="menu-card warning">
-        <div class="menu-card-icon">
-          <i class="fas fa-stethoscope"></i>
-        </div>
-        <h4 class="menu-card-title">Danh sách Bác sĩ</h4>
-        <p class="menu-card-description">Xem thông tin các bác sĩ</p>
       </a>
 
       <a href="/patient-discharge" class="menu-card info">
@@ -172,14 +172,10 @@
       <h3 class="card-title">Thông tin điều trị</h3>
     </div>
     <div class="card-body">
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+      <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
         <div style="padding: 16px; background: var(--bg-page); border-radius: var(--radius-lg); text-align: center;">
           <div style="font-size: 24px; font-weight: 700; color: var(--primary-600);">{{ symptoms }}</div>
           <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Triệu chứng</div>
-        </div>
-        <div style="padding: 16px; background: var(--bg-page); border-radius: var(--radius-lg); text-align: center;">
-          <div style="font-size: 24px; font-weight: 700; color: var(--success-600);">{{ admitDate }}</div>
-          <div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase;">Ngày nhập viện</div>
         </div>
       </div>
     </div>

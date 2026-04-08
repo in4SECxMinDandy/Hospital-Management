@@ -1,203 +1,249 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-
+<html lang="vi">
 <head>
   <meta charset="utf-8">
+  <title>Hóa đơn xuất viện</title>
   <style>
     @page {
       size: A4;
-      margin: 1cm;
-
-      @frame footer {
-        -pdf-frame-content: footerContent;
-        bottom: 0cm;
-        margin-left: 9cm;
-        margin-right: 9cm;
-        height: 1cm;
-      }
+      margin: 1.2cm;
     }
 
-    .invoice-box {
-      max-width: 800px;
-      margin: auto;
-      padding: 30px;
-      border: 1px solid #eee;
-      box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-      font-size: 16px;
-      line-height: 24px;
-      font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-      color: #555;
+    body {
+      font-family: ClinicSans, Helvetica, Arial, sans-serif;
+      font-size: 11pt;
+      color: #1f2937;
+      line-height: 1.45;
     }
 
-    .invoice-box table {
+    .page {
+      border: 1px solid #dbe4f0;
+      padding: 22px;
+      background: #ffffff;
+    }
+
+    .header-table,
+    .meta-table,
+    .detail-table,
+    .summary-table {
       width: 100%;
-      line-height: inherit;
-      text-align: left;
+      border-collapse: collapse;
     }
 
-    .invoice-box table td {
-      padding: 5px;
+    .header-table td {
+      vertical-align: top;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #2563eb;
+    }
+
+    .brand {
+      font-family: ClinicSansBold, ClinicSans, Helvetica, Arial, sans-serif;
+      font-size: 20pt;
+      color: #0f172a;
+      margin: 0 0 6px 0;
+    }
+
+    .muted {
+      color: #64748b;
+    }
+
+    .invoice-right {
+      text-align: right;
+    }
+
+    .invoice-label {
+      font-size: 9pt;
+      color: #64748b;
+    }
+
+    .invoice-number {
+      font-family: ClinicSansBold, ClinicSans, Helvetica, Arial, sans-serif;
+      font-size: 13pt;
+      color: #2563eb;
+      margin-top: 4px;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .section-title {
+      font-family: ClinicSansBold, ClinicSans, Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      color: #0f172a;
+      margin: 0 0 8px 0;
+      padding: 0;
+    }
+
+    .meta-table td {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
       vertical-align: top;
     }
 
-    .invoice-box table tr td:nth-child(2) {
-      text-align: right;
+    .meta-label {
+      font-size: 9pt;
+      color: #64748b;
+      margin-bottom: 4px;
     }
 
-    .invoice-box table tr.top table td {
-      padding-bottom: 20px;
+    .meta-value {
+      color: #111827;
     }
 
-    .invoice-box table tr.top table td.title {
-      font-size: 45px;
-      line-height: 45px;
-      color: #333;
+    .note-box {
+      border: 1px solid #e5e7eb;
+      background: #f8fafc;
+      padding: 12px;
     }
 
-    .invoice-box table tr.information table td {
-      padding-bottom: 40px;
-    }
-
-    .invoice-box table tr.heading td {
-      background: #eee;
-      border-bottom: 1px solid #ddd;
-      font-weight: bold;
-    }
-
-    .invoice-box table tr.details td {
-      padding-bottom: 20px;
-    }
-
-    .invoice-box table tr.item td {
-      border-bottom: 1px solid #eee;
-    }
-
-    .invoice-box table tr.item.last td {
-      border-bottom: none;
-    }
-
-    .invoice-box table tr.total td:nth-child(2) {
-      border-top: 2px solid #eee;
-      font-weight: bold;
-    }
-
-    @media only screen and (max-width: 600px) {
-      .invoice-box table tr.top table td {
-        width: 100%;
-        display: block;
-        text-align: center;
-      }
-
-      .invoice-box table tr.information table td {
-        width: 100%;
-        display: block;
-        text-align: center;
-      }
-    }
-
-    /** RTL **/
-    .rtl {
-      direction: rtl;
-      font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-    }
-
-    .rtl table {
-      text-align: right;
-    }
-
-    .rtl table tr td:nth-child(2) {
+    .detail-table th {
       text-align: left;
+      padding: 10px 12px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      border: 1px solid #dbeafe;
+      font-family: ClinicSansBold, ClinicSans, Helvetica, Arial, sans-serif;
+    }
+
+    .detail-table td {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .detail-table th:last-child,
+    .detail-table td:last-child {
+      text-align: right;
+    }
+
+    .summary-table {
+      margin-top: 12px;
+    }
+
+    .summary-table td {
+      padding-top: 10px;
+      border-top: 2px solid #cbd5e1;
+      font-family: ClinicSansBold, ClinicSans, Helvetica, Arial, sans-serif;
+      font-size: 13pt;
+      color: #2563eb;
+    }
+
+    .summary-table td:last-child {
+      text-align: right;
+    }
+
+    .footer {
+      margin-top: 18px;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
     }
   </style>
 </head>
-
 <body>
-
-  <br><br><br>
-  <div class="invoice-box">
-    <table cellpadding="0" cellspacing="0">
-      <tr class="top">
-        <td colspan="2">
-          <table>
-            <tr>
-              <td class="title">
-                <h5>Quản lý Bệnh viện</h5>
-              </td>
-
-              <td>
-
-                Ngày nhập viện: {{admitDate}}<br>
-                Ngày xuất viện: {{releaseDate}}<br>
-                Số ngày nằm viện: {{daySpent}}
-              </td>
-            </tr>
-          </table>
+  <div class="page">
+    <table class="header-table">
+      <tr>
+        <td>
+          <p class="brand">Clinic Pro</p>
+          <div class="muted">Hóa đơn xuất viện và thanh toán điều trị nội trú</div>
+        </td>
+        <td class="invoice-right">
+          <div class="invoice-label">Mã hóa đơn</div>
+          <div class="invoice-number">{{ invoiceNumber }}</div>
         </td>
       </tr>
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
-            <tr>
-              <td>
-                Tên Bệnh nhân : {{patientName}}<br>
-                Số điện thoại : {{mobile}}<br>
-                Địa chỉ : {{address}}<br>
-              </td>
-
-              <td>
-                Tên Bác sĩ :<br>
-                {{assignedDoctorName}}<br>
-
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
-            <tr>
-              <td>
-                Bệnh và Triệu chứng :<br>
-                &nbsp &nbsp &nbsp &nbsp &nbsp {{symptoms}}
-              </td>
-
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
-            <tr>
-              <td>
-                Chi phí :<br><br>
-                Tiền phòng {{daySpent}} ngày : {{roomCharge}}<br>
-                Phí Bác sĩ : {{doctorFee}}<br>
-                Tiền thuốc : {{medicineCost}}<br>
-                Chi phí khác : {{OtherCharge}} <br><br>
-                &nbsp &nbsp &nbsp &nbsp &nbsp Tổng cộng : {{total}}
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-
-
     </table>
+
+    <div class="section">
+      <p class="section-title">Thông tin hồ sơ</p>
+      <table class="meta-table">
+        <tr>
+          <td>
+            <div class="meta-label">Bệnh nhân</div>
+            <div class="meta-value">{{ patientName }}</div>
+          </td>
+          <td>
+            <div class="meta-label">Bác sĩ phụ trách</div>
+            <div class="meta-value">{{ assignedDoctorName }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="meta-label">Điện thoại</div>
+            <div class="meta-value">{{ mobile }}</div>
+          </td>
+          <td>
+            <div class="meta-label">Địa chỉ</div>
+            <div class="meta-value">{{ address }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="meta-label">Ngày nhập viện</div>
+            <div class="meta-value">{{ admitDate }}</div>
+          </td>
+          <td>
+            <div class="meta-label">Ngày xuất viện</div>
+            <div class="meta-value">{{ releaseDate }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="meta-label">Số ngày nằm viện</div>
+            <div class="meta-value">{{ daySpent }} ngày</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Triệu chứng / ghi chú điều trị</p>
+      <div class="note-box">{{ symptoms }}</div>
+    </div>
+
+    <div class="section">
+      <p class="section-title">Chi tiết thanh toán</p>
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>Khoản mục</th>
+            <th>Giá trị</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tiền phòng mỗi ngày</td>
+            <td>{{ roomChargePerDayDisplay }}</td>
+          </tr>
+          <tr>
+            <td>Tiền phòng {{ daySpent }} ngày</td>
+            <td>{{ roomChargeDisplay }}</td>
+          </tr>
+          <tr>
+            <td>Phí bác sĩ</td>
+            <td>{{ doctorFeeDisplay }}</td>
+          </tr>
+          <tr>
+            <td>Tiền thuốc</td>
+            <td>{{ medicineCostDisplay }}</td>
+          </tr>
+          <tr>
+            <td>Chi phí khác</td>
+            <td>{{ otherChargeDisplay }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="summary-table">
+        <tr>
+          <td>Tổng thanh toán</td>
+          <td>{{ totalDisplay }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer">Clinic Pro - Hệ thống quản lý bệnh viện</div>
   </div>
 </body>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-
 </html>

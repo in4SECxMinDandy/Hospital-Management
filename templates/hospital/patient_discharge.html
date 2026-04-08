@@ -1,142 +1,114 @@
 {% extends 'hospital/patient_base.html' %}
 {% load static %}
+{% block title %}Thông tin Xuất viện - Clinic Dashboard{% endblock %}
 {% block content %}
 
-  <br><br><br>
-
-{%if is_discharged%}
-<div class="invoice-box">
-  <table cellpadding="0" cellspacing="0">
-    <tr class="top">
-      <td colspan="2">
-        <table>
-          <tr>
-            <td class="title">
-              <h1>Quản lý Bệnh viện</h1>
-            </td>
-
-            <td>
-
-              Ngày nhập viện: {{admitDate}}<br>
-              Ngày xuất viện: {{releaseDate}}<br>
-              Số ngày nằm viện: {{daySpent}}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <tr class="information">
-      <td colspan="2">
-        <table>
-          <tr>
-            <td>
-              Tên Bệnh nhân : {{patientName}}<br>
-              Số điện thoại : {{mobile}}<br>
-              Địa chỉ : {{address}}<br>
-            </td>
-
-            <td>
-              Tên Bác sĩ :<br>
-              {{assignedDoctorName}}<br>
-
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <tr class="heading">
-      <td>
-        Bệnh và Triệu chứng
-      </td>
-      <td>
-
-      </td>
-
-    </tr>
-
-    <tr class="details">
-      <td>
-        {{symptoms}}
-      </td>
-    </tr>
-    <tr class="heading">
-      <td>
-        Khoản mục
-      </td>
-
-      <td>
-        Giá
-      </td>
-    </tr>
-
-    <tr class="item">
-      <td>
-        Tiền phòng {{daySpent}} ngày
-      </td>
-
-      <td>
-        {{roomCharge}}
-      </td>
-    </tr>
-
-    <tr class="item">
-      <td>
-        Phí Bác sĩ
-      </td>
-
-      <td>
-        {{doctorFee}}
-      </td>
-    </tr>
-
-    <tr class="item">
-      <td>
-        Tiền thuốc
-      </td>
-
-      <td>
-        {{medicineCost}}
-      </td>
-    </tr>
-
-    <tr class="item last">
-      <td>
-        Chi phí khác
-      </td>
-
-      <td>
-        {{OtherCharge}}
-      </td>
-    </tr>
-
-    <tr class="total">
-      <td></td>
-
-      <td>
-        Tổng cộng : {{total}}
-      </td>
-    </tr>
-
-  </table>
-</div>
-<br><br>
-<div class="download">
-  <a style="background:red; width:500px;" href="{% url 'download-pdf' patientId  %}">Tải xuống</a>
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Thông tin Xuất viện</h1>
+    <p class="page-subtitle">Xem chi tiết hóa đơn và thông tin xuất viện của bạn</p>
+  </div>
 </div>
 
+{% if is_discharged %}
+<!-- Invoice Card -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="card-body">
+    <!-- Invoice Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid var(--border-color);">
+      <div>
+        <h2 style="margin-bottom: 4px; color: var(--text-primary);">Hóa đơn Xuất viện</h2>
+        <p style="margin-bottom: 0; color: var(--text-secondary);">Quản lý Bệnh viện</p>
+      </div>
+      <div style="text-align: right;">
+        <span class="badge badge-success">Đã xuất viện</span>
+      </div>
+    </div>
 
+    <!-- Patient Info Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 32px;">
+      <div>
+        <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Thông tin bệnh nhân</h4>
+        <p style="margin: 0 0 4px;"><strong>{{ patientName }}</strong></p>
+        <p style="margin: 0 0 4px; color: var(--text-secondary);">Điện thoại: {{ mobile }}</p>
+        <p style="margin: 0; color: var(--text-secondary);">Địa chỉ: {{ address }}</p>
+      </div>
+      <div>
+        <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Bác sĩ phụ trách</h4>
+        <p style="margin: 0; color: var(--text-primary);"><strong>{{ assignedDoctorName }}</strong></p>
+      </div>
+      <div>
+        <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Thông tin nhập viện</h4>
+        <p style="margin: 0 0 4px; color: var(--text-secondary);">Ngày nhập: <strong>{{ admitDate }}</strong></p>
+        <p style="margin: 0 0 4px; color: var(--text-secondary);">Ngày xuất: <strong>{{ releaseDate }}</strong></p>
+        <p style="margin: 0; color: var(--text-secondary);">Số ngày nằm viện: <strong>{{ daySpent }} ngày</strong></p>
+      </div>
+    </div>
 
-{%else%}
-<h5 style="text-align:center;">Bạn chưa được xuất viện !</h5>
-<h5 style="text-align:center;">Điều trị của bạn đang tiếp tục !</h5><br><br>
-<h6 style="text-align:center;">Khi nào bạn được xuất viện, bạn có thể tải hóa đơn.</h6>
-{%endif%}
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
-<br><br><br><br><br><br><br><br>
+    <!-- Diagnosis -->
+    <div style="background: var(--warning-50); padding: 16px 20px; border-radius: var(--radius-lg); margin-bottom: 24px; border-left: 4px solid var(--warning-500);">
+      <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 8px;">Chẩn đoán</h4>
+      <p style="margin: 0; color: var(--text-primary);">{{ symptoms }}</p>
+    </div>
+
+    <!-- Bill Details -->
+    <div style="margin-bottom: 24px;">
+      <h4 style="margin-bottom: 16px; color: var(--text-secondary);">Chi tiết hóa đơn</h4>
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color);">
+            <th style="text-align: left; padding: 12px 0; color: var(--text-secondary); font-weight: 500;">Khoản mục</th>
+            <th style="text-align: right; padding: 12px 0; color: var(--text-secondary); font-weight: 500;">Số tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--border-color-light);">
+            <td style="padding: 12px 0;">Tiền phòng ({{ daySpent }} ngày)</td>
+            <td style="text-align: right; padding: 12px 0; font-family: monospace;">{{ roomCharge }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-color-light);">
+            <td style="padding: 12px 0;">Phí Bác sĩ</td>
+            <td style="text-align: right; padding: 12px 0; font-family: monospace;">{{ doctorFee }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-color-light);">
+            <td style="padding: 12px 0;">Tiền thuốc</td>
+            <td style="text-align: right; padding: 12px 0; font-family: monospace;">{{ medicineCost }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--border-color-light);">
+            <td style="padding: 12px 0;">Chi phí khác</td>
+            <td style="text-align: right; padding: 12px 0; font-family: monospace;">{{ OtherCharge }}</td>
+          </tr>
+          <tr style="font-weight: 700;">
+            <td style="padding: 16px 0 8px; font-size: 18px;">Tổng cộng</td>
+            <td style="text-align: right; padding: 16px 0 8px; font-size: 18px; color: var(--primary-600); font-family: monospace;">{{ total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Download Button -->
+    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+      <a href="{% url 'download-pdf' patientId %}" class="btn btn-primary">
+        <i class="fas fa-download"></i>
+        Tải hóa đơn PDF
+      </a>
+    </div>
+  </div>
+</div>
+{% else %}
+<!-- Not Discharged State -->
+<div class="card animate-fadeInUp">
+  <div class="card-body">
+    <div class="empty-state">
+      <div class="empty-state-icon" style="background: var(--warning-50); color: var(--warning-500);">
+        <i class="fas fa-clock"></i>
+      </div>
+      <h3 class="empty-state-title">Bạn chưa được xuất viện</h3>
+      <p class="empty-state-description">Quá trình điều trị của bạn đang tiếp tục. Khi bạn được xuất viện, bạn sẽ có thể xem và tải hóa đơn.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% endblock content %}

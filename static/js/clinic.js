@@ -385,6 +385,33 @@ const ClinicAPI = (function() {
     }
   }
 
+  async function handleAction(url, message, redirectUrl = null, options = {}) {
+    const {
+      method = 'GET',
+      successTitle = 'Thành công',
+      successMessage = 'Thao tác đã được thực hiện thành công!',
+      errorMessage = 'Không thể thực hiện thao tác này',
+    } = options;
+
+    const confirmed = await confirm(message);
+    if (!confirmed) {
+      return;
+    }
+
+    const result = await request(url, { method });
+    if (result.success) {
+      toast.success(successTitle, result.data?.message || successMessage);
+      if (redirectUrl) {
+        setTimeout(() => window.location.href = redirectUrl, 350);
+      } else {
+        window.location.reload();
+      }
+      return;
+    }
+
+    toast.error('Lỗi', result.error.message || errorMessage);
+  }
+
   // ============================================
   // MODAL MANAGEMENT
   // ============================================
@@ -737,6 +764,7 @@ const ClinicAPI = (function() {
     // Dialogs
     confirm,
     handleDelete,
+    handleAction,
     
     // Modal
     openModal,

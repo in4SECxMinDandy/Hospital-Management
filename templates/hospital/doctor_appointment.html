@@ -1,93 +1,31 @@
 {% extends 'hospital/doctor_base.html' %}
 {% load static %}
+{% block title %}Quan ly lich hen - Clinic Dashboard{% endblock %}
 {% block content %}
-<br><br>
 
-            <style type="text/css">
-    a:link {
-      text-decoration: none;
-    }
-
-    .menu {
-      top: 50px;
-    }
-
-    h6 {
-      color: white;
-    }
-
-    .order-card {
-      color: #fff;
-    }
-
-    .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
-    }
-
-    .bg-c-green {
-      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
-    }
-
-    .card {
-      border-radius: 5px;
-      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      border: none;
-      margin-bottom: 30px;
-      -webkit-transition: all 0.3s ease-in-out;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .card .card-block {
-      padding: 25px;
-    }
-
-    .order-card i {
-      font-size: 26px;
-    }
-
-    .f-left {
-      float: left;
-    }
-
-    .f-right {
-      float: right;
-    }
-  </style>
-<div class="container">
-  <div class="row">
-    <div class="col-md-4 col-xl-6">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <a href="/doctor-view-appointment">
-            <h6 class="m-b-20">Xem lịch hẹn</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 col-xl-6">
-      <div class="card bg-c-green order-card">
-        <div class="card-block">
-          <a href="/doctor-delete-appointment">
-            <h6 class="m-b-20">Xóa lịch hẹn</h6>
-          </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
-        </div>
-      </div>
-    </div>
-
-
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Quan ly lich hen</h1>
+    <p class="page-subtitle">Xem lich hen hien tai va lich su benh nhan da tung hen voi ban</p>
   </div>
 </div>
-<!--
-  developed By : sumit kumar
-  facebook : fb.com/sumit.luv
-  youtube : youtube.com/AT05s
-  -->
-<br><br><br><br><br><br><br>
+
+<div class="menu-grid animate-fadeInUp" style="animation-delay: 0.1s;">
+  <a href="/doctor-view-appointment" class="menu-card primary">
+    <div class="menu-card-icon">
+      <i class="fas fa-calendar-check"></i>
+    </div>
+    <h4 class="menu-card-title">Xem lich hen</h4>
+    <p class="menu-card-description">Xem danh sach lich hen da dat voi ban</p>
+  </a>
+
+  <a href="/doctor-delete-appointment" class="menu-card warning">
+    <div class="menu-card-icon">
+      <i class="fas fa-clock-rotate-left"></i>
+    </div>
+    <h4 class="menu-card-title">Lich su</h4>
+    <p class="menu-card-description">Chi xem lich su cua nhung benh nhan da tung hen voi ban</p>
+  </a>
+</div>
+
 {% endblock content %}

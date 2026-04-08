@@ -1,66 +1,146 @@
 {% extends 'hospital/doctor_base.html' %}
+{% load static %}
+{% block title %}Danh sách Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
-{%load static%}
 
-  <!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
+<!-- Page Header -->
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Danh sách Bệnh nhân</h1>
+    <p class="page-subtitle">Xem thông tin bệnh nhân được phân công cho bạn</p>
+  </div>
+</div>
 
+<!-- Search Form -->
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s; margin-bottom: 24px;">
+  <div class="card-body">
+    <form action="/search" method="get" class="search-form-inline">
+      <div class="search-input-group">
+        <input type="text" 
+               name="query" 
+               id="query"
+               class="search-input" 
+               placeholder="Tìm kiếm bệnh nhân..." 
+               value="{{ request.GET.query|default:'' }}"
+               aria-label="Tìm kiếm bệnh nhân">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-search"></i>
+          Tìm kiếm
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
-<div class="container">
-
-  <form action="/search" method="get" style="margin-left:70%;" class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm" name="query" id="query"
-      aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
-  </form>
-
-
-  {% if patients %}
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Danh sách Bệnh nhân</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
+<!-- Results Card -->
+{% if patients %}
+<div class="card animate-fadeInUp" style="animation-delay: 0.2s;">
+  <div class="table-container">
+    <table class="data-table" id="patientsTable">
       <thead>
         <tr>
-          <th>Tên</th>
-          <th>Ảnh đại diện</th>
+          <th>Bệnh nhân</th>
           <th>Triệu chứng</th>
           <th>Điện thoại</th>
           <th>Địa chỉ</th>
-
         </tr>
       </thead>
-      {% for p in patients %}
-      <tr>
-        <td> {{p.get_name}}</td>
-        <td>
-          {% if p.profile_pic %}
-          <img src="{{ p.profile_pic.url }}" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
-          {% else %}
-          <img src="https://ui-avatars.com/api/?name={{ p.get_name|urlencode }}&background=94a3b8&color=fff" alt="Ảnh đại diện" height="40px" width="40px" style="object-fit: cover;" />
-          {% endif %}
-        </td>
-        <td>{{p.symptoms}}</td>
-        <td>{{p.mobile}}</td>
-        <td>{{p.address}}</td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for p in patients %}
+        <tr class="stagger-item" data-name="{{ p.get_name|lower }}">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if p.profile_pic %}
+                <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                {% else %}
+                {{ p.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.get_name }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.address }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
-  {%else%}
-  <br><br><br>
-  <h4 style="text-align: center;color: red;">Không tìm thấy Bệnh nhân !!!</h4>
-  {% endif %}
 
-
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      {{ patients|length }} bệnh nhân
+    </div>
+  </div>
 </div>
-<!--
-developed By : sumit kumar
-facebook : fb.com/sumit.luv
-youtube : youtube.com/AT05s
--->
+{% else %}
+<div class="card animate-fadeInUp">
+  <div class="card-body">
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <h3 class="empty-state-title">Không tìm thấy bệnh nhân</h3>
+      <p class="empty-state-description">Không có bệnh nhân nào phù hợp với từ khóa tìm kiếm.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
 
 {% endblock content %}
+
+{% block extra_css %}
+<style>
+  .search-form-inline {
+    margin: 0;
+  }
+
+  .search-input-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    font-size: var(--font-size-base);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: white;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+
+  @media (max-width: 640px) {
+    .search-input-group {
+      flex-direction: column;
+    }
+
+    .search-input {
+      width: 100%;
+    }
+
+    .search-input-group .btn {
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %}

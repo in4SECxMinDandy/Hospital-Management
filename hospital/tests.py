@@ -172,11 +172,215 @@ class PermissionTestCase(TestCase):
 
     def test_public_routes_accessible_without_login(self):
         """Cac route public co the truy cap ma khong can dang nhap."""
-        public_routes = ['', 'aboutus', 'contactus']
+        public_routes = ['', 'home', 'aboutus', 'contactus', 'selectlogin']
         for route in public_routes:
             response = self.client.get(f'/{route}')
             self.assertIn(response.status_code, [200, 302],
                 f"Public route /{route} should be accessible, got {response.status_code}")
+
+    def test_public_routes_with_trailing_slash_work(self):
+        """Cac route public van hoat dong khi truy cap voi trailing slash."""
+        public_routes = ['home/', 'aboutus/', 'contactus/', 'selectlogin/']
+        for route in public_routes:
+            response = self.client.get(f'/{route}')
+            self.assertIn(response.status_code, [200, 302],
+                f"Public route /{route} should be accessible, got {response.status_code}")
+
+    def test_adminclick_redirects_to_selectlogin(self):
+        """Legacy adminclick luon redirect sang selectlogin."""
+        for route in ['/adminclick', '/adminclick/']:
+            response = self.client.get(route)
+            self.assertEqual(response.status_code, 302)
+            self.assertTrue(
+                response.url.endswith('/selectlogin'),
+                f"{route} should redirect to /selectlogin, got {response.url}"
+            )
+
+    def test_patient_signup_allows_empty_assigned_doctor(self):
+        """Benh nhan co the dang ky ma khong can chon bac si phu trach."""
+        response = self.client.post('/patientsignup', data={
+            'first_name': 'No',
+            'last_name': 'Doctor',
+            'username': 'nodoctor@example.com',
+            'password': 'testpass123',
+            'address': '999 Test St',
+            'mobile': '0912345678',
+            'symptoms': 'Headache and fever',
+            'assignedDoctorId': '',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/patientlogin', response.url)
+
+        user = User.objects.get(username='nodoctor@example.com')
+        patient = models.Patient.objects.get(user=user)
+        self.assertIsNone(patient.assignedDoctorId)
+
+    def test_discharge_patient_invalid_charge_input_shows_error(self):
+        """Nhap chi phi sai dinh dang khong duoc lam crash trang tao hoa don."""
+        self.client.login(username='testadmin', password='testpass123')
+        response = self.client.post(f'/discharge-patient/{self.patient.id}', data={
+            'roomCharge': 'abc',
+            'doctorFee': '100000',
+            'medicineCost': '200000',
+            'OtherCharge': '50000',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Không thể tạo hóa đơn', html=False)
+
+    def test_discharge_patient_generates_pdf_successfully(self):
+        """Admin tao hoa don va tai PDF thanh cong."""
+        self.client.login(username='testadmin', password='testpass123')
+        create_response = self.client.post(f'/discharge-patient/{self.patient.id}', data={
+            'roomCharge': '1000000',
+            'doctorFee': '300000',
+            'medicineCost': '200000',
+            'OtherCharge': '50000',
+        })
+
+        self.assertEqual(create_response.status_code, 200)
+        pdf_response = self.client.get(f'/download-pdf/{self.patient.id}')
+        self.assertEqual(pdf_response.status_code, 200)
+        self.assertEqual(pdf_response['Content-Type'], 'application/pdf')
+
+        from io import BytesIO
+        from pypdf import PdfReader
+
+        reader = PdfReader(BytesIO(pdf_response.content))
+        extracted = "\n".join(page.extract_text() or '' for page in reader.pages)
+        self.assertIn('Clinic Pro', extracted)
+        self.assertIn('HD-', extracted)
+
+    def test_discharge_patient_pdf_supports_vietnamese_content(self):
+        """PDF hoa don van giu duoc noi dung tieng Viet co dau."""
+        self.patient.symptoms = 'Theo dõi tim mạch và tái khám định kỳ'
+        self.patient.save()
+
+        self.client.login(username='testadmin', password='testpass123')
+        self.client.post(f'/discharge-patient/{self.patient.id}', data={
+            'roomCharge': '1000000',
+            'doctorFee': '300000',
+            'medicineCost': '200000',
+            'OtherCharge': '50000',
+        })
+        pdf_response = self.client.get(f'/download-pdf/{self.patient.id}')
+        self.assertEqual(pdf_response.status_code, 200)
+
+        from io import BytesIO
+        from pypdf import PdfReader
+
+        reader = PdfReader(BytesIO(pdf_response.content))
+        extracted = "\n".join(page.extract_text() or '' for page in reader.pages)
+        self.assertIn('Hóa đơn', extracted)
+        self.assertIn('Theo dõi tim mạch', extracted)
+
+    def test_admin_add_doctor_ajax_success(self):
+        """Admin co the them moi bac si qua form AJAX."""
+        self.client.login(username='testadmin', password='testpass123')
+        response = self.client.post('/admin-add-doctor', data={
+            'first_name': 'New',
+            'last_name': 'Doctor',
+            'username': 'newdoctorajax',
+            'password': 'testpass123',
+            'address': '123 New Street',
+            'mobile': '0912345678',
+            'department': 'Cardiologist',
+        }, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertTrue(User.objects.filter(username='newdoctorajax').exists())
+        self.assertTrue(models.Doctor.objects.filter(user__username='newdoctorajax').exists())
+
+    def test_admin_update_patient_keeps_password_when_blank(self):
+        """Cap nhat benh nhan khong duoc xoa mat khau neu admin de trong truong password."""
+        self.client.login(username='testadmin', password='testpass123')
+        original_password = self.patient_user.password
+
+        response = self.client.post(f'/update-patient/{self.patient.id}', data={
+            'first_name': 'Updated',
+            'last_name': 'Patient',
+            'username': self.patient_user.username,
+            'password': '',
+            'address': 'Updated Address',
+            'mobile': '0911222333',
+            'symptoms': 'Updated Symptoms',
+            'assignedDoctorId': self.doctor_user.id,
+        }, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.patient_user.refresh_from_db()
+        self.patient.refresh_from_db()
+        self.assertEqual(self.patient_user.password, original_password)
+        self.assertEqual(self.patient.address, 'Updated Address')
+        self.assertEqual(self.patient.assignedDoctorId, self.doctor_user.id)
+
+    def test_admin_approve_appointment_page_sets_csrf_cookie(self):
+        """Trang duyet lich hen cua admin phai cap CSRF cookie cho AJAX POST/DELETE."""
+        self.client.login(username='testadmin', password='testpass123')
+        response = self.client.get('/admin-approve-appointment')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('csrftoken', response.cookies)
+
+    def test_approve_appointment_ajax_updates_status(self):
+        """Admin duyet lich hen qua AJAX POST thanh cong."""
+        pending = models.Appointment.objects.create(
+            patientId=self.patient_user.id,
+            doctorId=self.doctor_user.id,
+            patientName='Patient User',
+            doctorName='Doctor User',
+            appointmentDate=date.today(),
+            appointmentTime='09:00',
+            description='Pending appointment',
+            status=False,
+        )
+
+        csrf_client = Client(enforce_csrf_checks=True)
+        self.assertTrue(csrf_client.login(username='testadmin', password='testpass123'))
+        page_response = csrf_client.get('/admin-approve-appointment')
+        csrf_token = page_response.cookies['csrftoken'].value
+
+        response = csrf_client.post(
+            f'/approve-appointment/{pending.id}',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            HTTP_X_CSRFTOKEN=csrf_token,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        pending.refresh_from_db()
+        self.assertTrue(pending.status)
+
+    def test_reject_appointment_ajax_delete_removes_record(self):
+        """Admin co the tu choi lich hen bang AJAX DELETE tu trang duyet."""
+        pending = models.Appointment.objects.create(
+            patientId=self.patient_user.id,
+            doctorId=self.doctor_user.id,
+            patientName='Patient User',
+            doctorName='Doctor User',
+            appointmentDate=date.today(),
+            appointmentTime='10:00',
+            description='Rejected appointment',
+            status=False,
+        )
+
+        csrf_client = Client(enforce_csrf_checks=True)
+        self.assertTrue(csrf_client.login(username='testadmin', password='testpass123'))
+        page_response = csrf_client.get('/admin-approve-appointment')
+        csrf_token = page_response.cookies['csrftoken'].value
+
+        response = csrf_client.delete(
+            f'/reject-appointment/{pending.id}',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+            HTTP_X_CSRFTOKEN=csrf_token,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertFalse(models.Appointment.objects.filter(id=pending.id).exists())
 
     # ================== ADMIN ROUTES ==================
 
@@ -261,6 +465,78 @@ class PermissionTestCase(TestCase):
         response = self.client.get('/doctor-view-patient')
         self.assertEqual(response.status_code, 200)
 
+    def test_doctor_history_page_shows_only_own_patients(self):
+        """Trang lich su chi hien thi benh nhan da tung hen voi bac si dang nhap."""
+        other_doctor_user = User.objects.create_user(
+            username='otherdoctor',
+            password='testpass123',
+            first_name='Other',
+            last_name='Doctor'
+        )
+        self.doctor_group.user_set.add(other_doctor_user)
+        models.Doctor.objects.create(
+            user=other_doctor_user,
+            address='999 Test St',
+            mobile='0999888777',
+            department='Dermatologists',
+            status=True
+        )
+        other_patient_user = User.objects.create_user(
+            username='otherpatient',
+            password='testpass123',
+            first_name='Other',
+            last_name='Patient'
+        )
+        self.patient_group.user_set.add(other_patient_user)
+        models.Patient.objects.create(
+            user=other_patient_user,
+            address='555 Test St',
+            mobile='0900000000',
+            symptoms='Back pain',
+            assignedDoctorId=other_doctor_user.id,
+            status=True
+        )
+        models.Appointment.objects.create(
+            patientId=other_patient_user.id,
+            doctorId=other_doctor_user.id,
+            patientName='Other Patient',
+            doctorName='Other Doctor',
+            appointmentDate=date.today(),
+            description='Other doctor appointment',
+            status=True
+        )
+
+        self.client.login(username='testdoctor', password='testpass123')
+        response = self.client.get('/doctor-delete-appointment')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Bac si chi xem duoc lich su cua benh nhan da tung hen voi minh.')
+        self.assertContains(response, 'Patient User')
+        self.assertNotContains(response, 'Other Patient')
+        self.assertNotContains(response, 'action="/delete-appointment/', html=False)
+
+    def test_doctor_cannot_delete_own_appointment_via_post(self):
+        """Bac si khong con quyen xoa lich hen qua POST."""
+        self.client.login(username='testdoctor', password='testpass123')
+        response = self.client.post(f'/delete-appointment/{self.appointment.id}')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/doctor-delete-appointment?forbidden=1', response.url)
+        self.assertTrue(
+            models.Appointment.objects.filter(id=self.appointment.id).exists()
+        )
+
+    def test_delete_appointment_get_does_not_remove_record(self):
+        """GET vao endpoint xoa se bi chuyen ve trang lich su va khong doi du lieu."""
+        self.client.login(username='testdoctor', password='testpass123')
+        response = self.client.get(f'/delete-appointment/{self.appointment.id}')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/doctor-delete-appointment?forbidden=1', response.url)
+        self.assertTrue(
+            models.Appointment.objects.filter(id=self.appointment.id).exists()
+        )
+
     # ================== PATIENT ROUTES ==================
 
     def test_patient_dashboard_accessible_by_patient(self):
@@ -281,11 +557,79 @@ class PermissionTestCase(TestCase):
         response = self.client.get('/patient-dashboard')
         self.assertNotEqual(response.status_code, 200)
 
+    def test_patient_profile_accessible_by_patient(self):
+        """Benh nhan co the truy cap trang ho so ca nhan."""
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.get('/patient-profiles')
+        self.assertEqual(response.status_code, 200)
+
+    def test_patient_profile_update_syncs_with_admin_doctor_and_api(self):
+        """Cap nhat ho so benh nhan duoc dong bo cho cac man hinh khac."""
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.post('/patient-profiles', data={
+            'first_name': 'Updated',
+            'last_name': 'Patient',
+            'mobile': '0981234567',
+            'address': 'Updated Address',
+            'symptoms': 'Updated Symptoms',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/patient-profiles?updated=1', response.url)
+
+        self.patient_user.refresh_from_db()
+        self.patient.refresh_from_db()
+        self.assertEqual(self.patient_user.first_name, 'Updated')
+        self.assertEqual(self.patient.mobile, '0981234567')
+        self.assertEqual(self.patient.address, 'Updated Address')
+        self.assertEqual(self.patient.symptoms, 'Updated Symptoms')
+
+        self.client.login(username='testdoctor', password='testpass123')
+        response = self.client.get('/doctor-view-patient')
+        self.assertEqual(response.status_code, 200)
+        doctor_patients = list(response.context['patients'])
+        self.assertEqual(doctor_patients[0].address, 'Updated Address')
+        self.assertEqual(doctor_patients[0].symptoms, 'Updated Symptoms')
+        self.assertEqual(doctor_patients[0].user.first_name, 'Updated')
+
+        self.client.login(username='testadmin', password='testpass123')
+        response = self.client.get('/admin-view-patient')
+        self.assertEqual(response.status_code, 200)
+        admin_patients = list(response.context['patients'])
+        self.assertEqual(admin_patients[0].mobile, '0981234567')
+        self.assertEqual(admin_patients[0].user.first_name, 'Updated')
+
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.get('/api/patient/profile/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertEqual(response.json()['data']['first_name'], 'Updated')
+        self.assertEqual(response.json()['data']['address'], 'Updated Address')
+
     def test_patient_see_only_own_appointments(self):
         """Benh nhan chi thay lich hen cua minh."""
         self.client.login(username='testpatient', password='testpass123')
         response = self.client.get('/patient-view-appointment')
         self.assertEqual(response.status_code, 200)
+
+    def test_patient_can_book_appointment_with_business_hour(self):
+        """Benh nhan dat lich voi khung gio hanh chinh de admin va bac si cung thay."""
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.post('/patient-book-appointment', data={
+            'doctorId': self.doctor_user.id,
+            'appointmentDate': date.today().isoformat(),
+            'appointmentTime': '09:00',
+            'description': 'Follow-up visit',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/patient-view-appointment', response.url)
+
+        appointment = models.Appointment.objects.exclude(id=self.appointment.id).get(
+            patientId=self.patient_user.id,
+            doctorId=self.doctor_user.id,
+        )
+        self.assertEqual(appointment.appointmentTime, '09:00')
 
     # ================== APPROVAL WORKFLOW ==================
 
@@ -296,10 +640,31 @@ class PermissionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_pending_patient_redirected_to_wait_page(self):
-        """Benh nhan chua duoc approve bi chuyen den trang cho."""
+        """Benh nhan dang nhap se vao dashboard ngay ca khi status cu la False."""
         self.client.login(username='pendingpatient', password='testpass123')
         response = self.client.get('/afterlogin')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/patient-dashboard', response.url)
+
+    def test_patient_signup_auto_approved(self):
+        """Benh nhan moi dang ky duoc kich hoat ngay de co the dat lich."""
+        response = self.client.post('/patientsignup', data={
+            'first_name': 'Auto',
+            'last_name': 'Approved',
+            'username': 'autoapproved@example.com',
+            'password': 'testpass123',
+            'address': '100 Test St',
+            'mobile': '0912345678',
+            'symptoms': 'General checkup',
+            'assignedDoctorId': '',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/patientlogin', response.url)
+
+        user = User.objects.get(username='autoapproved@example.com')
+        patient = models.Patient.objects.get(user=user)
+        self.assertTrue(patient.status)
 
 
 class PermissionDecoratorTestCase(TestCase):
@@ -358,6 +723,34 @@ class PermissionDecoratorTestCase(TestCase):
         self.assertNotEqual(response.status_code, 200,
             "search_doctor should require login")
 
+    def test_search_doctor_matches_full_name_terms(self):
+        """Co the tim bac si bang ho va ten day du."""
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.get('/searchdoctor', {'query': 'Doctor User'})
+
+        self.assertEqual(response.status_code, 200)
+        doctors = list(response.context['doctors'])
+        self.assertEqual(len(doctors), 1)
+        self.assertEqual(doctors[0].user.username, 'testdoctor')
+
+    def test_search_doctor_returns_all_when_query_blank(self):
+        """Bo trong tu khoa thi hien tat ca bac si da duyet."""
+        extra_user = User.objects.create_user(
+            username='seconddoctor', password='testpass123',
+            first_name='Second', last_name='Doctor'
+        )
+        self.doctor_group.user_set.add(extra_user)
+        models.Doctor.objects.create(
+            user=extra_user, address='789 St',
+            mobile='0988888888', department='Dermatologists', status=True
+        )
+
+        self.client.login(username='testpatient', password='testpass123')
+        response = self.client.get('/searchdoctor', {'query': '   '})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['doctors'].count(), 2)
+
     def test_download_pdf_requires_login(self):
         """download_pdf phai yeu cau dang nhap."""
         response = self.client.get('/download-pdf/1')
@@ -413,14 +806,13 @@ class SecurityHeadersTestCase(TestCase):
     def test_security_headers_present(self):
         """Kiem tra cac security headers."""
         response = self.client.get('/')
-        # Django 3.0: use response._headers instead of .headers
-        header_names = [k.lower() for k in response._headers.keys()]
+        header_names = [k.lower() for k in response.headers.keys()]
         self.assertIn('x-frame-options', header_names,
             "X-Frame-Options header should be present")
 
     def test_csrf_token_in_forms(self):
         """Kiem tra CSRF token trong forms."""
-        response = self.client.get('/adminsignup')
+        response = self.client.get('/adminlogin')
         self.assertContains(response, 'csrfmiddlewaretoken', status_code=200,
             msg_prefix="CSRF token should be in signup forms")
 
