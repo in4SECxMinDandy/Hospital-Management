@@ -46,7 +46,7 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'name', 'profile_pic', 'address',
             'mobile', 'symptoms', 'assignedDoctorId', 'assigned_doctor',
-            'admitDate', 'status'
+            'admitDate', 'status', 'treatment_status'
         ]
         read_only_fields = ['id']
     
@@ -75,9 +75,9 @@ class PatientProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'name', 'profile_pic', 'address',
             'mobile', 'symptoms', 'assignedDoctorId', 'assigned_doctor',
-            'admitDate', 'status'
+            'admitDate', 'status', 'treatment_status'
         ]
-        read_only_fields = ['id', 'assignedDoctorId', 'admitDate', 'status']
+        read_only_fields = ['id', 'assignedDoctorId', 'admitDate', 'status', 'treatment_status']
 
     def get_name(self, obj):
         return obj.get_name

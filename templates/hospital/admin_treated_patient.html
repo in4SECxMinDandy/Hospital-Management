@@ -1,0 +1,96 @@
+{% extends 'hospital/admin_base.html' %}
+{% load static %}
+{% block title %}Bệnh nhân đã điều trị - Clinic Dashboard{% endblock %}
+{% block content %}
+
+<div class="page-header animate-fadeInUp">
+  <div class="page-header-content">
+    <h1 class="page-title">Bệnh nhân đã điều trị</h1>
+    <p class="page-subtitle">Lịch sử các bệnh nhân đã hoàn tất điều trị</p>
+  </div>
+  <div class="page-actions">
+    <a href="/admin-view-patient" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i>
+      Quay lại đang điều trị
+    </a>
+  </div>
+</div>
+
+<div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Bệnh nhân</th>
+          <th>Triệu chứng</th>
+          <th>Bác sĩ phụ trách</th>
+          <th>Ngày nhập viện</th>
+          <th>Trạng thái</th>
+          <th style="text-align: right;">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in patients %}
+        <tr class="stagger-item">
+          <td>
+            <div class="cell-user">
+              <div class="cell-user-avatar">
+                {% if p.profile_pic %}
+                <img src="{{ p.profile_pic.url }}" alt="{{ p.get_name }}">
+                {% else %}
+                {{ p.get_name|slice:":1" }}
+                {% endif %}
+              </div>
+              <div class="cell-user-info">
+                <span class="cell-user-name">{{ p.get_name }}</span>
+                <span class="cell-user-email">SĐT: {{ p.mobile }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-warning">{{ p.symptoms }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.assigned_doctor_name }}</span>
+          </td>
+          <td>
+            <span style="color: var(--text-secondary);">{{ p.admitDate }}</span>
+          </td>
+          <td>
+            <span class="badge badge-info">{{ p.get_treatment_status_display }}</span>
+          </td>
+          <td>
+            <div class="action-buttons" style="justify-content: flex-end;">
+              <a href="{% url 'update-patient' p.id %}" class="action-btn edit" title="Chỉnh sửa">
+                <i class="fas fa-edit"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="empty-state-icon">
+                <i class="fas fa-clock-rotate-left"></i>
+              </div>
+              <h3 class="empty-state-title">Chưa có lịch sử đã điều trị</h3>
+              <p class="empty-state-description">Bệnh nhân sẽ xuất hiện ở đây sau khi admin chuyển trạng thái sang đã điều trị hoặc hoàn tất xuất viện.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if patients %}
+  <div class="pagination" style="padding: 16px 24px;">
+    <div class="pagination-info">
+      Hiển thị {{ patients|length }} bệnh nhân đã điều trị
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock content %}

@@ -59,10 +59,15 @@ class PatientForm(forms.ModelForm):
         to_field_name="user_id",
         required=False,
     )
+    treatment_status = forms.ChoiceField(
+        choices=models.patient_treatment_statuses,
+        required=False,
+        initial='under_treatment',
+    )
     class Meta:
         model=models.Patient
         # LOAI BO: status - chi admin moi set duoc thong qua view
-        fields=['address','mobile','symptoms','profile_pic']
+        fields=['address','mobile','symptoms','profile_pic','treatment_status']
         # status luon dat trong view (True = auto approve khi admin tao)
 
     def clean_mobile(self):

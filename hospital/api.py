@@ -104,6 +104,14 @@ class AdminDashboardAPIView(APIView):
             "doctor_count": doctor_count,
             "pending_doctors": pending_doctors,
             "patient_count": patient_count,
+            "active_patients": models.Patient.objects.filter(
+                status=True,
+                treatment_status='under_treatment',
+            ).count(),
+            "treated_patients": models.Patient.objects.filter(
+                status=True,
+                treatment_status='treated',
+            ).count(),
             "pending_patients": pending_patients,
             "appointment_count": appointment_count,
             "pending_appointments": pending_appointments
@@ -258,13 +266,17 @@ class AdminPatientListAPIView(APIView):
             return make_response(False, message="Không có quyền truy cập")
         
         status_filter = request.query_params.get('status')
-        
+        treatment_status = request.query_params.get('treatment_status')
+
         if status_filter == 'true':
             patients = models.Patient.objects.filter(status=True).select_related('user')
         elif status_filter == 'false':
             patients = models.Patient.objects.filter(status=False).select_related('user')
         else:
             patients = models.Patient.objects.select_related('user').all()
+
+        if treatment_status in {'under_treatment', 'treated'}:
+            patients = patients.filter(treatment_status=treatment_status)
         
         data = [{
             "id": p.id,
@@ -274,11 +286,11 @@ class AdminPatientListAPIView(APIView):
             "address": p.address,
             "admit_date": p.admitDate,
             "assigned_doctor": self._get_doctor_name(p.assignedDoctorId),
-            "status": p.status
+            "status": p.status,
+            "treatment_status": p.treatment_status
         } for p in patients]
         
         return make_response(True, data=data)
-    
     def _get_doctor_name(self, doctor_id):
         if doctor_id:
             try:
@@ -313,7 +325,8 @@ class AdminPatientListAPIView(APIView):
             mobile=data['mobile'],
             symptoms=data['symptoms'],
             assignedDoctorId=request.data.get('assignedDoctorId'),
-            status=True
+            status=True,
+            treatment_status=request.data.get('treatment_status', 'under_treatment'),
         )
         
         patient_group, _ = Group.objects.get_or_create(name='PATIENT')
@@ -341,7 +354,8 @@ class AdminPatientDetailAPIView(APIView):
             "mobile": patient.mobile,
             "address": patient.address,
             "admit_date": patient.admitDate,
-            "status": patient.status
+            "status": patient.status,
+            "treatment_status": patient.treatment_status
         })
     
     def put(self, request, pk):
@@ -357,6 +371,7 @@ class AdminPatientDetailAPIView(APIView):
         patient.mobile = request.data.get('mobile', patient.mobile)
         patient.symptoms = request.data.get('symptoms', patient.symptoms)
         patient.assignedDoctorId = request.data.get('assignedDoctorId', patient.assignedDoctorId)
+        patient.treatment_status = request.data.get('treatment_status', patient.treatment_status)
         patient.save()
         
         return make_response(True, message="Cập nhật thành công!")
@@ -385,6 +400,8 @@ class AdminApprovePatientAPIView(APIView):
         try:
             patient = models.Patient.objects.get(id=pk)
             patient.status = True
+            if not patient.treatment_status:
+                patient.treatment_status = 'under_treatment'
             patient.save()
             return make_response(True, message="Duyệt bệnh nhân thành công!")
         except models.Patient.DoesNotExist:
@@ -480,7 +497,10 @@ class AdminDischargeAPIView(APIView):
             return make_response(False, message="Không có quyền truy cập")
         
         # Get admitted patients
-        patients = models.Patient.objects.filter(status=True).select_related('user')
+        patients = models.Patient.objects.filter(
+            status=True,
+            treatment_status='under_treatment',
+        ).select_related('user')
         
         data = [{
             "id": p.id,
@@ -546,6 +566,8 @@ class AdminDischargeAPIView(APIView):
             OtherCharge=data['other_charge'],
             total=data['total']
         )
+        patient.treatment_status = 'treated'
+        patient.save(update_fields=['treatment_status'])
         
         return make_response(True, data={"id": discharge.id}, message="Xuất viện thành công!")
     
@@ -575,7 +597,9 @@ class DoctorDashboardAPIView(APIView):
             return make_response(False, message="Không tìm thấy hồ sơ bác sĩ")
         
         patients = models.Patient.objects.filter(
-            status=True, assignedDoctorId=request.user.id
+            status=True,
+            assignedDoctorId=request.user.id,
+            treatment_status='under_treatment',
         )
         
         appointments = models.Appointment.objects.filter(doctorId=request.user.id)
@@ -595,7 +619,9 @@ class DoctorPatientsAPIView(APIView):
             return make_response(False, message="Không có quyền truy cập")
         
         patients = models.Patient.objects.filter(
-            status=True, assignedDoctorId=request.user.id
+            status=True,
+            assignedDoctorId=request.user.id,
+            treatment_status='under_treatment',
         )
         
         data = [{
@@ -628,7 +654,7 @@ class PatientDashboardAPIView(APIView):
         return make_response(True, data={
             "appointment_count": appointments.count(),
             "completed_count": appointments.filter(status=True).count(),
-            "status": "active" if patient.status else "inactive"
+            "status": "pending" if not patient.status else patient.treatment_status
         })
 
 

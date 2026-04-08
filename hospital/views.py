@@ -682,15 +682,40 @@ def admin_view_doctor_specialisation_view(request):
 @user_passes_test(is_admin)
 def admin_patient_view(request):
     """Trang quan ly benh nhan."""
-    return render(request, 'hospital/admin_patient.html')
+    context = {
+        'patientcount': models.Patient.objects.filter(
+            status=True,
+            treatment_status='under_treatment',
+        ).count(),
+        'treatedpatientcount': models.Patient.objects.filter(
+            status=True,
+            treatment_status='treated',
+        ).count(),
+        'pendingpatientcount': models.Patient.objects.filter(status=False).count(),
+    }
+    return render(request, 'hospital/admin_patient.html', context)
 
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_view_patient_view(request):
-    """Xem danh sach benh nhan da duoc approve."""
-    patients = models.Patient.objects.filter(status=True).select_related('user')
+    """Xem danh sach benh nhan dang dieu tri."""
+    patients = models.Patient.objects.filter(
+        status=True,
+        treatment_status='under_treatment',
+    ).select_related('user').order_by('-id')
     return render(request, 'hospital/admin_view_patient.html', {'patients': patients})
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_treated_patient_view(request):
+    """Xem lich su benh nhan da dieu tri."""
+    patients = models.Patient.objects.filter(
+        status=True,
+        treatment_status='treated',
+    ).select_related('user').order_by('-id')
+    return render(request, 'hospital/admin_treated_patient.html', {'patients': patients})
 
 
 @login_required(login_url='adminlogin')
@@ -720,7 +745,13 @@ def update_patient_view(request, pk):
     original_password = user.password
     
     userForm = prepare_update_user_form(forms.PatientUserForm(instance=user))
-    patientForm = forms.PatientForm(instance=patient, initial={'assignedDoctorId': patient.assignedDoctorId})
+    patientForm = forms.PatientForm(
+        instance=patient,
+        initial={
+            'assignedDoctorId': patient.assignedDoctorId,
+            'treatment_status': patient.treatment_status,
+        },
+    )
     context = {'userForm': userForm, 'patientForm': patientForm}
     
     if request.method == 'POST':
@@ -741,15 +772,16 @@ def update_patient_view(request, pk):
             assigned_doctor = patientForm.cleaned_data.get('assignedDoctorId')
             patient.assignedDoctorId = assigned_doctor.user_id if assigned_doctor else None
             patient.save()
+            redirect_url = '/admin-treated-patient' if patient.treatment_status == 'treated' else '/admin-view-patient'
 
             if is_ajax(request):
                 return JsonResponse({
                     'success': True,
                     'message': 'Cập nhật thông tin bệnh nhân thành công.',
-                    'redirect': '/admin-view-patient'
+                    'redirect': redirect_url
                 })
 
-            return redirect('admin-view-patient')
+            return redirect(redirect_url)
 
         if is_ajax(request):
             return json_form_error_response(userForm, patientForm)
@@ -777,6 +809,7 @@ def admin_add_patient_view(request):
             patient = patientForm.save(commit=False)
             patient.user = user
             patient.status = True
+            patient.treatment_status = patientForm.cleaned_data.get('treatment_status') or 'under_treatment'
             assigned_doctor = patientForm.cleaned_data.get('assignedDoctorId')
             patient.assignedDoctorId = assigned_doctor.user_id if assigned_doctor else None
             patient.save()
@@ -802,9 +835,8 @@ def admin_add_patient_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_approve_patient_view(request):
-    """Xem danh sach benh nhan cho duyet."""
-    patients = models.Patient.objects.filter(status=False).select_related('user')
-    return render(request, 'hospital/admin_approve_patient.html', {'patients': patients})
+    """Bo qua man duyet benh nhan va quay lai danh sach."""
+    return redirect('admin-view-patient')
 
 
 @login_required(login_url='adminlogin')
@@ -813,6 +845,8 @@ def approve_patient_view(request, pk):
     """Chap nhan dang ky benh nhan."""
     patient = get_object_or_404(models.Patient, id=pk)
     patient.status = True
+    if not patient.treatment_status:
+        patient.treatment_status = 'under_treatment'
     patient.save()
     
     if is_ajax(request):
@@ -842,11 +876,43 @@ def reject_patient_view(request, pk):
     return redirect('admin-approve-patient')
 
 
+# Compatibility override: patient approval is no longer a separate workflow.
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def approve_patient_view(request, pk):
+    """Route cu duoc giu lai de tranh loi link, nhung khong con xu ly duyet rieng."""
+    if is_ajax(request):
+        return JsonResponse({
+            'success': True,
+            'message': 'Danh sach benh nhan khong con yeu cau buoc duyet rieng.',
+            'redirect': '/admin-view-patient'
+        })
+
+    return redirect('admin-view-patient')
+
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def reject_patient_view(request, pk):
+    """Route cu duoc giu lai de tranh loi link, nhung khong con man tu choi rieng."""
+    if is_ajax(request):
+        return JsonResponse({
+            'success': True,
+            'message': 'Vui long quan ly ho so truc tiep trong danh sach benh nhan.',
+            'redirect': '/admin-view-patient'
+        })
+
+    return redirect('admin-view-patient')
+
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_discharge_patient_view(request):
     """Trang xuat vien benh nhan."""
-    patients = models.Patient.objects.filter(status=True).select_related('user')
+    patients = models.Patient.objects.filter(
+        status=True,
+        treatment_status='under_treatment',
+    ).select_related('user')
     return render(request, 'hospital/admin_discharge_patient.html', {'patients': patients})
 
 
@@ -894,6 +960,8 @@ def discharge_patient_view(request, pk):
             OtherCharge=patient_context['OtherCharge'],
             total=patient_context['total'],
         )
+        patient.treatment_status = 'treated'
+        patient.save(update_fields=['treatment_status'])
 
         patient_context['invoiceNumber'] = build_invoice_number(discharge_details.id, discharge_details.releaseDate)
         return render(request, 'hospital/patient_final_bill.html', context=patient_context)
@@ -1099,7 +1167,11 @@ def doctor_dashboard_view(request):
     """Dashboard cua bac si."""
     doctor = get_object_or_404(models.Doctor, user_id=request.user.id)
     
-    patientcount = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id).count()
+    patientcount = models.Patient.objects.filter(
+        status=True,
+        assignedDoctorId=request.user.id,
+        treatment_status='under_treatment',
+    ).count()
     appointmentcount = models.Appointment.objects.filter(doctorId=request.user.id).count()
     patientdischarged = models.PatientDischargeDetails.objects.filter(
         assignedDoctorName=request.user.first_name
@@ -1111,7 +1183,9 @@ def doctor_dashboard_view(request):
     
     patients_list = list(
         models.Patient.objects.filter(
-            status=True, assignedDoctorId=request.user.id
+            status=True,
+            assignedDoctorId=request.user.id,
+            treatment_status='under_treatment',
         ).order_by('-id')[:10]
     )
     
@@ -1139,7 +1213,11 @@ def doctor_patient_view(request):
 def doctor_view_patient_view(request):
     """Xem danh sach benh nhan dang dieu tri."""
     doctor = get_object_or_404(models.Doctor, user_id=request.user.id)
-    patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
+    patients = models.Patient.objects.filter(
+        status=True,
+        assignedDoctorId=request.user.id,
+        treatment_status='under_treatment',
+    )
     return render(request, 'hospital/doctor_view_patient.html', {'patients': patients, 'doctor': doctor})
 
 
@@ -1151,7 +1229,9 @@ def search_view(request):
     query = request.GET.get('query', '').strip()
     
     patients = models.Patient.objects.filter(
-        status=True, assignedDoctorId=request.user.id
+        status=True,
+        assignedDoctorId=request.user.id,
+        treatment_status='under_treatment',
     ).filter(
         Q(symptoms__icontains=query) | Q(user__first_name__icontains=query)
     )

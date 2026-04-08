@@ -292,3 +292,23 @@
 </div>
 
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const approvePatientCard = document.querySelector('a[href="/admin-approve-patient"]');
+  if (approvePatientCard) {
+    approvePatientCard.remove();
+  }
+
+  const patientStatCard = document.querySelectorAll('.stats-grid .stat-card')[1];
+  const patientStatChange = patientStatCard ? patientStatCard.querySelector('.stat-change') : null;
+
+  if (patientStatChange) {
+    patientStatChange.classList.remove('negative');
+    patientStatChange.classList.add('positive');
+    patientStatChange.innerHTML = '<i class="fas fa-list-check"></i> Quản lý trực tiếp trong danh sách chung';
+  }
+});
+</script>
+{% endblock %}

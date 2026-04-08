@@ -22,6 +22,11 @@ appointment_time_slots = [
 ('16:00', '16:00'),
 ]
 
+patient_treatment_statuses = [
+('under_treatment', 'Đang điều trị'),
+('treated', 'Đã điều trị'),
+]
+
 class Doctor(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     profile_pic= models.ImageField(upload_to='profile_pic/DoctorProfilePic/',null=True,blank=True)
@@ -54,12 +59,26 @@ class Patient(models.Model):
     assignedDoctorId = models.PositiveIntegerField(null=True)
     admitDate=models.DateField(auto_now=True)
     status=models.BooleanField(default=False)
+    treatment_status = models.CharField(
+        max_length=20,
+        choices=patient_treatment_statuses,
+        default='under_treatment',
+    )
     @property
     def get_name(self):
         return self.user.first_name+" "+self.user.last_name
     @property
     def get_id(self):
         return self.user.id
+    @property
+    def is_under_treatment(self):
+        return self.treatment_status == 'under_treatment'
+    @property
+    def assigned_doctor_name(self):
+        if not self.assignedDoctorId:
+            return 'Chưa phân công'
+        doctor = Doctor.objects.select_related('user').filter(user_id=self.assignedDoctorId).first()
+        return doctor.get_name if doctor else 'Chưa phân công'
     def __str__(self):
         return self.user.first_name+" ("+self.symptoms+")"
 

@@ -433,6 +433,59 @@ class PermissionTestCase(TestCase):
             self.assertNotEqual(response.status_code, 200,
                 f"Unauthenticated should not access {route}")
 
+    def test_admin_patient_lists_split_active_and_treated(self):
+        """Admin thay dung danh sach dang dieu tri va da dieu tri."""
+        history_user = User.objects.create_user(
+            username='treatedpatient',
+            password='testpass123',
+            first_name='History',
+            last_name='Patient'
+        )
+        self.patient_group.user_set.add(history_user)
+        models.Patient.objects.create(
+            user=history_user,
+            address='111 History St',
+            mobile='0111222333',
+            symptoms='Recovered',
+            assignedDoctorId=self.doctor_user.id,
+            status=True,
+            treatment_status='treated'
+        )
+
+        self.client.login(username='testadmin', password='testpass123')
+
+        active_response = self.client.get('/admin-view-patient')
+        treated_response = self.client.get('/admin-treated-patient')
+
+        self.assertEqual(active_response.status_code, 200)
+        self.assertEqual(treated_response.status_code, 200)
+        self.assertContains(active_response, 'Patient User')
+        self.assertNotContains(active_response, 'History Patient')
+        self.assertContains(treated_response, 'History Patient')
+
+    def test_discharge_marks_patient_as_treated(self):
+        """Sau khi xuat vien, benh nhan duoc chuyen sang da dieu tri."""
+        self.client.login(username='testadmin', password='testpass123')
+
+        response = self.client.post(f'/discharge-patient/{self.patient.id}', {
+            'roomCharge': '100',
+            'doctorFee': '200',
+            'medicineCost': '300',
+            'OtherCharge': '50',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.patient.refresh_from_db()
+        self.assertEqual(self.patient.treatment_status, 'treated')
+
+    def test_admin_approve_patient_redirects_to_patient_list(self):
+        """Route duyet benh nhan cu se duoc chuyen ve danh sach benh nhan."""
+        self.client.login(username='testadmin', password='testpass123')
+        response = self.client.get('/admin-approve-patient')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.endswith('/admin-view-patient'))
+
     # ================== DOCTOR ROUTES ==================
 
     def test_doctor_dashboard_accessible_by_doctor(self):

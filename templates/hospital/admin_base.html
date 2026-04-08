@@ -19,6 +19,11 @@
   
   <!-- Custom Styles -->
   <link rel="stylesheet" href="{% static '/style.css' %}">
+  <style>
+    a[href="/admin-patient"] .nav-item-badge {
+      display: none;
+    }
+  </style>
 
   {% block extra_css %}{% endblock %}
 </head>
@@ -64,7 +69,7 @@
             {% endif %}
           </a>
           
-          <a href="/admin-patient" class="nav-item {% if '/admin-patient' in request.path %}active{% endif %}">
+          <a href="/admin-patient" class="nav-item {% if 'patient' in request.path and 'appointment' not in request.path %}active{% endif %}">
             <span class="nav-item-icon"><i class="fas fa-users"></i></span>
             <span class="nav-item-text">Bệnh nhân</span>
             {% if pendingpatientcount %}

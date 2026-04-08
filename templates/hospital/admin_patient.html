@@ -2,11 +2,10 @@
 {% block title %}Quản lý Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<!-- Page Header -->
 <div class="page-header animate-fadeInUp">
   <div class="page-header-content">
     <h1 class="page-title">Quản lý Bệnh nhân</h1>
-    <p class="page-subtitle">Quản lý thông tin và hồ sơ bệnh nhân</p>
+    <p class="page-subtitle">Theo dõi bệnh nhân đang điều trị và lịch sử đã điều trị</p>
   </div>
   <div class="page-actions">
     <a href="/admin-add-patient" class="btn btn-primary">
@@ -16,22 +15,21 @@
   </div>
 </div>
 
-<!-- Menu Cards -->
-<div class="menu-grid animate-fadeInUp" style="animation-delay: 0.1s;">
+<div class="menu-grid patient-menu-grid animate-fadeInUp" style="animation-delay: 0.1s;">
   <a href="/admin-view-patient" class="menu-card primary">
     <div class="menu-card-icon">
-      <i class="fas fa-list"></i>
+      <i class="fas fa-bed-pulse"></i>
     </div>
-    <h4 class="menu-card-title">Danh sách Bệnh nhân</h4>
-    <p class="menu-card-description">Xem và quản lý danh sách bệnh nhân đã được duyệt</p>
+    <h4 class="menu-card-title">Bệnh nhân đang điều trị</h4>
+    <p class="menu-card-description">Xem danh sách điều trị hiện tại và cập nhật trạng thái sang đã điều trị</p>
   </a>
 
-  <a href="/admin-add-patient" class="menu-card success">
+  <a href="/admin-treated-patient" class="menu-card info">
     <div class="menu-card-icon">
-      <i class="fas fa-user-plus"></i>
+      <i class="fas fa-clock-rotate-left"></i>
     </div>
-    <h4 class="menu-card-title">Thêm Bệnh nhân</h4>
-    <p class="menu-card-description">Tạo hồ sơ và tài khoản bệnh nhân mới</p>
+    <h4 class="menu-card-title">Bệnh nhân đã điều trị</h4>
+    <p class="menu-card-description">Lịch sử các bệnh nhân đã hoàn tất điều trị</p>
   </a>
 
   <a href="/admin-discharge-patient" class="menu-card warning">
@@ -39,7 +37,7 @@
       <i class="fas fa-file-invoice-dollar"></i>
     </div>
     <h4 class="menu-card-title">Xuất viện</h4>
-    <p class="menu-card-description">Xử lý xuất viện và thanh toán</p>
+    <p class="menu-card-description">Xử lý xuất viện và tự động chuyển bệnh nhân sang đã điều trị</p>
   </a>
 
   <a href="/admin-approve-patient" class="menu-card danger">
@@ -47,7 +45,8 @@
       <i class="fas fa-user-check"></i>
     </div>
     <h4 class="menu-card-title">Duyệt Bệnh nhân</h4>
-    <p class="menu-card-description">Phê duyệt đăng ký bệnh nhân mới
+    <p class="menu-card-description">
+      Phê duyệt đăng ký bệnh nhân mới
       {% if pendingpatientcount > 0 %}
       <span class="badge badge-danger" style="margin-left: 8px;">{{ pendingpatientcount }} mới</span>
       {% endif %}
@@ -55,7 +54,6 @@
   </a>
 </div>
 
-<!-- Statistics -->
 <div class="stats-grid animate-fadeInUp" style="animation-delay: 0.2s; margin-top: 24px;">
   <div class="stat-card success">
     <div class="stat-icon">
@@ -66,15 +64,47 @@
       <div class="stat-label">Bệnh nhân đang điều trị</div>
     </div>
   </div>
-  <div class="stat-card warning">
+
+  <div class="stat-card info">
     <div class="stat-icon">
-      <i class="fas fa-clock"></i>
+      <i class="fas fa-user-check"></i>
     </div>
     <div class="stat-content">
-      <div class="stat-value">{{ pendingpatientcount }}</div>
-      <div class="stat-label">Chờ duyệt</div>
+      <div class="stat-value">{{ treatedpatientcount }}</div>
+      <div class="stat-label">Bệnh nhân đã điều trị</div>
     </div>
   </div>
 </div>
 
 {% endblock content %}
+
+{% block extra_css %}
+<style>
+  .patient-menu-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1100px) {
+    .patient-menu-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 720px) {
+    .patient-menu-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const approvePatientCard = document.querySelector('a[href="/admin-approve-patient"]');
+  if (approvePatientCard) {
+    approvePatientCard.remove();
+  }
+});
+</script>
+{% endblock %}

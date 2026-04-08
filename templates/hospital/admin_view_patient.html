@@ -1,43 +1,39 @@
 {% extends 'hospital/admin_base.html' %}
 {% load static %}
-{% block title %}Danh sách Bệnh nhân - Clinic Dashboard{% endblock %}
+{% block title %}Bệnh nhân đang điều trị - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<!-- Page Header -->
 <div class="page-header animate-fadeInUp">
   <div class="page-header-content">
-    <h1 class="page-title">Danh sách Bệnh nhân</h1>
-    <p class="page-subtitle">Quản lý thông tin bệnh nhân trong hệ thống</p>
+    <h1 class="page-title">Bệnh nhân đang điều trị</h1>
+    <p class="page-subtitle">Admin có thể cập nhật thông tin và đổi trạng thái sang đã điều trị</p>
   </div>
   <div class="page-actions">
-    <a href="/admin-add-patient" class="btn btn-primary">
-      <i class="fas fa-plus"></i>
-      Thêm Bệnh nhân
+    <a href="/admin-treated-patient" class="btn btn-secondary">
+      <i class="fas fa-clock-rotate-left"></i>
+      Xem lịch sử đã điều trị
     </a>
   </div>
 </div>
 
-<!-- Card -->
 <div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
-  <!-- Filters -->
   <div class="filters-bar" style="padding: 16px 24px; border-bottom: 1px solid var(--border-color-light); margin-bottom: 0;">
     <div class="search-box">
       <span class="search-box-icon">
         <i class="fas fa-search"></i>
       </span>
-      <input type="text" id="searchInput" placeholder="Tìm kiếm bệnh nhân...">
+      <input type="text" id="searchInput" placeholder="Tìm kiếm bệnh nhân đang điều trị...">
     </div>
   </div>
 
-  <!-- Table -->
   <div class="table-container">
     <table class="data-table" id="patientsTable">
       <thead>
         <tr>
           <th>Bệnh nhân</th>
           <th>Triệu chứng</th>
-          <th>Điện thoại</th>
-          <th>Địa chỉ</th>
+          <th>Bác sĩ phụ trách</th>
+          <th>Trạng thái</th>
           <th style="text-align: right;">Thao tác</th>
         </tr>
       </thead>
@@ -63,17 +59,17 @@
             <span class="badge badge-warning">{{ p.symptoms }}</span>
           </td>
           <td>
-            <span style="color: var(--text-secondary);">{{ p.mobile }}</span>
+            <span style="color: var(--text-secondary);">{{ p.assigned_doctor_name }}</span>
           </td>
           <td>
-            <span style="color: var(--text-secondary);">{{ p.address }}</span>
+            <span class="badge badge-success">{{ p.get_treatment_status_display }}</span>
           </td>
           <td>
             <div class="action-buttons" style="justify-content: flex-end;">
-              <a href="{% url 'update-patient' p.id %}" class="action-btn edit" title="Chỉnh sửa">
+              <a href="{% url 'update-patient' p.id %}" class="action-btn edit" title="Chỉnh sửa và đổi trạng thái">
                 <i class="fas fa-edit"></i>
               </a>
-              <button type="button" class="action-btn delete" title="Xóa" 
+              <button type="button" class="action-btn delete" title="Xóa"
                       onclick="ClinicAPI.handleDelete('{% url 'delete-patient-from-hospital' p.id %}', 'Bạn có chắc muốn xóa bệnh nhân này?', '/admin-view-patient')">
                 <i class="fas fa-trash"></i>
               </button>
@@ -85,13 +81,13 @@
           <td colspan="5">
             <div class="empty-state">
               <div class="empty-state-icon">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-bed-pulse"></i>
               </div>
-              <h3 class="empty-state-title">Chưa có bệnh nhân nào</h3>
-              <p class="empty-state-description">Danh sách bệnh nhân trống. Hãy thêm bệnh nhân mới để bắt đầu.</p>
-              <a href="/admin-add-patient" class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                Thêm Bệnh nhân đầu tiên
+              <h3 class="empty-state-title">Không có bệnh nhân đang điều trị</h3>
+              <p class="empty-state-description">Danh sách hiện tại trống hoặc các bệnh nhân đã được chuyển sang đã điều trị.</p>
+              <a href="/admin-treated-patient" class="btn btn-primary">
+                <i class="fas fa-clock-rotate-left"></i>
+                Xem lịch sử đã điều trị
               </a>
             </div>
           </td>
@@ -101,11 +97,10 @@
     </table>
   </div>
 
-  <!-- Pagination -->
   {% if patients %}
   <div class="pagination" style="padding: 16px 24px;">
     <div class="pagination-info">
-      Hiển thị {{ patients|length }} bệnh nhân
+      Hiển thị {{ patients|length }} bệnh nhân đang điều trị
     </div>
   </div>
   {% endif %}
@@ -125,10 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     rows.forEach(row => {
       if (row.querySelector('.empty-state')) return;
-
-      const name = row.dataset.name || '';
       const text = row.textContent.toLowerCase();
-      
       row.style.display = text.includes(searchQuery) ? '' : 'none';
     });
   }

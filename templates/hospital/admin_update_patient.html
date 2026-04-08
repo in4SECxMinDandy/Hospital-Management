@@ -1,13 +1,12 @@
 {% extends 'hospital/admin_base.html' %}
-{% load static %}
+{% load static widget_tweaks %}
 {% block title %}Cập nhật Bệnh nhân - Clinic Dashboard{% endblock %}
 {% block content %}
 
-<!-- Page Header -->
 <div class="page-header animate-fadeInUp">
   <div class="page-header-content">
     <h1 class="page-title">Cập nhật thông tin Bệnh nhân</h1>
-    <p class="page-subtitle">Chỉnh sửa thông tin cá nhân và y tế của bệnh nhân</p>
+    <p class="page-subtitle">Chỉnh sửa hồ sơ và cập nhật trạng thái điều trị</p>
   </div>
   <div class="page-actions">
     <a href="/admin-view-patient" class="btn btn-secondary">
@@ -17,14 +16,12 @@
   </div>
 </div>
 
-<!-- Form Card -->
 <div class="card animate-fadeInUp" style="animation-delay: 0.1s;">
   <div class="card-body">
-    <form method="post" enctype="multipart/form-data" id="updatePatientForm" data-ajax data-redirect="/admin-view-patient">
+    <form method="post" enctype="multipart/form-data" id="updatePatientForm" data-ajax>
       {% csrf_token %}
 
       <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-        <!-- Left Column - Account Info -->
         <div>
           <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
             <i class="fas fa-user" style="margin-right: 8px;"></i>
@@ -34,119 +31,66 @@
           <div class="form-group">
             <label class="form-label" for="id_first_name">Họ</label>
             {% render_field userForm.first_name class="form-control" placeholder="Họ" %}
-            {% if userForm.first_name.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ userForm.first_name.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_last_name">Tên</label>
             {% render_field userForm.last_name class="form-control" placeholder="Tên" %}
-            {% if userForm.last_name.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ userForm.last_name.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_username">Tên đăng nhập</label>
             {% render_field userForm.username class="form-control" placeholder="Tên đăng nhập" %}
-            {% if userForm.username.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ userForm.username.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_password">Mật khẩu</label>
-            {% render_field userForm.password class="form-control" placeholder="Mật khẩu" %}
-            {% if userForm.password.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ userForm.password.errors.0 }}
-            </div>
-            {% endif %}
+            {% render_field userForm.password class="form-control" placeholder="Để trống nếu không đổi" %}
             <span class="form-text">Để trống nếu không muốn thay đổi mật khẩu</span>
           </div>
         </div>
 
-        <!-- Right Column - Medical Info -->
         <div>
           <h4 style="margin-bottom: 16px; color: var(--text-secondary); font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">
             <i class="fas fa-heartbeat" style="margin-right: 8px;"></i>
-            Thông tin y tế
+            Thông tin điều trị
           </h4>
 
           <div class="form-group">
             <label class="form-label" for="id_mobile">Số điện thoại</label>
             {% render_field patientForm.mobile class="form-control" placeholder="Số điện thoại" %}
-            {% if patientForm.mobile.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ patientForm.mobile.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_address">Địa chỉ</label>
             {% render_field patientForm.address class="form-control" placeholder="Địa chỉ" %}
-            {% if patientForm.address.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ patientForm.address.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_symptoms">Triệu chứng</label>
             {% render_field patientForm.symptoms class="form-control" placeholder="Triệu chứng" %}
-            {% if patientForm.symptoms.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ patientForm.symptoms.errors.0 }}
-            </div>
-            {% endif %}
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_assignedDoctorId">Bác sĩ phụ trách</label>
             {% render_field patientForm.assignedDoctorId class="form-control form-select" %}
-            {% if patientForm.assignedDoctorId.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ patientForm.assignedDoctorId.errors.0 }}
-            </div>
-            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="id_treatment_status">Trạng thái điều trị</label>
+            {% render_field patientForm.treatment_status class="form-control form-select" %}
+            <span class="form-text">Chọn "Đã điều trị" để chuyển bệnh nhân sang lịch sử điều trị.</span>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="id_profile_pic">Ảnh đại diện</label>
             {% render_field patientForm.profile_pic class="form-control" %}
-            {% if patientForm.profile_pic.errors %}
-            <div class="form-error">
-              <i class="fas fa-exclamation-circle"></i>
-              {{ patientForm.profile_pic.errors.0 }}
-            </div>
-            {% endif %}
-            <span class="form-text">Định dạng: JPG, PNG. Kích thước tối đa: 2MB</span>
           </div>
         </div>
       </div>
 
-      <!-- Form Actions -->
       <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
-        <a href="/admin-view-patient" class="btn btn-secondary">
-          Hủy
-        </a>
+        <a href="/admin-view-patient" class="btn btn-secondary">Hủy</a>
         <button type="submit" class="btn btn-primary">
           <i class="fas fa-save"></i>
           Cập nhật
